@@ -1,0 +1,35 @@
+logging:
+  path: ./logs
+
+spring:
+  datasource:
+    mysql:
+      jdbc-url: jdbc:mysql://localhost:3306/school?autoReconnect=true&amp;computer?autoReconnect=true&amp;autoReconnectForPools=true&allowMultiQueries=true
+      username: growlithe
+      password: growlithe
+
+#  redis:
+#    host: vm-xy-barrelled-redis-master.idc.yst.com.cn
+#  http:
+#    multipart:
+#      max-file-size: 20Mb
+#      max-request-size: 100Mb
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://user:password123@eureka-prod-1.idc.yst.com.cn:8761/eureka/,http://user:password123@eureka-prod-2.idc.yst.com.cn:8761/eureka/,http://user:password123@eureka-prod-3.idc.yst.com.cn:8761/eureka/
+#
+#dubbo:
+#  zookeeper:
+#    address: zk-prod-1.idc.yst.com.cn:2181,zk-prod-2.idc.yst.com.cn:2181,zk-prod-3.idc.yst.com.cn:2181
+#  protocol:
+#    port: 20888
+#
+#
+#attachment:
+#  path:  /home/admin/dealer/market/
+#
+#nfsq:
+#  sso:
+#    url: http://firefox-mrk.idc.yst.com.cn/NFSpring_auth_service/web/desktop/initDesktop

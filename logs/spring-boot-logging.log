@@ -1,0 +1,320 @@
+2018-12-23 20:15:33.203  INFO 12140 --- [main] com.work.school.SchoolApplication        : Starting SchoolApplication on wangxindeMacBook-Pro.local with PID 12140 (/Users/wangxin/code/java/school/target/classes started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:15:33.206  INFO 12140 --- [main] com.work.school.SchoolApplication        : The following profiles are active: dev
+2018-12-23 20:15:33.470  WARN 12140 --- [main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.work.school.mysql.**.dao.mapper]' package. Please check your configuration.
+2018-12-23 20:15:33.496  WARN 12140 --- [main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.work.school]' package. Please check your configuration.
+2018-12-23 20:15:33.707  WARN 12140 --- [main] s.c.a.AnnotationConfigApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mysqlSqlSessionFactory' defined in class path resource [com/work/school/config/MysqlDataSourceConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'mysqlSqlSessionFactory' threw exception; nested exception is java.io.FileNotFoundException: class path resource [com/work/school/mysql/] cannot be resolved to URL because it does not exist
+2018-12-23 20:15:33.714  INFO 12140 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2018-12-23 20:15:33.722 ERROR 12140 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mysqlSqlSessionFactory' defined in class path resource [com/work/school/config/MysqlDataSourceConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'mysqlSqlSessionFactory' threw exception; nested exception is java.io.FileNotFoundException: class path resource [com/work/school/mysql/] cannot be resolved to URL because it does not exist
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:627) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:607) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1288) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1127) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:538) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:498) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:846) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:863) ~[spring-context-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:546) ~[spring-context-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:775) ~[spring-boot-2.1.1.RELEASE.jar:2.1.1.RELEASE]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397) ~[spring-boot-2.1.1.RELEASE.jar:2.1.1.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316) ~[spring-boot-2.1.1.RELEASE.jar:2.1.1.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1260) ~[spring-boot-2.1.1.RELEASE.jar:2.1.1.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1248) ~[spring-boot-2.1.1.RELEASE.jar:2.1.1.RELEASE]
+	at com.work.school.SchoolApplication.main(SchoolApplication.java:10) ~[classes/:na]
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'mysqlSqlSessionFactory' threw exception; nested exception is java.io.FileNotFoundException: class path resource [com/work/school/mysql/] cannot be resolved to URL because it does not exist
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	... 18 common frames omitted
+Caused by: java.io.FileNotFoundException: class path resource [com/work/school/mysql/] cannot be resolved to URL because it does not exist
+	at org.springframework.core.io.ClassPathResource.getURL(ClassPathResource.java:195) ~[spring-core-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.core.io.support.PathMatchingResourcePatternResolver.findPathMatchingResources(PathMatchingResourcePatternResolver.java:497) ~[spring-core-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.core.io.support.PathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.java:298) ~[spring-core-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at com.work.school.config.MysqlDataSourceConfig.mysqlSqlSessionFactory(MysqlDataSourceConfig.java:50) ~[classes/:na]
+	at com.work.school.config.MysqlDataSourceConfig$$EnhancerBySpringCGLIB$$551c0bdd.CGLIB$mysqlSqlSessionFactory$2(<generated>) ~[classes/:na]
+	at com.work.school.config.MysqlDataSourceConfig$$EnhancerBySpringCGLIB$$551c0bdd$$FastClassBySpringCGLIB$$9baa3696.invoke(<generated>) ~[classes/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244) ~[spring-core-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363) ~[spring-context-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at com.work.school.config.MysqlDataSourceConfig$$EnhancerBySpringCGLIB$$551c0bdd.mysqlSqlSessionFactory(<generated>) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	... 19 common frames omitted
+
+2018-12-23 20:34:51.745  INFO 12199 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12199 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:34:51.746  INFO 12199 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:34:53.508  INFO 12199 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 2.391 seconds (JVM running for 4.552)
+2018-12-23 20:34:53.971  INFO 12199 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:34:53.988  WARN 12199 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:34:55.037 ERROR 12199 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Exception during pool initialization.
+
+java.sql.SQLNonTransientConnectionException: Cannot load connection class because of underlying exception: com.mysql.cj.exceptions.WrongArgumentException: Malformed database URL, failed to parse the connection string near ';autoReconnectForPools=true&allowMultiQueries=true'.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:110) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:73) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:79) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:131) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:227) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-3.2.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-3.2.0.jar:na]
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:151) ~[spring-jdbc-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115) ~[spring-jdbc-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78) ~[spring-jdbc-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.mybatis.spring.transaction.SpringManagedTransaction.openConnection(SpringManagedTransaction.java:82) ~[mybatis-spring-1.3.2.jar:1.3.2]
+	at org.mybatis.spring.transaction.SpringManagedTransaction.getConnection(SpringManagedTransaction.java:68) ~[mybatis-spring-1.3.2.jar:1.3.2]
+	at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:338) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:84) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83) ~[mybatis-3.4.6.jar:3.4.6]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49) ~[mybatis-3.4.6.jar:3.4.6]
+	at com.github.pagehelper.SqlUtil._processPage(SqlUtil.java:401) ~[pagehelper-4.1.0.jar:na]
+	at com.github.pagehelper.SqlUtil.processPage(SqlUtil.java:374) ~[pagehelper-4.1.0.jar:na]
+	at com.github.pagehelper.PageHelper.intercept(PageHelper.java:250) ~[pagehelper-4.1.0.jar:na]
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61) ~[mybatis-3.4.6.jar:3.4.6]
+	at com.sun.proxy.$Proxy73.query(Unknown Source) ~[na:na]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141) ~[mybatis-3.4.6.jar:3.4.6]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433) ~[mybatis-spring-1.3.2.jar:1.3.2]
+	at com.sun.proxy.$Proxy55.selectList(Unknown Source) ~[na:na]
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:230) ~[mybatis-spring-1.3.2.jar:1.3.2]
+	at org.apache.ibatis.binding.MapperMethod.executeForMany(MapperMethod.java:139) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:76) ~[mybatis-3.4.6.jar:3.4.6]
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:59) ~[mybatis-3.4.6.jar:3.4.6]
+	at com.sun.proxy.$Proxy61.listAll(Unknown Source) ~[na:na]
+	at com.work.school.mysql.banner.dao.mapper.MobileRedBannerMapperTest.listAllTest(MobileRedBannerMapperTest.java:28) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566) ~[na:na]
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47) ~[junit-4.12.jar:4.12]
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestExecutionCallbacks.evaluate(RunBeforeTestExecutionCallbacks.java:74) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestExecutionCallbacks.evaluate(RunAfterTestExecutionCallbacks.java:84) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) ~[junit-4.12.jar:4.12]
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363) ~[junit-4.12.jar:4.12]
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190) ~[spring-test-5.1.3.RELEASE.jar:5.1.3.RELEASE]
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137) ~[junit-4.12.jar:4.12]
+	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68) ~[junit-rt.jar:na]
+	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47) ~[junit-rt.jar:na]
+	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242) ~[junit-rt.jar:na]
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70) ~[junit-rt.jar:na]
+Caused by: com.mysql.cj.exceptions.UnableToConnectException: Cannot load connection class because of underlying exception: com.mysql.cj.exceptions.WrongArgumentException: Malformed database URL, failed to parse the connection string near ';autoReconnectForPools=true&allowMultiQueries=true'.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[na:na]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	... 74 common frames omitted
+Caused by: com.mysql.cj.exceptions.WrongArgumentException: Malformed database URL, failed to parse the connection string near ';autoReconnectForPools=true&allowMultiQueries=true'.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[na:na]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrlParser.processKeyValuePattern(ConnectionUrlParser.java:539) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrlParser.parseQuerySection(ConnectionUrlParser.java:519) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrlParser.getProperties(ConnectionUrlParser.java:644) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrl.collectProperties(ConnectionUrl.java:303) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrl.<init>(ConnectionUrl.java:288) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.url.SingleConnectionUrl.<init>(SingleConnectionUrl.java:47) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[na:na]
+	at com.mysql.cj.util.Util.handleNewInstance(Util.java:191) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.util.Util.getInstance(Util.java:166) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.util.Util.getInstance(Util.java:173) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.conf.ConnectionUrl.getConnectionUrlInstance(ConnectionUrl.java:200) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:204) ~[mysql-connector-java-8.0.13.jar:8.0.13]
+	... 73 common frames omitted
+
+2018-12-23 20:35:31.883  INFO 12206 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12206 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:35:31.884  INFO 12206 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:35:33.189  INFO 12206 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 1.833 seconds (JVM running for 2.954)
+2018-12-23 20:35:33.507  INFO 12206 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:35:33.515  WARN 12206 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:35:33.738  INFO 12206 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 20:35:37.852  INFO 12206 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 20:35:37.865  INFO 12206 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 20:36:59.824  INFO 12213 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12213 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:36:59.825  INFO 12213 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:37:00.930  INFO 12213 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 1.506 seconds (JVM running for 2.714)
+2018-12-23 20:37:01.275  INFO 12213 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:37:01.279  WARN 12213 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:37:01.452  INFO 12213 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 20:37:01.561  INFO 12213 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 20:37:01.572  INFO 12213 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 20:37:25.295  INFO 12217 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12217 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:37:25.296  INFO 12217 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:37:26.818  INFO 12217 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 2.154 seconds (JVM running for 3.238)
+2018-12-23 20:37:27.234  INFO 12217 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:37:27.238  WARN 12217 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:37:27.436  INFO 12217 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 20:37:27.547  INFO 12217 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 20:37:27.563  INFO 12217 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 20:38:10.090  INFO 12222 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12222 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:38:10.091  INFO 12222 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:38:11.313  INFO 12222 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 1.655 seconds (JVM running for 3.067)
+2018-12-23 20:38:17.328  INFO 12226 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12226 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:38:17.328  INFO 12226 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:38:18.569  INFO 12226 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 1.779 seconds (JVM running for 2.87)
+2018-12-23 20:38:18.967  INFO 12226 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:38:18.971  WARN 12226 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:38:19.147  INFO 12226 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 20:38:23.045  INFO 12226 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 20:38:23.055  INFO 12226 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 20:39:32.920  INFO 12232 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Starting MobileRedBannerMapperTest on wangxindeMacBook-Pro.local with PID 12232 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 20:39:32.921  INFO 12232 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : The following profiles are active: dev
+2018-12-23 20:39:34.259  INFO 12232 --- [main] c.w.s.m.b.d.m.MobileRedBannerMapperTest  : Started MobileRedBannerMapperTest in 1.91 seconds (JVM running for 3.18)
+2018-12-23 20:39:34.285  INFO 12232 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 20:39:34.292  WARN 12232 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 20:39:34.483  INFO 12232 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 20:39:34.493  INFO 12232 --- [main] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@35399441 testClass = MobileRedBannerMapperTest, testInstance = com.work.school.mysql.banner.dao.mapper.MobileRedBannerMapperTest@68f4865, testMethod = updateByIdsTest@MobileRedBannerMapperTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@4b7dc788 testClass = MobileRedBannerMapperTest, locations = '{}', classes = '{class com.work.school.SchoolApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1ebd319f, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@7a675056, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3f56875e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@69fb6037], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]; transaction manager [org.springframework.jdbc.datasource.DataSourceTransactionManager@188598ad]; rollback [true]
+2018-12-23 20:39:34.940  INFO 12232 --- [main] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@35399441 testClass = MobileRedBannerMapperTest, testInstance = com.work.school.mysql.banner.dao.mapper.MobileRedBannerMapperTest@68f4865, testMethod = updateByIdsTest@MobileRedBannerMapperTest, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@4b7dc788 testClass = MobileRedBannerMapperTest, locations = '{}', classes = '{class com.work.school.SchoolApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1ebd319f, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@7a675056, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3f56875e, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@69fb6037], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]
+2018-12-23 20:39:34.943  INFO 12232 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 20:39:34.956  INFO 12232 --- [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:50:37.959  INFO 12794 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12794 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:50:37.960  INFO 12794 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:50:39.184  INFO 12794 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b5512975] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:50:40.216  INFO 12794 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:50:41.132  INFO 12794 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:50:41.193  INFO 12794 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 3.889 seconds (JVM running for 5.256)
+2018-12-23 22:50:41.615  INFO 12794 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:50:41.623  WARN 12794 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:50:41.835  INFO 12794 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:50:42.512  WARN 12794 --- [main] c.w.s.m.b.s.MobileRedBannerService       : 第13行中,第5列 is not num
+2018-12-23 22:50:42.530  INFO 12794 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:50:42.533  INFO 12794 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:50:42.542  INFO 12794 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:51:14.565  INFO 12797 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12797 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:51:14.566  INFO 12797 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:51:16.386  INFO 12797 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$3f06f797] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:51:17.923  INFO 12797 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:51:19.101  INFO 12797 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:51:19.186  INFO 12797 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 5.258 seconds (JVM running for 6.522)
+2018-12-23 22:51:19.694  INFO 12797 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:51:19.700  WARN 12797 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:51:19.956  INFO 12797 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:51:38.420  WARN 12797 --- [main] c.w.s.m.b.s.MobileRedBannerService       : 第13行中,第5列 is not num
+2018-12-23 22:51:38.447  INFO 12797 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:51:38.454  INFO 12797 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:51:38.465  INFO 12797 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:54:01.501  INFO 12810 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12810 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:54:01.502  INFO 12810 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:54:02.837  INFO 12810 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$adc07587] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:54:03.857  INFO 12810 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:54:04.775  INFO 12810 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:54:04.836  INFO 12810 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 3.976 seconds (JVM running for 4.954)
+2018-12-23 22:54:05.240  INFO 12810 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:54:05.247  WARN 12810 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:54:05.483  INFO 12810 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:54:06.117  WARN 12810 --- [main] c.w.s.m.b.s.MobileRedBannerService       : 第14行中,第5列 is not num
+2018-12-23 22:54:06.135  INFO 12810 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:54:06.138  INFO 12810 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:54:06.150  INFO 12810 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:56:02.360  INFO 12820 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12820 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:56:02.361  INFO 12820 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:56:03.771  INFO 12820 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$3338102] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:56:04.620  INFO 12820 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:56:05.563  INFO 12820 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:56:05.616  INFO 12820 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.213 seconds (JVM running for 5.166)
+2018-12-23 22:56:05.998  INFO 12820 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:56:06.002  WARN 12820 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:56:06.201  INFO 12820 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:56:06.897  WARN 12820 --- [main] c.w.s.m.b.s.MobileRedBannerService       : 第14行中,第5列 is not num
+2018-12-23 22:56:06.917  INFO 12820 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:56:06.922  INFO 12820 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:56:06.935  INFO 12820 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:56:31.180  INFO 12823 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12823 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:56:31.181  INFO 12823 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:56:32.834  INFO 12823 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$6dab8b71] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:56:34.091  INFO 12823 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:56:55.626  INFO 12829 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12829 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:56:55.628  INFO 12829 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:56:57.450  INFO 12829 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c84796a2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:56:58.324  INFO 12829 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:56:59.232  INFO 12829 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:56:59.296  INFO 12829 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.341 seconds (JVM running for 5.38)
+2018-12-23 22:56:59.711  INFO 12829 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:56:59.715  WARN 12829 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:56:59.910  INFO 12829 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:57:00.671  INFO 12829 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:57:00.674  INFO 12829 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:57:00.686  INFO 12829 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 22:59:27.286  INFO 12835 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12835 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 22:59:27.287  INFO 12835 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 22:59:28.616  INFO 12835 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a340c860] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 22:59:29.591  INFO 12835 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:59:30.503  INFO 12835 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 22:59:30.570  INFO 12835 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 3.961 seconds (JVM running for 4.838)
+2018-12-23 22:59:30.991  INFO 12835 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 22:59:30.996  WARN 12835 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 22:59:31.211  INFO 12835 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 22:59:32.110  INFO 12835 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 22:59:32.113  INFO 12835 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 22:59:32.122  INFO 12835 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 23:04:42.248  INFO 12850 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12850 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 23:04:42.249  INFO 12850 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 23:04:43.823  INFO 12850 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$15003363] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 23:04:44.744  INFO 12850 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 23:04:45.688  INFO 12850 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 23:04:45.757  INFO 12850 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.307 seconds (JVM running for 5.604)
+2018-12-23 23:04:46.103  INFO 12850 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 23:04:46.107  WARN 12850 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 23:04:46.298  INFO 12850 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 23:04:46.954  INFO 12850 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 23:04:46.956  INFO 12850 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 23:04:46.966  INFO 12850 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-23 23:05:03.122  INFO 12855 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 12855 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-23 23:05:03.124  INFO 12855 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-23 23:05:04.637  INFO 12855 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$f37a9df] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-23 23:05:05.532  INFO 12855 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-23 23:05:06.524  INFO 12855 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-23 23:05:06.589  INFO 12855 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.016 seconds (JVM running for 4.981)
+2018-12-23 23:05:07.047  INFO 12855 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-23 23:05:07.052  WARN 12855 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-23 23:05:07.263  INFO 12855 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-23 23:05:08.057  INFO 12855 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-23 23:05:08.061  INFO 12855 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-23 23:05:08.072  INFO 12855 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
