@@ -1,5 +1,6 @@
 package com.work.school.mysql.banner.dao.mapper;
 
+import com.work.school.mysql.banner.dao.domain.MobileRedBannerDO;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,4 +52,13 @@ public class MobileRedBannerMapperTest {
         var count = mobileRedBannerMapper.updateByIds(ids);
         Assert.assertNotNull(count);
     }
+
+    @Test
+    public void listMobileRedBannerBySchoolTerm(){
+        var schoolTerm = 1;
+        List<MobileRedBannerDO> mobileRedBannerDOList = mobileRedBannerMapper.listMobileRedBannerBySchoolTerm(schoolTerm);
+        Assert.assertNotNull(mobileRedBannerDOList);
+    }
+
+
 }

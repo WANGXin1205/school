@@ -24,6 +24,7 @@
     select 
     <include refid="Base_Column_List" />
     from mobile_red_banner
+    where status = 1
   </select>
 
   <insert id="saveBatch" parameterType="java.util.List">
@@ -40,7 +41,8 @@
     <select id="listIds" parameterType="java.util.Map" resultType="java.lang.Long">
         select id
         from mobile_red_banner
-        where school_term = #{schoolTerm}
+        where status = 1
+        and school_term = #{schoolTerm}
         and week in
         <foreach collection="weeks" item="item" separator="," open="(" close=")">
             #{item}
@@ -53,5 +55,13 @@
       #{item}
     </foreach>
   </update>
+
+    <select id="listMobileRedBannerBySchoolTerm" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from mobile_red_banner
+        where status = 1
+        and school_term = #{schoolTerm}
+    </select>
 
 </mapper>

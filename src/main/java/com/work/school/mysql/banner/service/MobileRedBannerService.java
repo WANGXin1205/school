@@ -12,6 +12,7 @@ import com.work.school.mysql.banner.enums.ClassEnum;
 import com.work.school.mysql.banner.enums.MobileRedBannerEnum;
 import com.work.school.mysql.banner.enums.SchoolTermEnum;
 import com.work.school.mysql.banner.enums.WeekEnum;
+import com.work.school.mysql.banner.service.dto.ClassBannerCountDTO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -113,10 +115,10 @@ public class MobileRedBannerService {
                 String bestClassIdStr = data[ExcelDataConfigure.RED_BANNER_BEST_INDEX];
                 if (StringUtils.isNotEmpty(bestClassIdStr)) {
                     Integer bestClassId = Integer.valueOf(bestClassIdStr);
-                    if (classList.contains(bestClassId)){
+                    if (classList.contains(bestClassId)) {
                         throw new TransactionException("第" + (x + 2) + "行中有重复的班级");
                     }
-                    if (!classList.contains(bestClassId)){
+                    if (!classList.contains(bestClassId)) {
                         classList.add(bestClassId);
                     }
                     var mobileRedBannerDO = this.packMobileRedBannerDO(week, bestClassId, MobileRedBannerEnum.BEST);
@@ -131,10 +133,10 @@ public class MobileRedBannerService {
                 String teamClassIdStr = data[ExcelDataConfigure.RED_BANNER_TEAM_INDEX];
                 if (StringUtils.isNotEmpty(teamClassIdStr)) {
                     Integer teamClassId = Integer.valueOf(teamClassIdStr);
-                    if (classList.contains(teamClassId)){
+                    if (classList.contains(teamClassId)) {
                         throw new TransactionException("第" + (x + 2) + "行中有重复的班级");
                     }
-                    if (!classList.contains(teamClassId)){
+                    if (!classList.contains(teamClassId)) {
                         classList.add(teamClassId);
                     }
                     var mobileRedBannerDO = this.packMobileRedBannerDO(week, teamClassId, MobileRedBannerEnum.TEAM);
@@ -149,10 +151,10 @@ public class MobileRedBannerService {
                 String sportClassIdStr = data[ExcelDataConfigure.RED_BANNER_SPORT_INDEX];
                 if (StringUtils.isNotEmpty(sportClassIdStr)) {
                     Integer sportClassId = Integer.valueOf(sportClassIdStr);
-                    if (classList.contains(sportClassId)){
+                    if (classList.contains(sportClassId)) {
                         throw new TransactionException("第" + (x + 2) + "行中有重复的班级");
                     }
-                    if (!classList.contains(sportClassId)){
+                    if (!classList.contains(sportClassId)) {
                         classList.add(sportClassId);
                     }
                     var mobileRedBannerDO = this.packMobileRedBannerDO(week, sportClassId, MobileRedBannerEnum.SPORT);
@@ -167,10 +169,10 @@ public class MobileRedBannerService {
                 String healthClassIdStr = data[ExcelDataConfigure.RED_BANNER_HEALTH_INDEX];
                 if (StringUtils.isNotEmpty(healthClassIdStr)) {
                     Integer healthClassId = Integer.valueOf(healthClassIdStr);
-                    if (classList.contains(healthClassId)){
+                    if (classList.contains(healthClassId)) {
                         throw new TransactionException("第" + (x + 2) + "行中有重复的班级");
                     }
-                    if (!classList.contains(healthClassId)){
+                    if (!classList.contains(healthClassId)) {
                         classList.add(healthClassId);
                     }
                     var mobileRedBannerDO = this.packMobileRedBannerDO(week, healthClassId, MobileRedBannerEnum.HEALTH);
@@ -218,6 +220,90 @@ public class MobileRedBannerService {
         mobileRedBannerDO.setCreateBy(ExcelDataConfigure.GROWLITHE);
 
         return mobileRedBannerDO;
+    }
+
+    /**
+     * 根据 学期描述 获取各班流动红旗获得次数
+     *
+     * @param schoolTermDesc
+     * @return
+     */
+    public CandyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(String schoolTermDesc) {
+        CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
+
+        // 检查schoolTerm是否为空，是否合法
+        if (StringUtils.isEmpty(schoolTermDesc)) {
+            candyResult.setMessage("学期为空");
+            return candyResult;
+        }
+        Integer schoolTerm = SchoolTermEnum.getCode(schoolTermDesc);
+        if (schoolTerm == null) {
+            candyResult.setMessage("未知的学期");
+            return candyResult;
+        }
+
+        // 根据schoolTerm查询当前学期下，所有流动红旗记录
+        var algorithmInListAllClassBannerCountResult = this.algorithmInListAllClassBannerCount(schoolTerm);
+        if (!algorithmInListAllClassBannerCountResult.isSuccess()){
+            LOGGER.warn(algorithmInListAllClassBannerCountResult.getMessage());
+            candyResult.setMessage(algorithmInListAllClassBannerCountResult.getMessage());
+            return candyResult;
+        }
+        var classBannerCountDTOList = algorithmInListAllClassBannerCountResult.getData();
+
+        candyResult.setData(classBannerCountDTOList);
+        candyResult.setSuccess(true);
+        return candyResult;
+    }
+
+    /**
+     * 核心算法 根据 学期描述 获取各班流动红旗获得次数
+     * @param schoolTerm
+     * @return
+     */
+    private CandyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm){
+        CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
+
+        List<ClassBannerCountDTO> classBannerCountDTOList = new ArrayList<>();
+
+        // 先查询获得流动红旗的班级
+        List<MobileRedBannerDO> mobileRedBannerDOList = mobileRedBannerMapper.listMobileRedBannerBySchoolTerm(schoolTerm);
+        if (CollectionUtils.isEmpty(mobileRedBannerDOList)) {
+            candyResult.setMessage("未获取到当前学期各班流动红旗获得情况");
+            candyResult.setSuccess(true);
+            return candyResult;
+        }
+
+        // 根据班级进行分组
+        Map<Integer, List<MobileRedBannerDO>> mobileRedBannerMap = mobileRedBannerDOList.stream()
+                .collect(Collectors.groupingBy(MobileRedBannerDO::getClassId, Collectors.toList()));
+
+        for (Integer x: mobileRedBannerMap.keySet()){
+
+            var classBannerList = mobileRedBannerMap.get(x);
+
+            // 文明之星次数
+            Long bestCountLong = classBannerList.stream().filter(y-> MobileRedBannerEnum.BEST.getCode().equals(y.getRedBannerType())).count();
+            Integer bestCount = bestCountLong.intValue();
+            // 其他之星次数 = 总次数 - 文明之星次数
+            Integer otherCount = classBannerList.size() - bestCount;
+
+            String className = ClassEnum.getDesc(x);
+            String bannerDesc = className + "在" + SchoolTermEnum.getDesc(schoolTerm) +
+                    "中，获得文明之星 ["+ bestCount +"]次，获得其他之星 [" + otherCount + "] 次。";
+
+            ClassBannerCountDTO classBannerCountDTO = new ClassBannerCountDTO();
+            classBannerCountDTO.setClassId(x);
+            classBannerCountDTO.setClassName(className);
+            classBannerCountDTO.setBestBannerCount(bestCount);
+            classBannerCountDTO.setOtherBannerCount(otherCount);
+            classBannerCountDTO.setBannerDesc(bannerDesc);
+            classBannerCountDTOList.add(classBannerCountDTO);
+        }
+
+        candyResult.setData(classBannerCountDTOList);
+        candyResult.setSuccess(true);
+        return candyResult;
     }
 
 

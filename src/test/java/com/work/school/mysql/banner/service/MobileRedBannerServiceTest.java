@@ -1,5 +1,8 @@
 package com.work.school.mysql.banner.service;
 
+import com.work.school.common.CandyResult;
+import com.work.school.mysql.banner.dao.domain.MobileRedBannerDO;
+import com.work.school.mysql.banner.service.dto.ClassBannerCountDTO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -34,4 +38,15 @@ public class MobileRedBannerServiceTest {
         var candyResult = mobileRedBannerService.saveBatch(multipartFile);
         Assert.assertTrue(candyResult.isSuccess());
     }
+
+    @Test
+    public void listAllClassBannerCountTest(){
+        String schoolTermDesc = "2018-2019学年第一学期";
+        CandyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(schoolTermDesc);
+        var classBannerCountDTOList = candyResult.getData();
+        classBannerCountDTOList.forEach(x->System.out.println(x.getBannerDesc()));
+        Assert.assertTrue(candyResult.isSuccess());
+    }
+
+
 }

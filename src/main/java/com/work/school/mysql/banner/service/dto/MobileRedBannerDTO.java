@@ -1,14 +1,14 @@
-package com.work.school.mysql.banner.dao.domain;
+package com.work.school.mysql.banner.service.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @Author : Growlithe
- * @Date : 2018/12/23 21:38
- * @Description 流动红旗DO
+ * @Date : 2018/12/24 9:29 AM
+ * @Description
  */
-public class MobileRedBannerDO implements Serializable {
+public class MobileRedBannerDTO implements Serializable {
     /**
      * id 主键
      */
@@ -22,9 +22,13 @@ public class MobileRedBannerDO implements Serializable {
      */
     private String className;
     /**
-     * 学期
+     * 学期记号
      */
     private Integer schoolTerm;
+    /**
+     * 学期描述
+     */
+    private String schoolTermDesc;
     /**
      * 周
      */
@@ -33,6 +37,10 @@ public class MobileRedBannerDO implements Serializable {
      * 流动红旗类型 1 文明 2 路队 3 体育 4 卫生
      */
     private Integer redBannerType;
+    /**
+     * 流动红旗类型描述
+     */
+    private String redBannerTypeDesc;
     /**
      * 数据状态 1 有效 0 失效
      */
@@ -86,6 +94,14 @@ public class MobileRedBannerDO implements Serializable {
         this.schoolTerm = schoolTerm;
     }
 
+    public String getSchoolTermDesc() {
+        return schoolTermDesc;
+    }
+
+    public void setSchoolTermDesc(String schoolTermDesc) {
+        this.schoolTermDesc = schoolTermDesc;
+    }
+
     public Integer getWeek() {
         return week;
     }
@@ -100,6 +116,14 @@ public class MobileRedBannerDO implements Serializable {
 
     public void setRedBannerType(Integer redBannerType) {
         this.redBannerType = redBannerType;
+    }
+
+    public String getRedBannerTypeDesc() {
+        return redBannerTypeDesc;
+    }
+
+    public void setRedBannerTypeDesc(String redBannerTypeDesc) {
+        this.redBannerTypeDesc = redBannerTypeDesc;
     }
 
     public Integer getStatus() {
@@ -144,13 +168,15 @@ public class MobileRedBannerDO implements Serializable {
 
     @Override
     public String toString() {
-        return "MobileRedBannerDO{" +
+        return "MobileRedBannerDTO{" +
                 "id=" + id +
                 ", classId=" + classId +
                 ", className='" + className + '\'' +
                 ", schoolTerm=" + schoolTerm +
+                ", schoolTermDesc='" + schoolTermDesc + '\'' +
                 ", week=" + week +
                 ", redBannerType=" + redBannerType +
+                ", redBannerTypeDesc='" + redBannerTypeDesc + '\'' +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +
