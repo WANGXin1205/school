@@ -16,7 +16,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, class_id, class_name, school_term, week, red_banner_type, status, create_by, 
+    id, class_id, class_name, school_term, week, red_banner_type, status, create_by,
     create_time, update_by, update_time
   </sql>
 
@@ -32,7 +32,7 @@
       status, create_by, create_time)
     values
     <foreach collection="list" item="item" separator=",">
-        (#{item.classId,jdbcType=INTEGER}, #{item.className,jdbcType=VARCHAR},#{item.schoolTerm,jdbcType=VARCHAR},
+        (#{item.classId,jdbcType=INTEGER}, #{item.className,jdbcType=VARCHAR}, #{item.schoolTerm,jdbcType=VARCHAR},
         #{item.week,jdbcType=INTEGER}, #{item.redBannerType,jdbcType=INTEGER}, 1, #{item.createBy,jdbcType=VARCHAR}, now())
     </foreach>
 

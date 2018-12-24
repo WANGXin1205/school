@@ -42,7 +42,8 @@ public class MobileRedBannerServiceTest {
     @Test
     public void listAllClassBannerCountTest(){
         String schoolTermDesc = "2018-2019学年第一学期";
-        CandyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(schoolTermDesc);
+        var gradeDesc = "一年级";
+        CandyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(schoolTermDesc,gradeDesc);
         var classBannerCountDTOList = candyResult.getData();
         classBannerCountDTOList.forEach(x->System.out.println(x.getBannerDesc()));
         Assert.assertTrue(candyResult.isSuccess());

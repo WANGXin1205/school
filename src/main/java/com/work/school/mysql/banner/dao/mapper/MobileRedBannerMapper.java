@@ -27,8 +27,9 @@ public interface MobileRedBannerMapper {
      */
     Integer saveBatch(List<MobileRedBannerDO> mobileRedBannerDOList);
 
+
     /**
-     * 根据学期和周次查询数据主键
+     * 根据学期 年级和周次查询数据主键
      *
      * @param schoolTerm
      * @param weeks

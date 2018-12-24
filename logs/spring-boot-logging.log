@@ -62,3 +62,15 @@
 2018-12-24 16:16:05.248  INFO 14094 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
 2018-12-24 16:16:05.254  INFO 14094 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2018-12-24 16:16:05.264  INFO 14094 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2018-12-24 21:54:41.924  INFO 14529 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on wangxindeMacBook-Pro.local with PID 14529 (started by wangxin in /Users/wangxin/code/java/school)
+2018-12-24 21:54:41.925  INFO 14529 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2018-12-24 21:54:43.646  INFO 14529 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b5d5c4e1] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-12-24 21:54:44.925  INFO 14529 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2018-12-24 21:54:46.080  INFO 14529 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2018-12-24 21:54:46.162  INFO 14529 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 5.042 seconds (JVM running for 6.796)
+2018-12-24 21:54:46.648  INFO 14529 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-12-24 21:54:46.656  WARN 14529 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2018-12-24 21:54:46.900  INFO 14529 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-12-24 21:54:47.047  INFO 14529 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2018-12-24 21:54:47.055  INFO 14529 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2018-12-24 21:54:47.074  INFO 14529 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

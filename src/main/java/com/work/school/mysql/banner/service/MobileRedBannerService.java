@@ -3,15 +3,12 @@ package com.work.school.mysql.banner.service;
 import com.work.school.common.CandyResult;
 import com.work.school.common.config.ExcelDataConfigure;
 import com.work.school.common.excepetion.TransactionException;
-import com.work.school.common.utils.business.SchoolTermUtils;
+import com.work.school.common.utils.business.SchoolBusinessUtils;
 import com.work.school.common.utils.common.POIUtils;
 import com.work.school.common.utils.common.StringUtils;
 import com.work.school.mysql.banner.dao.domain.MobileRedBannerDO;
 import com.work.school.mysql.banner.dao.mapper.MobileRedBannerMapper;
-import com.work.school.mysql.banner.enums.ClassEnum;
-import com.work.school.mysql.banner.enums.MobileRedBannerEnum;
-import com.work.school.mysql.banner.enums.SchoolTermEnum;
-import com.work.school.mysql.banner.enums.WeekEnum;
+import com.work.school.mysql.banner.enums.*;
 import com.work.school.mysql.banner.service.dto.ClassBannerCountDTO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -25,7 +22,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -65,8 +61,9 @@ public class MobileRedBannerService {
         var mobileRedBannerDOList = listMobileRedBannerFromDataMapResult.getData();
 
         // 先根据schoolTerm和weeks 查询是否存在原始数据，如果有原始数据，需要先将原始数据清除
-        Integer schoolTerm = SchoolTermUtils.getSchoolTerm();
+        Integer schoolTerm = SchoolBusinessUtils.getSchoolTerm();
         List<Integer> weeks = mobileRedBannerDOList.stream().map(MobileRedBannerDO::getWeek).collect(Collectors.toList());
+
 
         var deleteIds = mobileRedBannerMapper.listIds(schoolTerm, weeks);
         if (CollectionUtils.isNotEmpty(deleteIds)) {
@@ -210,7 +207,7 @@ public class MobileRedBannerService {
             throw new TransactionException("未知的班级");
         }
 
-        Integer schoolTerm = SchoolTermUtils.getSchoolTerm();
+        Integer schoolTerm = SchoolBusinessUtils.getSchoolTerm();
 
         mobileRedBannerDO.setSchoolTerm(schoolTerm);
         mobileRedBannerDO.setWeek(week);
@@ -226,9 +223,10 @@ public class MobileRedBannerService {
      * 根据 学期描述 获取各班流动红旗获得次数
      *
      * @param schoolTermDesc
+     * @param gradeDesc
      * @return
      */
-    public CandyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(String schoolTermDesc) {
+    public CandyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(String schoolTermDesc, String gradeDesc) {
         CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
 
         // 检查schoolTerm是否为空，是否合法
@@ -241,10 +239,19 @@ public class MobileRedBannerService {
             candyResult.setMessage("未知的学期");
             return candyResult;
         }
+        if (StringUtils.isEmpty(gradeDesc)) {
+            candyResult.setMessage("年级为空");
+            return candyResult;
+        }
+        Integer grade = GradeEnum.getCode(gradeDesc);
+        if (grade == null) {
+            candyResult.setMessage("未知的年级");
+            return candyResult;
+        }
 
         // 根据schoolTerm查询当前学期下，所有流动红旗记录
         var algorithmInListAllClassBannerCountResult = this.algorithmInListAllClassBannerCount(schoolTerm);
-        if (!algorithmInListAllClassBannerCountResult.isSuccess()){
+        if (!algorithmInListAllClassBannerCountResult.isSuccess()) {
             LOGGER.warn(algorithmInListAllClassBannerCountResult.getMessage());
             candyResult.setMessage(algorithmInListAllClassBannerCountResult.getMessage());
             return candyResult;
@@ -258,10 +265,11 @@ public class MobileRedBannerService {
 
     /**
      * 核心算法 根据 学期描述 获取各班流动红旗获得次数
+     *
      * @param schoolTerm
      * @return
      */
-    private CandyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm){
+    private CandyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm) {
         CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
 
         List<ClassBannerCountDTO> classBannerCountDTOList = new ArrayList<>();
@@ -278,19 +286,19 @@ public class MobileRedBannerService {
         Map<Integer, List<MobileRedBannerDO>> mobileRedBannerMap = mobileRedBannerDOList.stream()
                 .collect(Collectors.groupingBy(MobileRedBannerDO::getClassId, Collectors.toList()));
 
-        for (Integer x: mobileRedBannerMap.keySet()){
+        for (Integer x : mobileRedBannerMap.keySet()) {
 
             var classBannerList = mobileRedBannerMap.get(x);
 
             // 文明之星次数
-            Long bestCountLong = classBannerList.stream().filter(y-> MobileRedBannerEnum.BEST.getCode().equals(y.getRedBannerType())).count();
+            Long bestCountLong = classBannerList.stream().filter(y -> MobileRedBannerEnum.BEST.getCode().equals(y.getRedBannerType())).count();
             Integer bestCount = bestCountLong.intValue();
             // 其他之星次数 = 总次数 - 文明之星次数
             Integer otherCount = classBannerList.size() - bestCount;
 
             String className = ClassEnum.getDesc(x);
             String bannerDesc = className + "在" + SchoolTermEnum.getDesc(schoolTerm) +
-                    "中，获得文明之星 ["+ bestCount +"]次，获得其他之星 [" + otherCount + "] 次。";
+                    "中，获得文明之星 [" + bestCount + "]次，获得其他之星 [" + otherCount + "] 次。";
 
             ClassBannerCountDTO classBannerCountDTO = new ClassBannerCountDTO();
             classBannerCountDTO.setClassId(x);
