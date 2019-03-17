@@ -2,7 +2,7 @@ package com.work.school.common.utils.common;
 
 
 
-import com.work.school.common.CandyResult;
+import com.work.school.common.CattyResult;
 import com.work.school.common.config.ExcelDataConfigure;
 import com.work.school.common.excepetion.TransactionException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -373,8 +373,8 @@ public final class POIUtils {
      * @param tableHeader
      * @return
      */
-    public static CandyResult<Workbook> validateExcel(MultipartFile file, String[] tableHeader) {
-        CandyResult<Workbook> result = new CandyResult<>();
+    public static CattyResult<Workbook> validateExcel(MultipartFile file, String[] tableHeader) {
+        CattyResult<Workbook> result = new CattyResult<>();
 
         try {
             return validateExcel(file.getInputStream(), file.getOriginalFilename(), tableHeader);
@@ -390,8 +390,8 @@ public final class POIUtils {
      * @param tableHeader
      * @return
      */
-    public static CandyResult<Sheet> validateExcel2(MultipartFile file, String[] tableHeader) {
-        CandyResult result = new CandyResult();
+    public static CattyResult<Sheet> validateExcel2(MultipartFile file, String[] tableHeader) {
+        CattyResult result = new CattyResult();
 
         try {
             return validateExcel2(file.getInputStream(), file.getOriginalFilename(), tableHeader);
@@ -408,8 +408,8 @@ public final class POIUtils {
      * @param filename    上传文件名
      * @return
      */
-    public static CandyResult<Sheet> validateExcel2(InputStream inputStream, String filename, String[] tableHeader) {
-        CandyResult<Sheet> result = new CandyResult<>();
+    public static CattyResult<Sheet> validateExcel2(InputStream inputStream, String filename, String[] tableHeader) {
+        CattyResult<Sheet> result = new CattyResult<>();
         if (inputStream == null) {
             result.setMessage("上传的文件不能为空");
             return result;
@@ -480,8 +480,8 @@ public final class POIUtils {
      * @param filename 上传文件名
      * @return
      */
-    public static CandyResult<Workbook> validateExcel(InputStream inputStream, String filename, String[] tableHeader){
-        CandyResult<Workbook> result = new CandyResult<>();
+    public static CattyResult<Workbook> validateExcel(InputStream inputStream, String filename, String[] tableHeader){
+        CattyResult<Workbook> result = new CattyResult<>();
         if(inputStream == null){
             result.setMessage("上传的文件不能为空");
             return result;
@@ -969,8 +969,8 @@ public final class POIUtils {
      * @param multipartFile
      * @param columnName
      */
-    public static CandyResult<Map<Integer,String[]>> getDataMapFromExcel(MultipartFile multipartFile,String[] columnName){
-        CandyResult<Map<Integer,String[]>> candyResult = new CandyResult<>();
+    public static CattyResult<Map<Integer,String[]>> getDataMapFromExcel(MultipartFile multipartFile, String[] columnName){
+        CattyResult<Map<Integer,String[]>> candyResult = new CattyResult<>();
 
         // 简单校验数据
         var validateExcelResult = POIUtils.validateExcel(multipartFile, columnName);

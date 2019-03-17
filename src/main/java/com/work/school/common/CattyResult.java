@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @Date : 2018/5/21 22:38
  * @Description 纪念我死去的卡蒂狗，因为Growlithe有拼写检查，我就用Candy了
  */
-public class CandyResult<T> implements Serializable {
+public class CattyResult<T> implements Serializable {
 
     private static final long serialVersionUID = -9130472993784728577L;
 
@@ -31,10 +31,10 @@ public class CandyResult<T> implements Serializable {
      */
     private String message;
 
-    public CandyResult() {
+    public CattyResult() {
     }
 
-    public CandyResult(boolean success, T data, String code, String message) {
+    public CattyResult(boolean success, T data, String code, String message) {
         this.success = success;
         this.data = data;
         this.code = code;

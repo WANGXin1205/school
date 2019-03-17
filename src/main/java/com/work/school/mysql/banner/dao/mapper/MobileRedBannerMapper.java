@@ -44,7 +44,7 @@ public interface MobileRedBannerMapper {
      * @param ids
      * @return
      */
-    Integer updateByIds(List<Long> ids);
+    Integer updateStatusByIds(List<Long> ids);
 
     /**
      * 根据schoolTerm 查询数据

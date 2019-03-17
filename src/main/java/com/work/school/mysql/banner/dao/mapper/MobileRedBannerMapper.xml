@@ -49,7 +49,7 @@
         </foreach>
     </select>
 
-  <update id="updateByIds" parameterType="java.util.List">
+  <update id="updateStatusByIds" parameterType="java.util.List">
     update mobile_red_banner set status = 0 where id in
     <foreach collection="list" item="item" separator="," open="(" close=")">
       #{item}

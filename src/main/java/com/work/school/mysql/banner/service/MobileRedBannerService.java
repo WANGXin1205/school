@@ -1,6 +1,6 @@
 package com.work.school.mysql.banner.service;
 
-import com.work.school.common.CandyResult;
+import com.work.school.common.CattyResult;
 import com.work.school.common.config.ExcelDataConfigure;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.common.utils.business.SchoolBusinessUtils;
@@ -38,8 +38,8 @@ public class MobileRedBannerService {
     private MobileRedBannerMapper mobileRedBannerMapper;
 
     @Transactional(value = "mysqlTransactionManager", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public CandyResult<Void> saveBatch(MultipartFile multipartFile) {
-        CandyResult<Void> candyResult = new CandyResult<>();
+    public CattyResult<Void> saveBatch(MultipartFile multipartFile) {
+        CattyResult<Void> candyResult = new CattyResult<>();
 
         // 从excel中获取数据
         var getDataMapFromExcelResult = POIUtils.getDataMapFromExcel(multipartFile, ExcelDataConfigure.RED_BANNER_DATA_NAME);
@@ -67,7 +67,7 @@ public class MobileRedBannerService {
 
         var deleteIds = mobileRedBannerMapper.listIds(schoolTerm, weeks);
         if (CollectionUtils.isNotEmpty(deleteIds)) {
-            mobileRedBannerMapper.updateByIds(deleteIds);
+            mobileRedBannerMapper.updateStatusByIds(deleteIds);
         }
 
         // 数据保存至数据库
@@ -83,8 +83,8 @@ public class MobileRedBannerService {
      * @param dataMap
      * @return
      */
-    private CandyResult<List<MobileRedBannerDO>> listMobileRedBannerFromDataMap(Map<Integer, String[]> dataMap) {
-        CandyResult<List<MobileRedBannerDO>> candyResult = new CandyResult<>();
+    private CattyResult<List<MobileRedBannerDO>> listMobileRedBannerFromDataMap(Map<Integer, String[]> dataMap) {
+        CattyResult<List<MobileRedBannerDO>> candyResult = new CattyResult<>();
         List<MobileRedBannerDO> mobileRedBannerDOList = new ArrayList<>();
 
         List<Integer> weekList = new ArrayList<>();
@@ -226,8 +226,8 @@ public class MobileRedBannerService {
      * @param gradeDesc
      * @return
      */
-    public CandyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(String schoolTermDesc, String gradeDesc) {
-        CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
+    public CattyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(String schoolTermDesc, String gradeDesc) {
+        CattyResult<List<ClassBannerCountDTO>> candyResult = new CattyResult<>();
 
         // 检查schoolTerm是否为空，是否合法
         if (StringUtils.isEmpty(schoolTermDesc)) {
@@ -269,8 +269,8 @@ public class MobileRedBannerService {
      * @param schoolTerm
      * @return
      */
-    private CandyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm) {
-        CandyResult<List<ClassBannerCountDTO>> candyResult = new CandyResult<>();
+    private CattyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm) {
+        CattyResult<List<ClassBannerCountDTO>> candyResult = new CattyResult<>();
 
         List<ClassBannerCountDTO> classBannerCountDTOList = new ArrayList<>();
 

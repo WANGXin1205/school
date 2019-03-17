@@ -49,7 +49,7 @@ public class MobileRedBannerMapperTest {
     @Test
     public void updateByIdsTest() {
         List<Long> ids = Lists.newArrayList(1L,2L);
-        var count = mobileRedBannerMapper.updateByIds(ids);
+        var count = mobileRedBannerMapper.updateStatusByIds(ids);
         Assert.assertNotNull(count);
     }
 
