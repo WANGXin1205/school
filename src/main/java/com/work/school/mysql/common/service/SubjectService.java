@@ -1,6 +1,7 @@
 package com.work.school.mysql.common.service;
 
 import com.work.school.common.CattyResult;
+import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.dao.domain.SubjectDO;
 import com.work.school.mysql.common.dao.mapper.SubjectMapper;
 import com.work.school.mysql.common.service.dto.ClassSubjectKeyDTO;
@@ -73,7 +74,7 @@ public class SubjectService {
     /**
      * 每次减少权重
      */
-    private static final Integer STEP_WEIGHT = 2;
+    private static final Integer STEP_WEIGHT = 1;
     /**
      * 0次
      */
@@ -82,6 +83,18 @@ public class SubjectService {
      * 第一节课
      */
     private static final Integer TIME_START = 1;
+    /**
+     * 语文课id
+     */
+    private static final Integer CHINESE_SUBJECT_ID = 1;
+    /**
+     * 数学课id
+     */
+    private static final Integer MATHS_SUBJECT_ID = 2;
+    /**
+     * 第二权重
+     */
+    private static final Integer SECOND_MAX_WEIGHT_INDEX = 2;
 
     @Resource
     private SubjectMapper subjectMapper;
@@ -136,7 +149,7 @@ public class SubjectService {
                 var teachingNum = classSubjectTeachingNumMap.get(classSubjectKeyDTO);
 
                 // 权重为上课次数 + 教师所带班级
-                Integer initWeight = INIT_WEIGHT + x.getFrequency() + teachingNum *2 ;
+                Integer initWeight = INIT_WEIGHT + x.getFrequency() * 2 + teachingNum;
                 x.setWeight(initWeight);
 
                 // 上午和下午课程赋值
@@ -154,6 +167,7 @@ public class SubjectService {
                 }
 
                 // 如果 已经排过课 则适当的减去权重
+                List<Integer> morningClassList = new ArrayList<>();
                 for (Integer y = TIME_START; y < time; y++) {
                     TimeTableKeyDTO timeTableKeyDTO = this.packTimeTableKeyDTO(workDay, classNum, y);
                     Integer subjectId = timeTableMap.get(timeTableKeyDTO);
@@ -161,16 +175,47 @@ public class SubjectService {
                     if (repeatFlag) {
                         x.setWeight(x.getWeight() - STEP_WEIGHT);
                     }
+
+                    // 如果早上没有设立语文数学课，那么要提升权重，先保存一下
+                    if (MORNING_LAST_CLASS_NUM.equals(time)) {
+                        if (!morningClassList.contains(subjectId)) {
+                            morningClassList.add(subjectId);
+                        }
+                    }
+
                 }
 
+                if (MORNING_LAST_CLASS_NUM.equals(time)) {
+                    boolean chineseFlag = morningClassList.contains(CHINESE_SUBJECT_ID);
+                    boolean mathsFlag = morningClassList.contains(MATHS_SUBJECT_ID);
+                    // 如果没有数学课，数学课权重最大
+                    if (chineseFlag && !mathsFlag) {
+                        if (MATHS_SUBJECT_ID.equals(x.getId())) {
+                            x.setWeight(MAX_WEIGHT);
+                        }
+
+                    }
+                    // 如果没有语文课，语文课权重最大
+                    if (!chineseFlag && mathsFlag) {
+                        if (CHINESE_SUBJECT_ID.equals(x.getId())) {
+                            x.setWeight(MAX_WEIGHT);
+                        }
+                    }
+                    // 如果没有语文和数学课，则要重新设定权重
+                    if (!chineseFlag && !mathsFlag) {
+                        throw new TransactionException("第一节和第二节课并非主课，请冲洗选课");
+                    }
+                }
             }
 
         }
 
+        // 班队会
         boolean classMeetingTimeFlag = MONDAY_NUM.equals(workDay) && CLASS_MEETING_TIME.equals(time);
         if (classMeetingTimeFlag) {
             subjectWeightDTOList = this.computerClassMeetingWeight(subjectWeightDTOList);
         }
+        // 校本课程
         boolean schoolBaseTimeFlag = FRIDAY_NUM.equals(workDay) && Arrays.asList(SCHOOL_BASED_TIME).contains(time);
         if (schoolBaseTimeFlag) {
             subjectWeightDTOList = this.computerSchoolBasedWeight(subjectWeightDTOList);
@@ -246,10 +291,22 @@ public class SubjectService {
         Integer maxSubjectWeightId = subjectWeightDTO.getId();
 
         if (!passFlag) {
-            subjectWeightDTOList.stream().filter(x -> classNum.equals(x.getClassNum())).filter(x -> maxSubjectWeightId.equals(x.getId())).forEach(x -> {
-                Integer weight = x.getWeight() - STEP_WEIGHT;
-                x.setWeight(weight);
-            });
+            var weightList = subjectWeightDTOList.stream().filter(x -> classNum.equals(x.getClassNum()))
+                    .map(SubjectWeightDTO::getWeight).distinct().collect(Collectors.toList());
+            Collections.sort(weightList);
+            Collections.reverse(weightList);
+            if (weightList.size() > SECOND_MAX_WEIGHT_INDEX) {
+                Integer secondWeight = weightList.get(SECOND_MAX_WEIGHT_INDEX);
+                subjectWeightDTOList.stream().filter(x -> classNum.equals(x.getClassNum())).filter(x -> maxSubjectWeightId.equals(x.getId())).forEach(x -> {
+                    x.setWeight(secondWeight - STEP_WEIGHT);
+                });
+            } else {
+                subjectWeightDTOList.stream().filter(x -> classNum.equals(x.getClassNum())).filter(x -> maxSubjectWeightId.equals(x.getId())).forEach(x -> {
+                    Integer weight = x.getWeight() - STEP_WEIGHT;
+                    x.setWeight(weight);
+                });
+            }
+
         }
 
         optionalSubjectWeightDTO = subjectWeightDTOList.stream().max(Comparator.comparing(SubjectWeightDTO::getWeight));

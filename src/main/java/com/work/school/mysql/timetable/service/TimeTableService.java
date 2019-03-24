@@ -29,10 +29,6 @@ public class TimeTableService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeTableService.class);
     /**
-     * 每天上7节课
-     */
-    private static final Integer EVERY_DAY_CLASS_NUM = 7;
-    /**
      * 停机条件
      */
     private static final Integer STOP_WEIGHT = -100;
@@ -131,7 +127,7 @@ public class TimeTableService {
      */
     private CattyResult<HashMap<TimeTableKeyDTO, Integer>> computerWeight(SchoolGradeDefaultDTO schoolGradeDefaultDTO) {
         CattyResult<HashMap<TimeTableKeyDTO, Integer>> cattyResult = new CattyResult<>();
-        HashMap<TimeTableKeyDTO, Integer> timeTableMap = new HashMap<>();
+        HashMap<TimeTableKeyDTO, Integer> timeTableMap = new HashMap<>(16);
 
         Integer workDay = SchoolGradeDefaultDTO.getWorkDay();
         Integer classSize = schoolGradeDefaultDTO.getClassSize();
