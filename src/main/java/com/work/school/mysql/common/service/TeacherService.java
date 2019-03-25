@@ -54,7 +54,7 @@ public class TeacherService {
      * @param judgeTeacherDTO
      * @return
      */
-    public CattyResult<Boolean> judgeTeacherIsFree(JudgeClassRightDTO judgeTeacherDTO) {
+    public CattyResult<Boolean> judgeIsFree(JudgeClassRightDTO judgeTeacherDTO) {
         CattyResult<Boolean> cattyResult = new CattyResult<>();
         boolean freeFlag = true;
 

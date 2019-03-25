@@ -169,12 +169,12 @@ public class TimeTableService {
                         // 查询该科目是否合适
                         JudgeClassRightDTO judgeTeacherDTO = this.packJudgeClassRightDTO(x, y, z,
                                 maxSubjectWeightDTO, classSubjectTeacherMap, teacherFreeMap, timeTableMap);
-                        CattyResult<Boolean> judgeTeacherIsFreeResult = teacherService.judgeTeacherIsFree(judgeTeacherDTO);
-                        if (!judgeTeacherIsFreeResult.isSuccess()) {
-                            cattyResult.setMessage(judgeTeacherIsFreeResult.getMessage());
+                        CattyResult<Boolean> judgeIsFreeResult = teacherService.judgeIsFree(judgeTeacherDTO);
+                        if (!judgeIsFreeResult.isSuccess()) {
+                            cattyResult.setMessage(judgeIsFreeResult.getMessage());
                             return cattyResult;
                         }
-                        boolean teacherFreeFlag = judgeTeacherIsFreeResult.getData();
+                        boolean teacherFreeFlag = judgeIsFreeResult.getData();
 
                         // 如果合适，赋值
                         if (teacherFreeFlag) {
