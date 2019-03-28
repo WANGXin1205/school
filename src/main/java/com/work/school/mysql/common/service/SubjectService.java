@@ -25,10 +25,13 @@ import java.util.stream.Collectors;
 public class SubjectService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectService.class);
+
+    private static final Integer MORNING_SEC_CLASS_NUM = 2;
     /**
      * 早上最后一节课
      */
     private static final Integer MORNING_LAST_CLASS_NUM = 3;
+
 
     private static final Integer MONDAY_NUM = 1;
     private static final Integer FRIDAY_NUM = 5;
@@ -177,7 +180,7 @@ public class SubjectService {
                     }
 
                     // 如果早上没有设立语文数学课，那么要提升权重，先保存一下
-                    if (MORNING_LAST_CLASS_NUM.equals(time)) {
+                    if (MORNING_SEC_CLASS_NUM.equals(time)) {
                         if (!morningClassList.contains(subjectId)) {
                             morningClassList.add(subjectId);
                         }
@@ -185,7 +188,8 @@ public class SubjectService {
 
                 }
 
-                if (MORNING_LAST_CLASS_NUM.equals(time)) {
+                // 决定第二节课什么课
+                if (MORNING_SEC_CLASS_NUM.equals(time)) {
                     boolean chineseFlag = morningClassList.contains(CHINESE_SUBJECT_ID);
                     boolean mathsFlag = morningClassList.contains(MATHS_SUBJECT_ID);
                     // 如果没有数学课，数学课权重最大
@@ -203,7 +207,7 @@ public class SubjectService {
                     }
                     // 如果没有语文和数学课，则要重新设定权重
                     if (!chineseFlag && !mathsFlag) {
-                        throw new TransactionException("第一节和第二节课并非主课，请冲洗选课");
+                        throw new TransactionException("第一节和第二节课并非主课，请重新选课");
                     }
                 }
             }
