@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.school.mysql.common.dao.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.StudentDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="student_class_id" jdbcType="INTEGER" property="studentClassId"/>
+        <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="grade" jdbcType="INTEGER" property="grade"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+        <result column="class_num" jdbcType="INTEGER" property="classNum"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, student_class_id, student_name, sex, grade, grade_id, class_num, status, create_by, create_time,
+    update_by, update_time
+  </sql>
+    <select id="listStudentByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where grade = #{grade}
+        and status = 1
+    </select>
+
+    <select id="listStudentByGradeClass" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where grade = #{grade}
+        and class_num = #{classNum}
+        and status = 1
+    </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into student(student_class_id, student_name, sex, grade, grade_id, class_num,
+        status, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.studentClassId}, #{item.studentName}, #{item.sex}, #{item.grade},#{item.gradeId},
+             #{item.classNum}, 1, #{item.createBy}, now())
+        </foreach>
+
+    </insert>
+
+</mapper>

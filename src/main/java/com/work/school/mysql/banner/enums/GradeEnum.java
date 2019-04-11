@@ -52,6 +52,18 @@ public enum GradeEnum {
         return null;
     }
 
+    public static GradeEnum getGradeEnum(Integer code) {
+        if (code == null) {
+            return null;
+        }
+        for (GradeEnum e : GradeEnum.values()) {
+            if (e.getCode().equals(code)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public static GradeEnum getGradeEnum(String desc) {
         if (desc == null) {
             return null;

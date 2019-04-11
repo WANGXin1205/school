@@ -97,5 +97,27 @@ public class ExcelDataConfigure {
     public static BigDecimal HIGH_GOOD_SUP_SCORE = new BigDecimal("89");
     public static BigDecimal HIGH_MIDDLE_SUP_SCORE = new BigDecimal("74");
 
+    /**
+     * 学生信息
+     */
+    public static String[] STUDENT_DATA_NAME = {"序号", "姓名", "性别"};
+    public static String STUDENT_GRADE_CLASS_SPILT_SIGN = "级";
+    public static String STUDENT_CLASS_SPILT_SIGN = "班";
+    /**
+     * 学生年级信息行数
+     */
+    public static Integer STUDENT_GRADE_CLASS_ROW = 0;
+    public static Integer STUDENT_GRADE_CLASS_BEGIN_COL = 0;
+    public static Integer STUDENT_GRADE_COL = 0;
+    public static Integer STUDENT_CLASS_INFO_COL = 0;
+    public static Integer STUDENT_CLASS_COL = 1;
+    public static Integer STUDENT_TITLE_ROW = 1;
+    public static Integer STUDENT_TITLE_INDEX_COL = 0;
+    public static Integer STUDENT_TITLE_NAME_COL = 1;
+    public static Integer STUDENT_TITLE_SEX_COL = 2;
+    public static Integer STUDENT_BEGIN_ROW = 2;
+    public static Integer STUDENT_CLASS_ID_COL = 0;
+    public static Integer STUDENT_NAME_COL = 1;
+    public static Integer STUDENT_SEX_COL = 2;
 
 }

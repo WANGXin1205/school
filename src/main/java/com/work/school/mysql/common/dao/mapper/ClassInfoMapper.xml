@@ -3,10 +3,12 @@
 <mapper namespace="com.work.school.mysql.common.dao.mapper.ClassInfoMapper">
     <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.ClassInfoDO">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="grade_num" jdbcType="INTEGER" property="gradeNum"/>
+        <result column="grade" jdbcType="INTEGER" property="grade"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
         <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
         <result column="class_num" jdbcType="INTEGER" property="classNum"/>
         <result column="class_name" jdbcType="VARCHAR" property="className"/>
+        <result column="graduate" jdbcType="INTEGER" property="graduate"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -14,7 +16,8 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, grade_num, grade_name,class_num, class_name, status, create_by, create_time, update_by, update_time
+    id, grade,grade_id, grade_name,class_num, class_name, graduate, status, create_by,
+    create_time, update_by, update_time
   </sql>
 
     <select id="listAllClass" resultMap="BaseResultMap">
@@ -26,7 +29,13 @@
     <select id="listClassByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from class_info where grade_num = #{gradeNum} and status = 1
+        from class_info where grade = #{grade} and status = 1
+    </select>
+
+    <select id="listClassByGradeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from class_info where grade_id = #{gradeId} and status = 1
     </select>
 
 </mapper>

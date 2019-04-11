@@ -1,4 +1,4 @@
-package com.work.school.mysql.exam.service;
+package com.work.school.mysql.common.service;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,23 +16,23 @@ import static org.junit.Assert.*;
 
 /**
  * @Author : Growlithe
- * @Date : 2019/3/28 8:05 PM
+ * @Date : 2019/4/4 9:19 PM
  * @Description
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ExamResultsServiceTest {
+public class StudentServiceTest {
 
     @Resource
-    private ExamResultsService examResultsService;
+    private StudentService studentService;
 
     @Test
-    public void computerExamTarget() throws Exception{
-        var fileLocal = new File("/Users/wangxin/Downloads/副本4班语文 月考.xlsx");
+    public void saveBatchTest() throws Exception{
+        var fileLocal = new File("/Users/wangxin/Downloads/2班.xlsx");
         var fis = new FileInputStream(fileLocal);
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         var multipartFile = new MockMultipartFile(fileLocal.getName(), fileLocal.getName(), contentType, fis);
-        var candyResult = examResultsService.computerExamTarget(multipartFile);
-        Assert.assertTrue(candyResult.isSuccess());
+        var cattyResult = studentService.saveBatch(multipartFile);
+        Assert.assertTrue(cattyResult.isSuccess());
     }
 }

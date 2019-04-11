@@ -62,11 +62,11 @@ public class SchoolGradeDefaultDTO implements Serializable {
      */
     private List<SubjectWeightDTO> allSubjectWeightList;
     /**
-     * 某个班某个课程是和老师对应关系 的map
+     * 某个班某个课程和老师对应关系的map
      */
     private Map<ClassSubjectKeyDTO,Integer> classSubjectTeacherMap;
     /**
-     * 获取某个课程某个班的老师 所带班级数目 的map
+     * 某个课程某个班的老师 所带班级数目 的map
      */
     private Map<ClassSubjectKeyDTO,Integer> classSubjectTeachingNumMap;
 

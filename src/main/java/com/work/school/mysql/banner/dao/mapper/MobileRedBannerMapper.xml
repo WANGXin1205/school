@@ -3,7 +3,7 @@
 <mapper namespace="com.work.school.mysql.banner.dao.mapper.MobileRedBannerMapper">
   <resultMap id="BaseResultMap" type="com.work.school.mysql.banner.dao.domain.MobileRedBannerDO">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="class_id" jdbcType="INTEGER" property="classNum" />
     <result column="class_name" jdbcType="VARCHAR" property="className" />
     <result column="school_term" jdbcType="INTEGER" property="schoolTerm" />
     <result column="week" jdbcType="INTEGER" property="week" />
@@ -32,7 +32,7 @@
       status, create_by, create_time)
     values
     <foreach collection="list" item="item" separator=",">
-        (#{item.classId,jdbcType=INTEGER}, #{item.className,jdbcType=VARCHAR}, #{item.schoolTerm,jdbcType=VARCHAR},
+        (#{item.classNum,jdbcType=INTEGER}, #{item.className,jdbcType=VARCHAR}, #{item.schoolTerm,jdbcType=VARCHAR},
         #{item.week,jdbcType=INTEGER}, #{item.redBannerType,jdbcType=INTEGER}, 1, #{item.createBy,jdbcType=VARCHAR}, now())
     </foreach>
 

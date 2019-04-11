@@ -26,7 +26,7 @@ public class ClassInfoService {
     private ClassInfoMapper classInfoMapper;
 
     /**
-     * 根据年级查询 班级信息
+     * 根据年级(1)查询 班级信息
      * @param grade
      * @return
      */
@@ -35,5 +35,13 @@ public class ClassInfoService {
     }
 
 
+    /**
+     * 根据年级(2018)查询 班级信息
+     * @param gradeId
+     * @return
+     */
+    public List<ClassInfoDO> listClassByGradeId(Integer gradeId){
+        return classInfoMapper.listClassByGradeId(gradeId);
+    }
 
 }

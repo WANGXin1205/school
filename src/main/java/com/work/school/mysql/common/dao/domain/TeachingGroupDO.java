@@ -12,7 +12,7 @@ public class TeachingGroupDO {
 
     private Integer groupId;
 
-    private Integer studentClassId;
+    private Integer classNum;
 
     private Integer status;
 
@@ -40,12 +40,12 @@ public class TeachingGroupDO {
         this.groupId = groupId;
     }
 
-    public Integer getStudentClassId() {
-        return studentClassId;
+    public Integer getClassNum() {
+        return classNum;
     }
 
-    public void setStudentClassId(Integer studentClassId) {
-        this.studentClassId = studentClassId;
+    public void setClassNum(Integer classNum) {
+        this.classNum = classNum;
     }
 
     public Integer getStatus() {
@@ -93,7 +93,7 @@ public class TeachingGroupDO {
         return "TeachingGroupDO{" +
                 "id=" + id +
                 ", groupId=" + groupId +
-                ", studentClassId=" + studentClassId +
+                ", classNum=" + classNum +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +

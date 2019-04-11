@@ -67,13 +67,40 @@ public class TimeTableService {
         }
         HashMap<TimeTableKeyDTO, Integer> timeTableMap = computerWeightResult.getData();
 
+        var allSubjectMap = schoolGradeDefaultDTO.getAllSubjectMap();
+        var allClassInfoList = schoolGradeDefaultDTO.getAllClassInfoList();
 
         // 结果赋值
-        var allSubjectMap = schoolGradeDefaultDTO.getAllSubjectMap();
+        CattyResult<List<TimeTableDTO>> packTimeTableDTOListResult = this.packTimeTableDTOList(allSubjectMap, allClassInfoList, timeTableMap);
+        if (!packTimeTableDTOListResult.isSuccess()){
+            LOGGER.warn(packTimeTableDTOListResult.getMessage());
+            cattyResult.setMessage(packTimeTableDTOListResult.getMessage());
+            return cattyResult;
+        }
+        List<TimeTableDTO> timeTableDTOList = packTimeTableDTOListResult.getData();
+
+        cattyResult.setData(timeTableDTOList);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
+    /**
+     * 组装排课结果
+     *
+     * @param allSubjectMap
+     * @param allClassInfoList
+     * @param timeTableMap
+     * @return
+     */
+    private CattyResult<List<TimeTableDTO>> packTimeTableDTOList(Map<Integer, SubjectDO> allSubjectMap,
+                                                                 List<ClassInfoDO> allClassInfoList,
+                                                                 HashMap<TimeTableKeyDTO, Integer> timeTableMap) {
+        CattyResult<List<TimeTableDTO>> cattyResult = new CattyResult<>();
+
         List<TimeTableDTO> timeTableDTOList = new ArrayList<>();
         for (int x = 1; x <= SchoolGradeDefaultDTO.getWorkDay(); x++) {
 
-            for (ClassInfoDO y : schoolGradeDefaultDTO.getAllClassInfoList()) {
+            for (ClassInfoDO y : allClassInfoList) {
                 HashMap<TimeTableKeyDTO, String> timeTableShowMap = new HashMap<>(16);
                 TimeTableDTO timeTableDTO = new TimeTableDTO();
 
@@ -101,7 +128,6 @@ public class TimeTableService {
         cattyResult.setSuccess(true);
         return cattyResult;
     }
-
 
     /**
      * 准备默认学校配置

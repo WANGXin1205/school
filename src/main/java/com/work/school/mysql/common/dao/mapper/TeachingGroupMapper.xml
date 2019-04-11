@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.TeachingGroupDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
-    <result column="student_class_id" jdbcType="INTEGER" property="studentClassId" />
+    <result column="class_id" jdbcType="INTEGER" property="classNum" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -12,7 +12,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, group_id, student_class_id, status, create_by, create_time, update_by, update_time
+    id, group_id, class_id, status, create_by, create_time, update_by, update_time
   </sql>
 
     <select id="listAllTeachingGroup" resultMap="BaseResultMap">

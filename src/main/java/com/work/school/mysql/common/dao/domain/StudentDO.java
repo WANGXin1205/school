@@ -3,42 +3,86 @@ package com.work.school.mysql.common.dao.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @Author : Growlithe
- * @Date : 2019/3/7 10:11 AM
- * @Description 班级信息
- */
-public class ClassInfoDO implements Serializable {
-    private Integer id;
-
+public class StudentDO implements Serializable {
+    /**
+     * id 主键
+     */
+    private Long id;
+    /**
+     * 学生班级id
+     */
+    private Integer studentClassId;
+    /**
+     * 学生姓名
+     */
+    private String studentName;
+    /**
+     * 性别 m-男 f-女
+     */
+    private String sex;
+    /**
+     * 年级
+     */
     private Integer grade;
-
+    /**
+     * 年级标号
+     */
     private Integer gradeId;
-
-    private String gradeName;
-
+    /**
+     * 班级
+     */
     private Integer classNum;
-
-    private String className;
-
-    private Integer graduate;
-
+    /**
+     * 数据状态 1 有效 0 失效
+     */
     private Integer status;
-
+    /**
+     * 创建人
+     */
     private String createBy;
-
+    /**
+     * 创建时间
+     */
     private Date createTime;
-
+    /**
+     * 更新人
+     */
     private String updateBy;
-
+    /**
+     * 更新时间
+     */
     private Date updateTime;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getStudentClassId() {
+        return studentClassId;
+    }
+
+    public void setStudentClassId(Integer studentClassId) {
+        this.studentClassId = studentClassId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public Integer getGrade() {
@@ -57,28 +101,12 @@ public class ClassInfoDO implements Serializable {
         this.gradeId = gradeId;
     }
 
-    public String getGradeName() {
-        return gradeName;
-    }
-
-    public void setGradeName(String gradeName) {
-        this.gradeName = gradeName;
-    }
-
     public Integer getClassNum() {
         return classNum;
     }
 
     public void setClassNum(Integer classNum) {
         this.classNum = classNum;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
     }
 
     public Integer getStatus() {
@@ -121,24 +149,16 @@ public class ClassInfoDO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getGraduate() {
-        return graduate;
-    }
-
-    public void setGraduate(Integer graduate) {
-        this.graduate = graduate;
-    }
-
     @Override
     public String toString() {
-        return "ClassInfoDO{" +
+        return "StudentDO{" +
                 "id=" + id +
+                ", studentClassId=" + studentClassId +
+                ", studentName='" + studentName + '\'' +
+                ", sex='" + sex + '\'' +
                 ", grade=" + grade +
                 ", gradeId=" + gradeId +
-                ", gradeName='" + gradeName + '\'' +
                 ", classNum=" + classNum +
-                ", className='" + className + '\'' +
-                ", graduate=" + graduate +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +

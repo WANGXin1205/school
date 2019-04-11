@@ -39,13 +39,13 @@ public class MobileRedBannerService {
 
     @Transactional(value = "mysqlTransactionManager", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public CattyResult<Void> saveBatch(MultipartFile multipartFile) {
-        CattyResult<Void> candyResult = new CattyResult<>();
+        CattyResult<Void> cattyResult = new CattyResult<>();
 
         // 从excel中获取数据
         var getDataMapFromExcelResult = POIUtils.getDataMapFromExcel(multipartFile, ExcelDataConfigure.RED_BANNER_DATA_NAME);
         if (!getDataMapFromExcelResult.isSuccess()) {
-            candyResult.setMessage(getDataMapFromExcelResult.getMessage());
-            return candyResult;
+            cattyResult.setMessage(getDataMapFromExcelResult.getMessage());
+            return cattyResult;
         }
 
         var dataMap = getDataMapFromExcelResult.getData();
@@ -54,8 +54,8 @@ public class MobileRedBannerService {
         var listMobileRedBannerFromDataMapResult = this.listMobileRedBannerFromDataMap(dataMap);
         if (!listMobileRedBannerFromDataMapResult.isSuccess()) {
             LOGGER.warn(listMobileRedBannerFromDataMapResult.getMessage());
-            candyResult.setMessage(listMobileRedBannerFromDataMapResult.getMessage());
-            return candyResult;
+            cattyResult.setMessage(listMobileRedBannerFromDataMapResult.getMessage());
+            return cattyResult;
         }
 
         var mobileRedBannerDOList = listMobileRedBannerFromDataMapResult.getData();
@@ -73,8 +73,8 @@ public class MobileRedBannerService {
         // 数据保存至数据库
         mobileRedBannerMapper.saveBatch(mobileRedBannerDOList);
 
-        candyResult.setSuccess(true);
-        return candyResult;
+        cattyResult.setSuccess(true);
+        return cattyResult;
     }
 
     /**

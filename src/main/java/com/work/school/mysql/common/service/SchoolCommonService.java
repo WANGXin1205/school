@@ -11,7 +11,6 @@ import com.work.school.mysql.common.service.dto.TeacherFreeKeyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.core.ClassInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -111,7 +110,7 @@ public class SchoolCommonService {
             for (TeachingGroupDO y:teachingGroupDOList){
                 ClassSubjectKeyDTO classSubjectKeyDTO = new ClassSubjectKeyDTO();
                 classSubjectKeyDTO.setSubjectId(x.getSubjectId());
-                classSubjectKeyDTO.setClassNum(y.getStudentClassId());
+                classSubjectKeyDTO.setClassNum(y.getClassNum());
                 classSubjectTeacherMap.put(classSubjectKeyDTO,x.getId());
                 classSubjectTeachingNumMap.put(classSubjectKeyDTO,teachingGroupDOList.size());
             }
