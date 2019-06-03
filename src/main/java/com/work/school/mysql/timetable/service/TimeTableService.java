@@ -11,6 +11,7 @@ import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.timetable.service.dto.JudgeClassRightDTO;
 import com.work.school.mysql.timetable.service.dto.TimeTableDTO;
 import com.work.school.mysql.timetable.service.dto.TimeTableKeyDTO;
+import net.sf.jsqlparser.expression.Function;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class TimeTableService {
 
         // 结果赋值
         CattyResult<List<TimeTableDTO>> packTimeTableDTOListResult = this.packTimeTableDTOList(allSubjectMap, allClassInfoList, timeTableMap);
-        if (!packTimeTableDTOListResult.isSuccess()){
+        if (!packTimeTableDTOListResult.isSuccess()) {
             LOGGER.warn(packTimeTableDTOListResult.getMessage());
             cattyResult.setMessage(packTimeTableDTOListResult.getMessage());
             return cattyResult;
@@ -139,6 +140,12 @@ public class TimeTableService {
         CattyResult<SchoolGradeDefaultDTO> cattyResult = new CattyResult<>();
 
         var schoolDefaultDTO = schoolCommonService.getSchoolDefaultDTO(grade);
+
+        var checkTimeTableSolutionResult = this.checkTimeTableSolution(schoolDefaultDTO);
+        if (!checkTimeTableSolutionResult.isSuccess()){
+            cattyResult.setMessage(checkTimeTableSolutionResult.getMessage());
+            return cattyResult;
+        }
 
         cattyResult.setData(schoolDefaultDTO);
         cattyResult.setSuccess(true);
@@ -305,5 +312,46 @@ public class TimeTableService {
         initSubjectWeightDTO.setClassSubjectTeachingNumMap(classSubjectTeachingNumMap);
 
         return initSubjectWeightDTO;
+    }
+
+    /**
+     * 检查排课是否有解
+     *
+     * @param schoolGradeDefaultDTO
+     * @return
+     */
+    private CattyResult checkTimeTableSolution(SchoolGradeDefaultDTO schoolGradeDefaultDTO) {
+        CattyResult cattyResult = new CattyResult();
+
+        var allSubjectList = schoolGradeDefaultDTO.getAllSubjectList();
+        int allFrequency = 0;
+        for (SubjectDO x : allSubjectList) {
+            allFrequency = allFrequency + x.getFrequency();
+        }
+        int allTime = SchoolGradeDefaultDTO.getWorkDay() * SchoolGradeDefaultDTO.getTime();
+        if (allFrequency != allTime) {
+            cattyResult.setMessage("每周上课总节数与各课程每周上课总节数不相等，不能进行排课");
+            return cattyResult;
+        }
+
+        var classSubjectTeacherMap = schoolGradeDefaultDTO.getClassSubjectTeacherMap();
+        var classSize = schoolGradeDefaultDTO.getClassSize();
+        var mainAndOtherSubjectList = subjectService.filterMainAndOtherSubjectList(allSubjectList);
+        for (int x=1;x<=classSize;x++){
+            for (SubjectDO y:mainAndOtherSubjectList){
+                ClassSubjectKeyDTO classSubjectKeyDTO = new ClassSubjectKeyDTO();
+                classSubjectKeyDTO.setClassNum(x);
+                classSubjectKeyDTO.setSubjectId(y.getId());
+                var teacherId = classSubjectTeacherMap.get(classSubjectKeyDTO);
+                if (teacherId == null){
+                    cattyResult.setMessage("第"+ x + "班的" +y.getName() + "没有教师授课，不能进行排课");
+                    return cattyResult;
+                }
+
+            }
+        }
+
+        cattyResult.setSuccess(true);
+        return cattyResult;
     }
 }

@@ -179,7 +179,7 @@ public class SubjectService {
                         x.setWeight(x.getWeight() - STEP_WEIGHT);
                     }
 
-                    // 如果早上没有设立语文数学课，那么要提升权重，先保存一下
+                    // 如果早上没有设立语文数学课，那么要提升权重
                     if (MORNING_SEC_CLASS_NUM.equals(time)) {
                         if (!morningClassList.contains(subjectId)) {
                             morningClassList.add(subjectId);
@@ -357,5 +357,16 @@ public class SubjectService {
         timeTableKeyDTO.setTime(time);
 
         return timeTableKeyDTO;
+    }
+
+    /**
+     * 筛选出有教师上课的课程
+     *
+     * @param subjectDOList
+     * @return
+     */
+    public List<SubjectDO> filterMainAndOtherSubjectList(List<SubjectDO> subjectDOList) {
+        return subjectDOList.stream().filter(x -> MAIN_SUBJECT_TYPE.equals(x.getType()) || OTHER_SUBJECT_TYPE.equals(x.getType())
+        ).collect(Collectors.toList());
     }
 }

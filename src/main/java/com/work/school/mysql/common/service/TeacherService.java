@@ -47,6 +47,15 @@ public class TeacherService {
     @Resource
     private TeacherMapper teacherMapper;
 
+    /**
+     * 查询学校所有教师
+     *
+     * @return
+     */
+    public List<TeacherDO> listAll() {
+        return teacherMapper.listAll();
+    }
+
 
     /**
      * 判断教师是否空闲
@@ -92,13 +101,13 @@ public class TeacherService {
             }
         }
 
-        for (TimeTableKeyDTO x:timeTableMap.keySet()){
+        for (TimeTableKeyDTO x : timeTableMap.keySet()) {
             var useSubjectId = timeTableMap.get(x);
 
             // 同一天同一个班小课程不允许上两节
             boolean otherSubjectRepeatFlag = workDay.equals(x.getWorkDay()) && classNum.equals(x.getClassNum())
                     && OTHER_SUBJECT_TYPE.equals(subjectWeightDTO.getType()) && useSubjectId.equals(subjectId);
-            if (otherSubjectRepeatFlag){
+            if (otherSubjectRepeatFlag) {
                 freeFlag = false;
             }
         }

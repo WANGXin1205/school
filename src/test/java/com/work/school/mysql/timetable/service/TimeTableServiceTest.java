@@ -1,5 +1,6 @@
 package com.work.school.mysql.timetable.service;
 
+import com.work.school.common.utils.common.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,10 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTable() {
         Integer grade = 1;
+        var start = DateUtils.getNow().getTime();
         var cattyResult = timeTableService.planTimeTable(grade);
+        var end = DateUtils.getNow().getTime();
+        System.out.println(end - start);
         Assert.assertTrue(cattyResult.isSuccess());
     }
 

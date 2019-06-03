@@ -70,6 +70,7 @@ public class ExamSeatingScheduleService {
         var surplusStudentNum = studentListSize % examNum;
 
 
+
         cattyResult.setSuccess(true);
         return cattyResult;
     }

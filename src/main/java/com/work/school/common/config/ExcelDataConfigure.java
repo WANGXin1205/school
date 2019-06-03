@@ -22,11 +22,6 @@ public class ExcelDataConfigure {
      */
     public static Integer DEFAULT_ADD_ROW = 2;
 
-    /**
-     * 默认创建人 更新人
-     */
-    public static String GROWLITHE = "WANGXin";
-
 
     /**
      * 流动红旗汇总表配置
@@ -120,4 +115,17 @@ public class ExcelDataConfigure {
     public static Integer STUDENT_NAME_COL = 1;
     public static Integer STUDENT_SEX_COL = 2;
 
+    /**
+     * 图书借阅Excel标题
+     */
+    public static String[] BORROW_TITLE_NAME = {"序号", "图书编号","教师编号","教师姓名", "借阅时间", "备注"};
+    /**
+     * 图书借阅Excel默认值
+     */
+    public static Integer BORROW_ROW_INDEX = 0;
+    public static Integer BORROW_LIBRARY_BOOK_ID_INDEX = 1;
+    public static Integer BORROW_TEACHER_ID_INDEX = 2;
+    public static Integer BORROW_TEACHER_NAME_INDEX = 3;
+    public static Integer BORROW_BORROW_TIME_INDEX = 4;
+    public static Integer BORROW_MARK_INDEX = 5;
 }

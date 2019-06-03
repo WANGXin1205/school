@@ -2,6 +2,7 @@ package com.work.school.mysql.common.service;
 
 import com.work.school.common.CattyResult;
 import com.work.school.common.config.ExcelDataConfigure;
+import com.work.school.common.config.SchoolDefaultConfigure;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.common.utils.business.SchoolBusinessUtils;
 import com.work.school.common.utils.common.POIUtils;
@@ -147,7 +148,7 @@ public class StudentService {
                 studentDO.setStudentClassId(studentClassId);
                 studentDO.setStudentName(name);
                 studentDO.setSex(sexEnum.getCode());
-                studentDO.setCreateBy(ExcelDataConfigure.GROWLITHE);
+                studentDO.setCreateBy(SchoolDefaultConfigure.GROWLITHE);
                 studentDOList.add(studentDO);
             }
 

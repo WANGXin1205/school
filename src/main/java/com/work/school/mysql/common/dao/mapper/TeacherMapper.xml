@@ -19,6 +19,11 @@
     update_by, update_time
   </sql>
 
+    <select id="listAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from teacher where status = 1
+    </select>
+
     <select id="listAllTeacherByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/>
         from teacher where status = 1 and grade = #{grade}
@@ -26,7 +31,7 @@
 
     <select id="listAllTeachingTeacherByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/>
-        from teacher where status = 1 and teacher_group_id is not null and grade = #{grade}
+        from teacher where status = 1 and subject_id is not null and teacher_group_id is not null and grade = #{grade}
     </select>
 
     <select id="listAllTeacherGroupId" resultType="java.lang.Integer">

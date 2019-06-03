@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.school.mysql.library.dao.mapper.BorrowMapper">
+  <resultMap id="BaseResultMap" type="com.work.school.mysql.library.dao.domain.BorrowDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="library_book_id" jdbcType="VARCHAR" property="libraryBookId" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="borrow_start" jdbcType="DATE" property="borrowStart" />
+    <result column="borrow_end" jdbcType="DATE" property="borrowEnd" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, library_book_id, teacher_id, borrow_start, borrow_end, mark, status, create_by, 
+    create_time, update_by, update_time
+  </sql>
+
+  <insert id="saveBatch" parameterType="java.util.List">
+    insert into borrow (library_book_id, teacher_id, borrow_start, borrow_end, mark,
+      status, create_by, create_time)
+    values
+      <foreach collection="list" item="item" separator=",">
+      (#{item.libraryBookId,jdbcType=VARCHAR}, #{item.teacherId,jdbcType=INTEGER}, #{item.borrowStart,jdbcType=DATE},
+      #{item.borrowEnd,jdbcType=DATE}, #{item.mark,jdbcType=VARCHAR}, 1, #{item.createBy,jdbcType=VARCHAR}, now())
+      </foreach>
+  </insert>
+
+    <select id="listAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from borrow where status = 1
+    </select>
+
+    <select id="listBorrowBook" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from borrow where status = 1 and borrow_end is null
+    </select>
+
+    <select id="listBorrowPastByTime" parameterType="java.util.Date" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from borrow where status = 1 and borrow_end is null and borrow_start <![CDATA[<=]]> #{borrowStart}
+    </select>
+
+    <select id="listBorrowLaterByTime" parameterType="java.util.Date" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from borrow where status = 1 and borrow_end is null and borrow_start <![CDATA[>=]]> #{borrowStart}
+    </select>
+
+</mapper>

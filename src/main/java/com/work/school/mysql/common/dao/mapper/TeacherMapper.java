@@ -8,7 +8,15 @@ import java.util.List;
 public interface TeacherMapper {
 
     /**
+     * 查询学校所有教师
+     *
+     * @return
+     */
+    List<TeacherDO> listAll();
+
+    /**
      * 查询某个年级下所有教师
+     *
      * @param grade
      * @return
      */
@@ -16,6 +24,7 @@ public interface TeacherMapper {
 
     /**
      * 查询某个年级下所有上课教师
+     *
      * @param grade
      * @return
      */
@@ -23,8 +32,10 @@ public interface TeacherMapper {
 
     /**
      * 查询所有上课组合
+     *
      * @return
      */
     List<Integer> listAllTeacherGroupId();
+
 
 }

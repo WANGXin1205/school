@@ -2,6 +2,7 @@ package com.work.school.mysql.banner.service;
 
 import com.work.school.common.CattyResult;
 import com.work.school.common.config.ExcelDataConfigure;
+import com.work.school.common.config.SchoolDefaultConfigure;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.common.utils.business.SchoolBusinessUtils;
 import com.work.school.common.utils.common.POIUtils;
@@ -59,6 +60,10 @@ public class MobileRedBannerService {
         }
 
         var mobileRedBannerDOList = listMobileRedBannerFromDataMapResult.getData();
+        if (CollectionUtils.isEmpty(mobileRedBannerDOList)){
+            cattyResult.setMessage("没有流动红旗评比数据");
+            return cattyResult;
+        }
 
         // 先根据schoolTerm和weeks 查询是否存在原始数据，如果有原始数据，需要先将原始数据清除
         Integer schoolTerm = SchoolBusinessUtils.getSchoolTerm();
@@ -214,7 +219,7 @@ public class MobileRedBannerService {
         mobileRedBannerDO.setClassId(classId);
         mobileRedBannerDO.setClassName(className);
         mobileRedBannerDO.setRedBannerType(mobileRedBannerEnum.getCode());
-        mobileRedBannerDO.setCreateBy(ExcelDataConfigure.GROWLITHE);
+        mobileRedBannerDO.setCreateBy(SchoolDefaultConfigure.GROWLITHE);
 
         return mobileRedBannerDO;
     }
