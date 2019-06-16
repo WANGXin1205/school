@@ -46,5 +46,17 @@ public class MobileRedBannerServiceTest {
         Assert.assertTrue(candyResult.isSuccess());
     }
 
+    @Test
+    public void listAllClassBannerCountTest1() throws Exception{
+        var fileLocal = new File("/Users/wangxin/Downloads/流动红旗.xlsx");
+        var fis = new FileInputStream(fileLocal);
+        var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        var multipartFile = new MockMultipartFile(fileLocal.getName(), fileLocal.getName(), contentType, fis);
+        CattyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(multipartFile);
+        var classBannerCountDTOList = candyResult.getData();
+        classBannerCountDTOList.forEach(x->System.out.println(x.getBannerDesc()));
+        Assert.assertTrue(candyResult.isSuccess());
+    }
+
 
 }

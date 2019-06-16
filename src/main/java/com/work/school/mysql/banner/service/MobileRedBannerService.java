@@ -38,6 +38,45 @@ public class MobileRedBannerService {
     @Resource
     private MobileRedBannerMapper mobileRedBannerMapper;
 
+    /**
+     * 从excel表中获取各班流动红旗获得次数
+     *
+     * @param multipartFile
+     * @return
+     */
+    public CattyResult<List<ClassBannerCountDTO>> listAllClassBannerCount(MultipartFile multipartFile) {
+        CattyResult<List<ClassBannerCountDTO>> cattyResult = new CattyResult<>();
+
+        // 从excel中获取数据
+        var getDataMapFromExcelResult = POIUtils.getDataMapFromExcel(multipartFile, ExcelDataConfigure.RED_BANNER_DATA_NAME);
+        if (!getDataMapFromExcelResult.isSuccess()) {
+            cattyResult.setMessage(getDataMapFromExcelResult.getMessage());
+            return cattyResult;
+        }
+
+        var dataMap = getDataMapFromExcelResult.getData();
+
+        // 将dataMap数据 变为 mobileRedBannerDO
+        var listMobileRedBannerFromDataMapResult = this.listMobileRedBannerFromDataMap(dataMap);
+        if (!listMobileRedBannerFromDataMapResult.isSuccess()) {
+            LOGGER.warn(listMobileRedBannerFromDataMapResult.getMessage());
+            cattyResult.setMessage(listMobileRedBannerFromDataMapResult.getMessage());
+            return cattyResult;
+        }
+
+        var mobileRedBannerDOList = listMobileRedBannerFromDataMapResult.getData();
+        if (CollectionUtils.isEmpty(mobileRedBannerDOList)) {
+            cattyResult.setMessage("没有流动红旗评比数据");
+            return cattyResult;
+        }
+
+        var classBannerCountDTOList = this.groupClassBanner(mobileRedBannerDOList);
+
+        cattyResult.setData(classBannerCountDTOList);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
     @Transactional(value = "mysqlTransactionManager", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public CattyResult<Void> saveBatch(MultipartFile multipartFile) {
         CattyResult<Void> cattyResult = new CattyResult<>();
@@ -60,7 +99,7 @@ public class MobileRedBannerService {
         }
 
         var mobileRedBannerDOList = listMobileRedBannerFromDataMapResult.getData();
-        if (CollectionUtils.isEmpty(mobileRedBannerDOList)){
+        if (CollectionUtils.isEmpty(mobileRedBannerDOList)) {
             cattyResult.setMessage("没有流动红旗评比数据");
             return cattyResult;
         }
@@ -277,8 +316,6 @@ public class MobileRedBannerService {
     private CattyResult<List<ClassBannerCountDTO>> algorithmInListAllClassBannerCount(Integer schoolTerm) {
         CattyResult<List<ClassBannerCountDTO>> candyResult = new CattyResult<>();
 
-        List<ClassBannerCountDTO> classBannerCountDTOList = new ArrayList<>();
-
         // 先查询获得流动红旗的班级
         List<MobileRedBannerDO> mobileRedBannerDOList = mobileRedBannerMapper.listMobileRedBannerBySchoolTerm(schoolTerm);
         if (CollectionUtils.isEmpty(mobileRedBannerDOList)) {
@@ -288,9 +325,25 @@ public class MobileRedBannerService {
         }
 
         // 根据班级进行分组
+        var classBannerCountDTOList = this.groupClassBanner(mobileRedBannerDOList);
+
+        candyResult.setData(classBannerCountDTOList);
+        candyResult.setSuccess(true);
+        return candyResult;
+    }
+
+    /**
+     * 根据 学期描述 获取各班流动红旗获得次数
+     *
+     * @param mobileRedBannerDOList
+     * @return
+     */
+    private List<ClassBannerCountDTO> groupClassBanner(List<MobileRedBannerDO> mobileRedBannerDOList) {
+
         Map<Integer, List<MobileRedBannerDO>> mobileRedBannerMap = mobileRedBannerDOList.stream()
                 .collect(Collectors.groupingBy(MobileRedBannerDO::getClassId, Collectors.toList()));
 
+        List<ClassBannerCountDTO> classBannerCountDTOList = new ArrayList<>();
         for (Integer x : mobileRedBannerMap.keySet()) {
 
             var classBannerList = mobileRedBannerMap.get(x);
@@ -302,8 +355,7 @@ public class MobileRedBannerService {
             Integer otherCount = classBannerList.size() - bestCount;
 
             String className = ClassEnum.getDesc(x);
-            String bannerDesc = className + "在" + SchoolTermEnum.getDesc(schoolTerm) +
-                    "中，获得文明之星 [" + bestCount + "]次，获得其他之星 [" + otherCount + "] 次。";
+            String bannerDesc = className + "获得文明之星 [" + bestCount + "]次，获得其他之星 [" + otherCount + "] 次。";
 
             ClassBannerCountDTO classBannerCountDTO = new ClassBannerCountDTO();
             classBannerCountDTO.setClassId(x);
@@ -314,10 +366,7 @@ public class MobileRedBannerService {
             classBannerCountDTOList.add(classBannerCountDTO);
         }
 
-        candyResult.setData(classBannerCountDTOList);
-        candyResult.setSuccess(true);
-        return candyResult;
+        return classBannerCountDTOList;
     }
-
 
 }
