@@ -1,28 +1,7 @@
-2019-06-17 01:27:44.576  INFO 48079 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on bogon with PID 48079 (started by wangxin in /Users/wangxin/code/java/school)
-2019-06-17 01:27:44.653  INFO 48079 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
-2019-06-17 01:27:46.689  INFO 48079 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$479ba4e5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-06-17 01:27:48.122  INFO 48079 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:27:49.243  INFO 48079 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2019-06-17 01:27:49.327  INFO 48079 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 6.192 seconds (JVM running for 9.217)
-2019-06-17 01:28:22.161  INFO 48079 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:28:27.643  INFO 48086 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on bogon with PID 48086 (started by wangxin in /Users/wangxin/code/java/school)
-2019-06-17 01:28:27.644  INFO 48086 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
-2019-06-17 01:28:29.303  INFO 48086 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$37e21c87] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-06-17 01:28:30.591  INFO 48086 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:28:31.676  INFO 48086 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2019-06-17 01:28:31.756  INFO 48086 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.766 seconds (JVM running for 5.972)
-2019-06-17 01:33:22.800  INFO 48086 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:37:46.217  INFO 48096 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on bogon with PID 48096 (started by wangxin in /Users/wangxin/code/java/school)
-2019-06-17 01:37:46.219  INFO 48096 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
-2019-06-17 01:37:47.753  INFO 48096 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ca005f24] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-06-17 01:37:49.119  INFO 48096 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:37:50.141  INFO 48096 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2019-06-17 01:37:50.253  INFO 48096 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.64 seconds (JVM running for 5.917)
-2019-06-17 01:38:00.251  INFO 48096 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:39:18.053  INFO 48100 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on bogon with PID 48100 (started by wangxin in /Users/wangxin/code/java/school)
-2019-06-17 01:39:18.055  INFO 48100 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
-2019-06-17 01:39:19.498  INFO 48100 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$76957a4f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-06-17 01:39:20.462  INFO 48100 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-06-17 01:39:21.276  INFO 48100 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2019-06-17 01:39:21.335  INFO 48100 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 3.934 seconds (JVM running for 4.836)
-2019-06-17 01:39:22.221  INFO 48100 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-07-01 14:52:05.444  INFO 12849 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Starting MobileRedBannerServiceTest on bogon with PID 12849 (started by wangxin in /Users/wangxin/code/java/school)
+2019-07-01 14:52:05.483  INFO 12849 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : The following profiles are active: dev
+2019-07-01 14:52:07.130  INFO 12849 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7fb443e2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-07-01 14:52:08.535  INFO 12849 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-07-01 14:52:09.690  INFO 12849 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2019-07-01 14:52:09.777  INFO 12849 --- [main] c.w.s.m.b.s.MobileRedBannerServiceTest   : Started MobileRedBannerServiceTest in 4.954 seconds (JVM running for 7.4)
+2019-07-01 15:33:28.035  INFO 12849 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
