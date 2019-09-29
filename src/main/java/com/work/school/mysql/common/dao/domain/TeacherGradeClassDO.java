@@ -5,17 +5,18 @@ import java.util.Date;
 
 /**
  * @Author : Growlithe
- * @Date : 2019/3/7 10:11 AM
- * @Description 班级信息
+ * @Date : 2019/9/3 3:26 PM
+ * @Description
  */
-public class ClassInfoDO implements Serializable {
+public class TeacherGradeClassDO implements Serializable {
+
     private Integer id;
+
+    private Integer teacherId;
 
     private Integer grade;
 
     private Integer classNum;
-
-    private Integer graduate;
 
     private Integer status;
 
@@ -35,6 +36,14 @@ public class ClassInfoDO implements Serializable {
         this.id = id;
     }
 
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public Integer getGrade() {
         return grade;
     }
@@ -49,14 +58,6 @@ public class ClassInfoDO implements Serializable {
 
     public void setClassNum(Integer classNum) {
         this.classNum = classNum;
-    }
-
-    public Integer getGraduate() {
-        return graduate;
-    }
-
-    public void setGraduate(Integer graduate) {
-        this.graduate = graduate;
     }
 
     public Integer getStatus() {
@@ -101,11 +102,11 @@ public class ClassInfoDO implements Serializable {
 
     @Override
     public String toString() {
-        return "ClassInfoDO{" +
+        return "TeacherGradeClassDO{" +
                 "id=" + id +
+                ", teacherId=" + teacherId +
                 ", grade=" + grade +
                 ", classNum=" + classNum +
-                ", graduate=" + graduate +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +

@@ -52,6 +52,12 @@
             <version>3.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.1-jre</version>
+        </dependency>
+
         <!--分页 pagehelper -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>

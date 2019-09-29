@@ -5,14 +5,16 @@ import java.util.Date;
 /**
  * @Author : Growlithe
  * @Date : 2019/3/7 10:11 AM
- * @Description 排课分组信息
+ * @Description 课程信息
  */
-public class TeachingGroupDO {
+public class SubjectDetailsDO {
     private Integer id;
 
-    private Integer groupId;
+    private Integer grade;
 
-    private Integer classNum;
+    private Integer subjectId;
+
+    private Integer frequency;
 
     private Integer status;
 
@@ -32,20 +34,28 @@ public class TeachingGroupDO {
         this.id = id;
     }
 
-    public Integer getGroupId() {
-        return groupId;
+    public Integer getGrade() {
+        return grade;
     }
 
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 
-    public Integer getClassNum() {
-        return classNum;
+    public Integer getSubjectId() {
+        return subjectId;
     }
 
-    public void setClassNum(Integer classNum) {
-        this.classNum = classNum;
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
     }
 
     public Integer getStatus() {
@@ -61,7 +71,7 @@ public class TeachingGroupDO {
     }
 
     public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
+        this.createBy = createBy;
     }
 
     public Date getCreateTime() {
@@ -77,7 +87,7 @@ public class TeachingGroupDO {
     }
 
     public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
+        this.updateBy = updateBy;
     }
 
     public Date getUpdateTime() {
@@ -90,10 +100,11 @@ public class TeachingGroupDO {
 
     @Override
     public String toString() {
-        return "TeachingGroupDO{" +
+        return "SubjectDetailsDO{" +
                 "id=" + id +
-                ", groupId=" + groupId +
-                ", classNum=" + classNum +
+                ", grade=" + grade +
+                ", subjectId=" + subjectId +
+                ", frequency=" + frequency +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +

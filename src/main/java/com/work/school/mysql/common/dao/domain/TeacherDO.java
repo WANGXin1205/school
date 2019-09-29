@@ -14,11 +14,7 @@ public class TeacherDO {
 
     private Integer teacherType;
 
-    private Integer grade;
-
-    private Integer subjectId;
-
-    private Integer teacherGroupId;
+    private Integer workStatus;
 
     private Integer status;
 
@@ -43,7 +39,7 @@ public class TeacherDO {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public Integer getTeacherType() {
@@ -54,28 +50,12 @@ public class TeacherDO {
         this.teacherType = teacherType;
     }
 
-    public Integer getGrade() {
-        return grade;
+    public Integer getWorkStatus() {
+        return workStatus;
     }
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
-    public Integer getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(Integer subjectId) {
-        this.subjectId = subjectId;
-    }
-
-    public Integer getTeacherGroupId() {
-        return teacherGroupId;
-    }
-
-    public void setTeacherGroupId(Integer teacherGroupId) {
-        this.teacherGroupId = teacherGroupId;
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
     }
 
     public Integer getStatus() {
@@ -91,7 +71,7 @@ public class TeacherDO {
     }
 
     public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
+        this.createBy = createBy;
     }
 
     public Date getCreateTime() {
@@ -107,7 +87,7 @@ public class TeacherDO {
     }
 
     public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
+        this.updateBy = updateBy;
     }
 
     public Date getUpdateTime() {
@@ -124,9 +104,7 @@ public class TeacherDO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", teacherType=" + teacherType +
-                ", grade=" + grade +
-                ", subjectId=" + subjectId +
-                ", teacherGroupId=" + teacherGroupId +
+                ", workStatus=" + workStatus +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +
@@ -134,4 +112,5 @@ public class TeacherDO {
                 ", updateTime=" + updateTime +
                 '}';
     }
+
 }

@@ -3,9 +3,7 @@
 <mapper namespace="com.work.school.mysql.common.dao.mapper.SubjectMapper">
     <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.SubjectDO">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="grade" jdbcType="INTEGER" property="grade"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="frequency" jdbcType="INTEGER" property="frequency"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
@@ -14,13 +12,13 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, grade, name, frequency, type, status, create_by, create_time, update_by, update_time
+    id, name, type, status, create_by, create_time, update_by, update_time
   </sql>
 
-    <select id="listAllSubjectByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="listAllSubject" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from subject where status = 1 and grade = #{grade}
+        from subject where status = 1
     </select>
 
 </mapper>

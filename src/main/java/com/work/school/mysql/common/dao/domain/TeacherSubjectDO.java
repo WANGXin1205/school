@@ -6,16 +6,15 @@ import java.util.Date;
 /**
  * @Author : Growlithe
  * @Date : 2019/3/7 10:11 AM
- * @Description 班级信息
+ * @Description 教师信息
  */
-public class ClassInfoDO implements Serializable {
+public class TeacherSubjectDO implements Serializable {
+
     private Integer id;
 
-    private Integer grade;
+    private Integer teacherId;
 
-    private Integer classNum;
-
-    private Integer graduate;
+    private Integer subjectId;
 
     private Integer status;
 
@@ -35,28 +34,20 @@ public class ClassInfoDO implements Serializable {
         this.id = id;
     }
 
-    public Integer getGrade() {
-        return grade;
+    public Integer getTeacherId() {
+        return teacherId;
     }
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public Integer getClassNum() {
-        return classNum;
+    public Integer getSubjectId() {
+        return subjectId;
     }
 
-    public void setClassNum(Integer classNum) {
-        this.classNum = classNum;
-    }
-
-    public Integer getGraduate() {
-        return graduate;
-    }
-
-    public void setGraduate(Integer graduate) {
-        this.graduate = graduate;
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
     }
 
     public Integer getStatus() {
@@ -101,11 +92,10 @@ public class ClassInfoDO implements Serializable {
 
     @Override
     public String toString() {
-        return "ClassInfoDO{" +
+        return "TeacherSubjectDO{" +
                 "id=" + id +
-                ", grade=" + grade +
-                ", classNum=" + classNum +
-                ", graduate=" + graduate +
+                ", teacherId=" + teacherId +
+                ", subjectId=" + subjectId +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +
                 ", createTime=" + createTime +

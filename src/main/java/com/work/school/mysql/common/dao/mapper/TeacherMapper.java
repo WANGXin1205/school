@@ -15,27 +15,9 @@ public interface TeacherMapper {
     List<TeacherDO> listAll();
 
     /**
-     * 查询某个年级下所有教师
-     *
-     * @param grade
-     * @return
-     */
-    List<TeacherDO> listAllTeacherByGrade(Integer grade);
-
-    /**
-     * 查询某个年级下所有上课教师
-     *
-     * @param grade
-     * @return
-     */
-    List<TeacherDO> listAllTeachingTeacherByGrade(Integer grade);
-
-    /**
-     * 查询所有上课组合
+     * 查询所有上课的教师
      *
      * @return
      */
-    List<Integer> listAllTeacherGroupId();
-
-
+    List<TeacherDO> listAllWorkTeacher();
 }

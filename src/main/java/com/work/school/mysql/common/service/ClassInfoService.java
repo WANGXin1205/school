@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -26,22 +28,30 @@ public class ClassInfoService {
     private ClassInfoMapper classInfoMapper;
 
     /**
-     * 根据年级(1)查询 班级信息
-     * @param grade
+     * 查询所有年级下的班级
+     *
      * @return
      */
-    public List<ClassInfoDO> listClassByGrade(Integer grade){
-        return classInfoMapper.listClassByGrade(grade);
+    public List<ClassInfoDO> listAllClass() {
+        return classInfoMapper.listAllClass();
     }
-
 
     /**
-     * 根据年级(2018)查询 班级信息
-     * @param gradeId
+     * 获取所有年级下属班级数目
+     *
+     * @param allClass
      * @return
      */
-    public List<ClassInfoDO> listClassByGradeId(Integer gradeId){
-        return classInfoMapper.listClassByGradeId(gradeId);
+    public HashMap<Integer, Integer> getGradeClassCountMap(List<ClassInfoDO> allClass) {
+        HashMap<Integer, Integer> gradeClassMap = new HashMap<>();
+
+        var gradeClassCountLongMap = allClass.stream().collect(Collectors.groupingBy(ClassInfoDO::getGrade, Collectors.counting()));
+        for (Integer x : gradeClassCountLongMap.keySet()) {
+            gradeClassMap.put(x, gradeClassCountLongMap.get(x).intValue());
+        }
+
+        return gradeClassMap;
     }
+
 
 }

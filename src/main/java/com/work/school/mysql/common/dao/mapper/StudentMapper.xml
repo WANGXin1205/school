@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.work.school.mysql.common.dao.mapper.StudentMapper">
     <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.StudentDO">
-        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="id" jdbcType="BIGINT" property="id"/>
         <result column="student_class_id" jdbcType="INTEGER" property="studentClassId"/>
         <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
         <result column="sex" jdbcType="VARCHAR" property="sex"/>

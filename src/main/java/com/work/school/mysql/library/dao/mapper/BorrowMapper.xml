@@ -15,7 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, library_book_id, teacher_id, borrow_start, borrow_end, mark, status, create_by, 
+    id, library_book_id, teacher_id, borrow_start, borrow_end, mark, status, create_by,
     create_time, update_by, update_time
   </sql>
 

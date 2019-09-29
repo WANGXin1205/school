@@ -1,5 +1,6 @@
 package com.work.school.mysql.common.dao.mapper;
 
+import com.work.school.mysql.common.dao.domain.TeacherGradeClassDO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,20 +13,19 @@ import static org.junit.Assert.*;
 
 /**
  * @Author : Growlithe
- * @Date : 2019/3/6 12:02 AM
+ * @Date : 2019/9/3 3:28 PM
  * @Description
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SubjectMapperTest {
+public class TeacherGradeClassMapperTest {
 
     @Resource
-    private SubjectMapper subjectMapper;
+    private TeacherGradeClassMapper teacherGradeClassMapper;
 
     @Test
-    public void listAllSubjectTest() {
-        var allSubjectDOList = subjectMapper.listAllSubject();
-        Assert.assertNotNull(allSubjectDOList);
+    public void listAllTeacherGradeClass() {
+        var teacherGradeClassDOList = teacherGradeClassMapper.listAllTeacherGradeClass();
+        Assert.assertNotNull(teacherGradeClassDOList);
     }
-
 }

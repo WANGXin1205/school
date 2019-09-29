@@ -26,11 +26,11 @@
     <update id="updateTimeBatch" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
             update school.library_book set update_by = #{item.updateBy}, update_time = now()
-            where id = #{item.id} and status = 1
+            where subjectId = #{item.subjectId} and status = 1
         </foreach>
     </update>
 
-    <insert id="saveBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="subjectId">
         insert into school.library_book (book_id, number, status, create_by, create_time)
         values
         <foreach collection="list" item="item" separator=",">

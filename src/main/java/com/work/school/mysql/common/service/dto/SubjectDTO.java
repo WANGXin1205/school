@@ -1,24 +1,23 @@
 package com.work.school.mysql.common.service.dto;
 
-import java.io.Serializable;
+import java.util.Date;
 
-public class SubjectWeightDTO implements Serializable {
-    /**
-     * 科目id
-     */
+/**
+ * @Author : Growlithe
+ * @Date : 2019/9/24 11:58 PM
+ * @Description
+ */
+public class SubjectDTO {
+
     private Integer subjectId;
-    /**
-     * 科目名称
-     */
-    private String name;
-    /**
-     * 科目类型
-     */
-    private Integer type;
 
-    private Integer weight;
+    private String name;
+
+    private Integer grade;
 
     private Integer frequency;
+
+    private Integer type;
 
     public Integer getSubjectId() {
         return subjectId;
@@ -36,20 +35,12 @@ public class SubjectWeightDTO implements Serializable {
         this.name = name;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getGrade() {
+        return grade;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 
     public Integer getFrequency() {
@@ -60,14 +51,22 @@ public class SubjectWeightDTO implements Serializable {
         this.frequency = frequency;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "SubjectWeightDTO{" +
+        return "SubjectDTO{" +
                 "subjectId=" + subjectId +
                 ", name='" + name + '\'' +
-                ", type=" + type +
-                ", weight=" + weight +
+                ", grade=" + grade +
                 ", frequency=" + frequency +
+                ", type=" + type +
                 '}';
     }
 }

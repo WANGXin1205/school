@@ -24,19 +24,8 @@ public class TeacherMapperTest {
 
     @Test
     public void listAllTeacher() {
-        var allTeacherList = teacherMapper.listAllTeacherByGrade(1);
+        var allTeacherList = teacherMapper.listAll();
         Assert.assertNotNull(allTeacherList);
     }
 
-    @Test
-    public void listAllTeachingTeacherTest(){
-        var allTeachingTeacherList = teacherMapper.listAllTeachingTeacherByGrade(1);
-        Assert.assertNotNull(allTeachingTeacherList);
-    }
-
-    @Test
-    public void listAllTeacherGroupId(){
-        var allTeacherGroupIdList = teacherMapper.listAllTeacherGroupId();
-        Assert.assertNotNull(allTeacherGroupIdList);
-    }
 }

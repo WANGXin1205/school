@@ -1,6 +1,8 @@
 package com.work.school.mysql.timetable.service;
 
 import com.work.school.common.utils.common.DateUtils;
+import com.work.school.mysql.common.dao.domain.TeacherDO;
+import com.work.school.mysql.common.service.TeacherService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,13 +32,10 @@ public class TimeTableServiceTest {
     private TimeTableService timeTableService;
 
     @Test
-    public void planTimeTable() {
-        Integer grade = 1;
-        var start = DateUtils.getNow().getTime();
-        var cattyResult = timeTableService.planTimeTable(grade);
-        var end = DateUtils.getNow().getTime();
-        System.out.println(end - start);
+    public void planTimeTableTest(){
+        var cattyResult = timeTableService.planTimeTable();
         Assert.assertTrue(cattyResult.isSuccess());
     }
+
 
 }

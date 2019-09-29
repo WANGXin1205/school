@@ -8,10 +8,10 @@ import java.util.List;
 public interface SubjectMapper {
 
     /**
-     * 查询某个年级下所有科目信息
+     * 查询所有科目信息
      *
-     * @param grade
      * @return
      */
-    List<SubjectDO> listAllSubjectByGrade(Integer grade);
+    List<SubjectDO> listAllSubject();
+
 }

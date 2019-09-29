@@ -16,7 +16,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, number, name, price, quantity, publisher, status, create_by, create_time, update_by, 
+    id, number, name, price, quantity, publisher, status, create_by, create_time, update_by,
     update_time
   </sql>
 

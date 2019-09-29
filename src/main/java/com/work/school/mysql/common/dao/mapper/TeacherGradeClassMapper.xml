@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.work.school.mysql.common.dao.mapper.ClassInfoMapper">
-    <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.ClassInfoDO">
+<mapper namespace="com.work.school.mysql.common.dao.mapper.TeacherGradeClassMapper">
+    <resultMap id="BaseResultMap" type="com.work.school.mysql.common.dao.domain.TeacherGradeClassDO">
         <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="teacher_id" jdbcType="INTEGER" property="teacherId"/>
         <result column="grade" jdbcType="INTEGER" property="grade"/>
-        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
         <result column="class_num" jdbcType="INTEGER" property="classNum"/>
-        <result column="graduate" jdbcType="INTEGER" property="graduate"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
-    <sql id="Base_Column_List">
-    id, grade,class_num, graduate, status, create_by,
-    create_time, update_by, update_time
-  </sql>
 
-    <select id="listAllClass" resultMap="BaseResultMap">
+    <sql id="Base_Column_List">
+    id, teacher_id, grade, class_num, status, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listAllTeacherGradeClass" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from class_info where status = 1 and graduate = 0
+        from teacher_grade_class where status = 1
     </select>
 
 </mapper>

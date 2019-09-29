@@ -1,5 +1,7 @@
 package com.work.school.mysql.common.service;
 
+import com.google.common.collect.Lists;
+import com.work.school.mysql.common.service.dto.SubjectWeightDTO;
 import com.work.school.mysql.timetable.service.TimeTableService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+
+import java.util.Comparator;
 
 import static org.junit.Assert.*;
 
@@ -23,18 +27,5 @@ public class TeacherServiceTest {
     @Resource
     private TeacherService teacherService;
 
-    @Test
-    public void listAllTeacherGroupMapTest(){
-        var teacherDOList = teacherService.listAllTeachingTeacherByGrade(1);
-        var cattyResult = teacherService.listAllTeacherGroupMap(teacherDOList);
-        Assert.assertTrue(cattyResult.isSuccess());
-    }
-
-    @Test
-    public void listAllSubjectTeacherMapTest(){
-        var teacherDOList = teacherService.listAllTeachingTeacherByGrade(1);
-        var cattyResult = teacherService.listAllSubjectTeacherMap(teacherDOList);
-        Assert.assertTrue(cattyResult.isSuccess());
-    }
 
 }

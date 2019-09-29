@@ -9,11 +9,7 @@ import java.util.Date;
 public class SubjectDO {
     private Integer id;
 
-    private Integer grade;
-
     private String name;
-
-    private Integer frequency;
 
     private Integer type;
 
@@ -35,28 +31,12 @@ public class SubjectDO {
         this.id = id;
     }
 
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(Integer frequency) {
-        this.frequency = frequency;
     }
 
     public Integer getType() {
@@ -111,9 +91,7 @@ public class SubjectDO {
     public String toString() {
         return "SubjectDO{" +
                 "id=" + id +
-                ", grade=" + grade +
                 ", name='" + name + '\'' +
-                ", frequency=" + frequency +
                 ", type=" + type +
                 ", status=" + status +
                 ", createBy='" + createBy + '\'' +

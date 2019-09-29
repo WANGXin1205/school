@@ -58,5 +58,4 @@ public class MobileRedBannerServiceTest {
         Assert.assertTrue(candyResult.isSuccess());
     }
 
-
 }
