@@ -34,7 +34,7 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
      */
     private HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>> classroomUsedCountMap;
 
-    private HashMap<Integer,Integer> classroomMaxCapcaity;
+    private HashMap<Integer,Integer> classroomMaxCapacity;
 
     public Integer getTime() {
         return time;
@@ -100,12 +100,12 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
         this.classroomUsedCountMap = classroomUsedCountMap;
     }
 
-    public HashMap<Integer, Integer> getClassroomMaxCapcaity() {
-        return classroomMaxCapcaity;
+    public HashMap<Integer, Integer> getClassroomMaxCapacity() {
+        return classroomMaxCapacity;
     }
 
-    public void setClassroomMaxCapcaity(HashMap<Integer, Integer> classroomMaxCapcaity) {
-        this.classroomMaxCapcaity = classroomMaxCapcaity;
+    public void setClassroomMaxCapacity(HashMap<Integer, Integer> classroomMaxCapacity) {
+        this.classroomMaxCapacity = classroomMaxCapacity;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
                 ", subjectGradeClassTeacherMap=" + subjectGradeClassTeacherMap +
                 ", teacherTeachingMap=" + teacherTeachingMap +
                 ", classroomUsedCountMap=" + classroomUsedCountMap +
-                ", classroomMaxCapcaity=" + classroomMaxCapcaity +
+                ", classroomMaxCapcaity=" + classroomMaxCapacity +
                 '}';
     }
 }

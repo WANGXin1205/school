@@ -626,7 +626,7 @@ public class TimeTableService {
         checkAllCompleteIsOkDTO.setSubjectMaxWeightDTO(subjectMaxWeightDTO);
         checkAllCompleteIsOkDTO.setSubjectGradeClassTeacherMap(planTimeTablePrepareDTO.getSubjectGradeClassTeacherMap());
         checkAllCompleteIsOkDTO.setTeacherTeachingMap(planTimeTablePrepareDTO.getTeacherTeachingMap());
-        checkAllCompleteIsOkDTO.setClassroomMaxCapcaity(planTimeTablePrepareDTO.getClassroomMaxCapacityMap());
+        checkAllCompleteIsOkDTO.setClassroomMaxCapacity(planTimeTablePrepareDTO.getClassroomMaxCapacityMap());
         checkAllCompleteIsOkDTO.setClassroomUsedCountMap(planTimeTablePrepareDTO.getClassRoomUsedCountMap());
 
         return checkAllCompleteIsOkDTO;
@@ -715,7 +715,7 @@ public class TimeTableService {
         checkClassRoomIsOkDTO.setSubjectId(subjectMaxWeightDTO.getSubjectId());
         checkClassRoomIsOkDTO.setWorkDay(checkAllCompleteIsOkDTO.getWorkDay());
         checkClassRoomIsOkDTO.setTime(checkAllCompleteIsOkDTO.getTime());
-        checkClassRoomIsOkDTO.setClassroomMaxCapacity(checkAllCompleteIsOkDTO.getClassroomMaxCapcaity());
+        checkClassRoomIsOkDTO.setClassroomMaxCapacity(checkAllCompleteIsOkDTO.getClassroomMaxCapacity());
         checkClassRoomIsOkDTO.setClassroomUsedCountMap(checkAllCompleteIsOkDTO.getClassroomUsedCountMap());
 
         return checkClassRoomIsOkDTO;
