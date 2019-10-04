@@ -33,6 +33,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      */
     private static final Integer MONDAY_NUM = 1;
     /**
+     * 周三
+     */
+    private static final Integer WEDNESDAY_NUM = 3;
+    /**
      * 周五
      */
     private static final Integer FRIDAY_NUM = 5;
@@ -57,6 +61,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      */
     private static final Integer CLASS_MEETING_TIME = 7;
     /**
+     * 书法课时间
+     */
+    private static final Integer WRITING_TIME = 7;
+    /**
      * 校本课程时间
      */
     private static final Integer[] SCHOOL_BASED_TIME = {4, 5, 6, 7};
@@ -76,6 +84,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      * 班队会课 编号
      */
     private static final Integer SUBJECT_CLASS_MEETING_ID = 10;
+    /**
+     * 书法课 编号
+     */
+    private static final Integer WRITING_ID = 14;
     /**
      * 校本课程课 编号
      */
@@ -243,6 +255,18 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
 
     public static Integer getSubjectContinueTime() {
         return SUBJECT_CONTINUE_TIME;
+    }
+
+    public static Integer getWednesdayNum() {
+        return WEDNESDAY_NUM;
+    }
+
+    public static Integer getWritingTime() {
+        return WRITING_TIME;
+    }
+
+    public static Integer getWritingId() {
+        return WRITING_ID;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class TimeTableServiceTest {
 
     @Test
     public void planTimeTableTest(){
-        var cattyResult = timeTableService.planTimeTable();
+        var cattyResult = timeTableService.planTimeTableWithDynamicWeightsAndBacktracking();
         Assert.assertTrue(cattyResult.isSuccess());
     }
 

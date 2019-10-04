@@ -40,7 +40,7 @@ public class TimeTableService {
      *
      * @return
      */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTable() {
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableWithDynamicWeightsAndBacktracking() {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
 
         // 准备默认学校配置
@@ -401,56 +401,31 @@ public class TimeTableService {
 
                         // 排课
                         var subjectMaxWeightDTO = this.planTimeTableCore(grade, classNum, workDay, time, planTimeTablePrepareDTO);
+                        // 设置停机条件
+                        if (subjectMaxWeightDTO.getSubjectId() < SubjectWeightDefaultValueDTO.getOneStep()){
+                            cattyResult.setMessage("在该权重下，未找到解");
+                            return cattyResult;
+                        }
 
                         // 权重清零并且赋值的科目次数减少1
                         this.clearAllWeight(grade, classNum, subjectMaxWeightDTO, planTimeTablePrepareDTO.getGradeClassSubjectWeightMap());
 
-                        // 教师要记录上课节次
                         if (!SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(subjectMaxWeightDTO.getType())) {
-                            var subjectGradeClassTeacherMap = planTimeTablePrepareDTO.getSubjectGradeClassTeacherMap();
-
                             var subjectGradeClassDTO = this.packSubjectGradeClassDTO(subjectMaxWeightDTO, grade, classNum);
-                            var teacherId = subjectGradeClassTeacherMap.get(subjectGradeClassDTO);
-                            var teacherTeachingMap = planTimeTablePrepareDTO.getTeacherTeachingMap();
-                            var workDayTimeTeaching = teacherTeachingMap.get(teacherId);
-                            var teachingList = workDayTimeTeaching.get(time);
-                            if (CollectionUtils.isEmpty(teachingList)) {
-                                teachingList = new ArrayList<>();
-                            }
-                            teachingList.add(time);
-                            workDayTimeTeaching.put(workDay, teachingList);
-                            teacherTeachingMap.put(teacherId, workDayTimeTeaching);
+                            // 教师要记录上课节次
+                            this.markTeacher(planTimeTablePrepareDTO, subjectGradeClassDTO, workDay, time);
 
                             // 记录上课次数
-                            var gradeClassNumWorkDaySubjectCountMap = planTimeTablePrepareDTO.getGradeClassNumWorkDaySubjectCountMap();
-                            var classNumWorkDaySubjectCountMap = gradeClassNumWorkDaySubjectCountMap.get(grade);
-                            var workDaySubjectCountMap = classNumWorkDaySubjectCountMap.get(classNum);
-                            var subjectCountMap = workDaySubjectCountMap.get(workDay);
-                            var subjectCount = subjectCountMap.get(subjectMaxWeightDTO.getSubjectId());
-                            subjectCountMap.put(subjectMaxWeightDTO.getSubjectId(), subjectCount + SubjectWeightDefaultValueDTO.getOneStep());
-                            workDaySubjectCountMap.put(workDay, subjectCountMap);
-                            classNumWorkDaySubjectCountMap.put(classNum, workDaySubjectCountMap);
-                            gradeClassNumWorkDaySubjectCountMap.put(grade, classNumWorkDaySubjectCountMap);
+                            this.markGradeClassNumWorkDaySubjectCountMap(planTimeTablePrepareDTO, grade, classNum, workDay, subjectMaxWeightDTO.getSubjectId());
 
                             // 如果有占用教室，记录教室使用情况
                             if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectMaxWeightDTO.getType())) {
-                                var classRoomUsedCountMap = planTimeTablePrepareDTO.getClassRoomUsedCountMap();
-                                var workDaytimeClassroomUsedMap = classRoomUsedCountMap.get(subjectGradeClassDTO.getSubjectId());
-                                var timeClassroomUsedMap = workDaytimeClassroomUsedMap.get(workDay);
-                                timeClassroomUsedMap.put(time, timeClassroomUsedMap.get(time) + 1);
-                                workDaytimeClassroomUsedMap.put(workDay, timeClassroomUsedMap);
-                                classRoomUsedCountMap.put(subjectMaxWeightDTO.getSubjectId(), workDaytimeClassroomUsedMap);
+                                this.markClassroom(planTimeTablePrepareDTO, subjectMaxWeightDTO.getSubjectId(), workDay, time);
                             }
                         }
 
                         // 组装成课表
-                        var classNumWorkDayTimeSubjectMap = timeTableMap.get(grade);
-                        var workDayTimeSubjectMap = classNumWorkDayTimeSubjectMap.get(classNum);
-                        var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
-                        timeSubjectMap.put(time, subjectMaxWeightDTO.getSubjectId());
-                        workDayTimeSubjectMap.put(workDay, timeSubjectMap);
-                        classNumWorkDayTimeSubjectMap.put(classNum, workDayTimeSubjectMap);
-                        timeTableMap.put(grade, classNumWorkDayTimeSubjectMap);
+                        this.markTimeTableMap(timeTableMap, grade, classNum, workDay, time, subjectMaxWeightDTO.getSubjectId());
                     }
                 }
 
@@ -458,10 +433,99 @@ public class TimeTableService {
 
         }
 
-
         cattyResult.setSuccess(true);
         cattyResult.setData(timeTableMap);
         return cattyResult;
+    }
+
+    /**
+     * 教师记录上课时间
+     *
+     * @param planTimeTablePrepareDTO
+     * @param subjectGradeClassDTO
+     * @param workDay
+     * @param time
+     */
+    private void markTeacher(PlanTimeTablePrepareDTO planTimeTablePrepareDTO,
+                             SubjectGradeClassDTO subjectGradeClassDTO,
+                             Integer workDay,
+                             Integer time) {
+        var subjectGradeClassTeacherMap = planTimeTablePrepareDTO.getSubjectGradeClassTeacherMap();
+
+        var teacherId = subjectGradeClassTeacherMap.get(subjectGradeClassDTO);
+        var teacherTeachingMap = planTimeTablePrepareDTO.getTeacherTeachingMap();
+        var workDayTimeTeaching = teacherTeachingMap.get(teacherId);
+        var teachingList = workDayTimeTeaching.get(workDay);
+        if (CollectionUtils.isEmpty(teachingList)) {
+            teachingList = new ArrayList<>();
+        }
+        teachingList.add(time);
+        workDayTimeTeaching.put(workDay, teachingList);
+        teacherTeachingMap.put(teacherId, workDayTimeTeaching);
+        planTimeTablePrepareDTO.setTeacherTeachingMap(teacherTeachingMap);
+    }
+
+    /**
+     * 记录上课次数
+     *
+     * @param planTimeTablePrepareDTO
+     * @param grade
+     * @param classNum
+     * @param workDay
+     * @param subjectId
+     */
+    private void markGradeClassNumWorkDaySubjectCountMap(PlanTimeTablePrepareDTO planTimeTablePrepareDTO,
+                                                         Integer grade,
+                                                         Integer classNum,
+                                                         Integer workDay,
+                                                         Integer subjectId) {
+        var gradeClassNumWorkDaySubjectCountMap = planTimeTablePrepareDTO.getGradeClassNumWorkDaySubjectCountMap();
+        var classNumWorkDaySubjectCountMap = gradeClassNumWorkDaySubjectCountMap.get(grade);
+        var workDaySubjectCountMap = classNumWorkDaySubjectCountMap.get(classNum);
+        var subjectCountMap = workDaySubjectCountMap.get(workDay);
+        var subjectCount = subjectCountMap.get(subjectId);
+        subjectCountMap.put(subjectId, subjectCount + SubjectWeightDefaultValueDTO.getOneStep());
+        workDaySubjectCountMap.put(workDay, subjectCountMap);
+        classNumWorkDaySubjectCountMap.put(classNum, workDaySubjectCountMap);
+        gradeClassNumWorkDaySubjectCountMap.put(grade, classNumWorkDaySubjectCountMap);
+        planTimeTablePrepareDTO.setGradeClassNumWorkDaySubjectCountMap(gradeClassNumWorkDaySubjectCountMap);
+    }
+
+    /**
+     * 记录教室使用情况
+     *
+     * @param planTimeTablePrepareDTO
+     * @param subjectId
+     * @param workDay
+     * @param time
+     */
+    private void markClassroom(PlanTimeTablePrepareDTO planTimeTablePrepareDTO,
+                               Integer subjectId,
+                               Integer workDay,
+                               Integer time) {
+        var classRoomUsedCountMap = planTimeTablePrepareDTO.getClassRoomUsedCountMap();
+        var workDaytimeClassroomUsedMap = classRoomUsedCountMap.get(subjectId);
+        var timeClassroomUsedMap = workDaytimeClassroomUsedMap.get(workDay);
+        timeClassroomUsedMap.put(time, timeClassroomUsedMap.get(time) + 1);
+        workDaytimeClassroomUsedMap.put(workDay, timeClassroomUsedMap);
+        classRoomUsedCountMap.put(subjectId, workDaytimeClassroomUsedMap);
+        planTimeTablePrepareDTO.setClassRoomUsedCountMap(classRoomUsedCountMap);
+    }
+
+    /**
+     * 记录课程表
+     *
+     * @param timeTableMap
+     */
+    private void markTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap,
+                                  Integer grade, Integer classNum, Integer workDay, Integer time, Integer subjectId) {
+        var classNumWorkDayTimeSubjectMap = timeTableMap.get(grade);
+        var workDayTimeSubjectMap = classNumWorkDayTimeSubjectMap.get(classNum);
+        var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
+        timeSubjectMap.put(time, subjectId);
+        workDayTimeSubjectMap.put(workDay, timeSubjectMap);
+        classNumWorkDayTimeSubjectMap.put(classNum, workDayTimeSubjectMap);
+        timeTableMap.put(grade, classNumWorkDayTimeSubjectMap);
     }
 
     /**
@@ -562,7 +626,7 @@ public class TimeTableService {
         var classSubjectWeightMap = gradeClassSubjectWeightMap.get(grade);
         var subjectWeightList = classSubjectWeightMap.get(classNum);
         subjectWeightList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
-                .forEach(x -> x.setWeight(x.getFrequency() * x.getType()));
+                .forEach(x -> x.setWeight(x.getFrequency() * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType()-x.getType())));
         return subjectWeightList;
     }
 
@@ -660,23 +724,35 @@ public class TimeTableService {
      */
     private boolean checkAllCompleteFlag(CheckAllCompleteIsOkDTO checkAllCompleteIsOkDTO) {
 
-        // 特殊课程直接OK
+        // 特殊课程检验
         if (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(checkAllCompleteIsOkDTO.getSubjectMaxWeightDTO().getType())) {
-            return true;
+            boolean classMeetingFlag = SchoolTimeTableDefaultValueDTO.getMondayNum().equals(checkAllCompleteIsOkDTO.getWorkDay())
+                    && SchoolTimeTableDefaultValueDTO.getClassMeetingTime().equals(checkAllCompleteIsOkDTO.getTime());
+            boolean writingFlag = SchoolTimeTableDefaultValueDTO.getWednesdayNum().equals(checkAllCompleteIsOkDTO.getWorkDay())
+                    && SchoolTimeTableDefaultValueDTO.getWritingTime().equals(checkAllCompleteIsOkDTO.getTime());
+            boolean schoolBaseFlag = SchoolTimeTableDefaultValueDTO.getFridayNum().equals(checkAllCompleteIsOkDTO.getWorkDay())
+                    && Arrays.asList(SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()).contains(checkAllCompleteIsOkDTO.getTime());
+            if (classMeetingFlag || writingFlag || schoolBaseFlag){
+                return true;
+            }else {
+                return false;
+            }
         }
 
         // 判断教师是否空闲
         var checkTeacherIsOkDTO = this.packCheckTeacherIsOkDTO(checkAllCompleteIsOkDTO);
-        boolean teacherIsNotOK = this.checkTeacherIsOk(checkTeacherIsOkDTO);
+        boolean teacherIsOK = this.checkTeacherIsOk(checkTeacherIsOkDTO);
+        if (!teacherIsOK){
+            return false;
+        }
 
         // 判断是否需要场地
         boolean needAreaFlag = SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType()
                 .equals(checkTeacherIsOkDTO.getSubjectMaxWeightDTO().getType());
-        if (!needAreaFlag) {
-            return teacherIsNotOK;
-        }
-
         // 如果是需要教室的课程，判断教室是否可以使用
+        if (!needAreaFlag){
+            return true;
+        }
         var checkClassRoomIsOkDTO = this.packCheckClassRoomIsOkDTO(checkAllCompleteIsOkDTO);
         return this.checkClassRoomIsOk(checkClassRoomIsOkDTO);
     }

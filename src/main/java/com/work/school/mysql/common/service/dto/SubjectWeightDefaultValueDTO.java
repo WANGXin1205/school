@@ -11,7 +11,7 @@ public final class SubjectWeightDefaultValueDTO implements Serializable {
     /**
      * 最大权重
      */
-    private static final Integer MAX_WEIGHT = 999;
+    private static final Integer MAX_WEIGHT = 9999;
     /**
      * 最小权重
      */
@@ -31,7 +31,7 @@ public final class SubjectWeightDefaultValueDTO implements Serializable {
     /**
      * 停机条件
      */
-    private static final Integer STOP_WEIGHT = -100;
+    private static final Integer STOP_WEIGHT = -10;
 
     public static Integer getMaxWeight() {
         return MAX_WEIGHT;
