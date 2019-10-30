@@ -80,10 +80,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
      */
     private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
     /**
-     * 排序关系
-     */
-    private HashMap<GradeClassNumWorkDayTimeDTO,Integer> gradeClassNumWorkDayTimeOrderMap;
-    /**
      * 课程表map
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer,HashMap<Integer, Integer>>>> timeTableMap;
@@ -216,14 +212,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
     }
 
-    public HashMap<GradeClassNumWorkDayTimeDTO, Integer> getGradeClassNumWorkDayTimeOrderMap() {
-        return gradeClassNumWorkDayTimeOrderMap;
-    }
-
-    public void setGradeClassNumWorkDayTimeOrderMap(HashMap<GradeClassNumWorkDayTimeDTO, Integer> gradeClassNumWorkDayTimeOrderMap) {
-        this.gradeClassNumWorkDayTimeOrderMap = gradeClassNumWorkDayTimeOrderMap;
-    }
-
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
         return timeTableMap;
     }
@@ -251,7 +239,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
                 ", classRoomUsedCountMap=" + classRoomUsedCountMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
-                ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }

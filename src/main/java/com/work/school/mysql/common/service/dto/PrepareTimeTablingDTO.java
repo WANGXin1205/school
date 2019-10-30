@@ -84,10 +84,6 @@ public class PrepareTimeTablingDTO implements Serializable {
      * 排序关系
      */
     private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
-    /**
-     * 排序关系
-     */
-    private HashMap<GradeClassNumWorkDayTimeDTO,Integer> gradeClassNumWorkDayTimeOrderMap;
 
     public List<ClassInfoDO> getAllGradeClassInfo() {
         return allGradeClassInfo;
@@ -225,14 +221,6 @@ public class PrepareTimeTablingDTO implements Serializable {
         this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
     }
 
-    public HashMap<GradeClassNumWorkDayTimeDTO, Integer> getGradeClassNumWorkDayTimeOrderMap() {
-        return gradeClassNumWorkDayTimeOrderMap;
-    }
-
-    public void setGradeClassNumWorkDayTimeOrderMap(HashMap<GradeClassNumWorkDayTimeDTO, Integer> gradeClassNumWorkDayTimeOrderMap) {
-        this.gradeClassNumWorkDayTimeOrderMap = gradeClassNumWorkDayTimeOrderMap;
-    }
-
     @Override
     public String toString() {
         return "PrepareTimeTablingDTO{" +
@@ -253,7 +241,6 @@ public class PrepareTimeTablingDTO implements Serializable {
                 ", classRoomUsedCountMap=" + classRoomUsedCountMap +
                 ", timeTableMap=" + timeTableMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
-                ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +
                 '}';
     }
 }

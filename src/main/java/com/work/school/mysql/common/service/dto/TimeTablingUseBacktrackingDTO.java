@@ -88,10 +88,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
      */
     private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
     /**
-     * 排序关系
-     */
-    private HashMap<GradeClassNumWorkDayTimeDTO,Integer> gradeClassNumWorkDayTimeOrderMap;
-    /**
      * 课程表map
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap;
@@ -240,14 +236,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
         this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
     }
 
-    public HashMap<GradeClassNumWorkDayTimeDTO, Integer> getGradeClassNumWorkDayTimeOrderMap() {
-        return gradeClassNumWorkDayTimeOrderMap;
-    }
-
-    public void setGradeClassNumWorkDayTimeOrderMap(HashMap<GradeClassNumWorkDayTimeDTO, Integer> gradeClassNumWorkDayTimeOrderMap) {
-        this.gradeClassNumWorkDayTimeOrderMap = gradeClassNumWorkDayTimeOrderMap;
-    }
-
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
         return timeTableMap;
     }
@@ -277,7 +265,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 ", classRoomUsedCountMap=" + classRoomUsedCountMap +
                 ", gradeClassNumWorkDayTimeSubjectIdCanUseMap=" + gradeClassNumWorkDayTimeSubjectIdCanUseMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
-                ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }

@@ -615,7 +615,7 @@ public class TimeTableService {
         HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap = this.getTimeTableMap(gradeClassSubjectWeightMap);
         HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap = this.getTeacherTeachingMap(allWorkTeacher);
         var gradeClassNumWorkDaySubjectCountMap = this.getGradeClassNumWorkDaySubjectCountMap(gradeClassCountMap, allSubjects);
-        OrderDTO orderDTO = this.getOrderMap(gradeClassCountMap);
+        var orderGradeClassNumWorkDayTimeMap = this.getOrderGradeClassNumWorkDayTimeMap(gradeClassCountMap);
 
         // 检查年级信息无误
         CattyResult checkGradeResult = this.checkGrade(gradeClassCountMap, gradeSubjectMap);
@@ -652,8 +652,7 @@ public class TimeTableService {
         prepareTimeTablingDTO.setTeacherSubjectListMap(teacherSubjectListMap);
         prepareTimeTablingDTO.setGradeClassSubjectWeightMap(gradeClassSubjectWeightMap);
         prepareTimeTablingDTO.setTimeTableMap(timeTableMap);
-        prepareTimeTablingDTO.setOrderGradeClassNumWorkDayTimeMap(orderDTO.getOrderGradeClassNumWorkDayTimeMap());
-        prepareTimeTablingDTO.setGradeClassNumWorkDayTimeOrderMap(orderDTO.getGradeClassNumWorkDayTimeOrderMap());
+        prepareTimeTablingDTO.setOrderGradeClassNumWorkDayTimeMap(orderGradeClassNumWorkDayTimeMap);
 
         return prepareTimeTablingDTO;
     }
@@ -688,7 +687,6 @@ public class TimeTableService {
         timeTablingUseBacktrackingDTO.setGradeClassNumSubjectFrequencyMap(gradeClassSubjectFrequencyMap);
         timeTablingUseBacktrackingDTO.setGradeClassNumWorkDayTimeSubjectIdCanUseMap(subjectIdCanUseMap);
         timeTablingUseBacktrackingDTO.setOrderGradeClassNumWorkDayTimeMap(prepareTimeTablingDTO.getOrderGradeClassNumWorkDayTimeMap());
-        timeTablingUseBacktrackingDTO.setGradeClassNumWorkDayTimeOrderMap(prepareTimeTablingDTO.getGradeClassNumWorkDayTimeOrderMap());
 
         cattyResult.setData(timeTablingUseBacktrackingDTO);
         cattyResult.setSuccess(true);
@@ -862,10 +860,8 @@ public class TimeTableService {
      * @param gradeClassCountMap
      * @return
      */
-    private OrderDTO getOrderMap(HashMap<Integer, Integer> gradeClassCountMap) {
-        OrderDTO orderDTO = new OrderDTO();
+    private HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, Integer> gradeClassCountMap) {
         HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap = new HashMap<>();
-        HashMap<GradeClassNumWorkDayTimeDTO, Integer> gradeClassNumWorkDayTimeOrderMap = new HashMap<>();
         int count = START_INDEX;
         for (Integer grade : gradeClassCountMap.keySet()) {
             for (int classNum = SchoolTimeTableDefaultValueDTO.getStartClassIndex(); classNum <= gradeClassCountMap.get(grade); classNum++) {
@@ -877,17 +873,13 @@ public class TimeTableService {
                         gradeClassNumWorkDayTimeDTO.setWorkDay(workDay);
                         gradeClassNumWorkDayTimeDTO.setTime(time);
                         orderGradeClassNumWorkDayTimeMap.put(count, gradeClassNumWorkDayTimeDTO);
-                        gradeClassNumWorkDayTimeOrderMap.put(gradeClassNumWorkDayTimeDTO, count);
-
-                        orderDTO.setOrderGradeClassNumWorkDayTimeMap(orderGradeClassNumWorkDayTimeMap);
-                        orderDTO.setGradeClassNumWorkDayTimeOrderMap(gradeClassNumWorkDayTimeOrderMap);
 
                         count = count + SubjectDefaultValueDTO.getOneCount();
                     }
                 }
             }
         }
-        return orderDTO;
+        return orderGradeClassNumWorkDayTimeMap;
     }
 
 
