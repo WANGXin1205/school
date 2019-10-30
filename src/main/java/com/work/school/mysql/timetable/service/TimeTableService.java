@@ -109,7 +109,8 @@ public class TimeTableService {
                 // 检查是否有回溯课程
                 var backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                 if (backFlag) {
-                    gradeClassNumWorkDayTimeDTO = this.rollback(order, timeTablingUseBacktrackingDTO);
+                    order = this.rollback(order, timeTablingUseBacktrackingDTO);
+                    gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
                     grade = gradeClassNumWorkDayTimeDTO.getGrade();
                     classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
                     workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
@@ -148,7 +149,8 @@ public class TimeTableService {
 
                         // 如果课程使用完毕，则找上一层的回溯点
                         if (backFlag) {
-                            gradeClassNumWorkDayTimeDTO = this.rollback(order, timeTablingUseBacktrackingDTO);
+                            order = this.rollback(order, timeTablingUseBacktrackingDTO);
+                            gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
                             grade = gradeClassNumWorkDayTimeDTO.getGrade();
                             classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
                             workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
@@ -173,7 +175,7 @@ public class TimeTableService {
      * @param order
      * @param timeTablingUseBacktrackingDTO
      */
-    private GradeClassNumWorkDayTimeDTO rollback(Integer order, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+    private Integer rollback(Integer order, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
         if (SchoolTimeTableDefaultValueDTO.getStartOrder().equals(order)) {
             throw new TransactionException("不能回溯");
         }
@@ -185,6 +187,7 @@ public class TimeTableService {
         var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
         var time = gradeClassNumWorkDayTimeDTO.getTime();
 
+        // 确定回溯点
         var subjectIdCanUseMap = this.getSubjectIdCanUseMap(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO.getGradeClassNumWorkDayTimeSubjectIdCanUseMap());
         var flag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
         while (flag) {
@@ -193,8 +196,7 @@ public class TimeTableService {
             flag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
         }
 
-        order = order + SchoolTimeTableDefaultValueDTO.getStep();
-
+        // 回溯
         for (int clearOrder = order; clearOrder <= orderGradeClassNumWorkDayTimeMap.size(); clearOrder++) {
             gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(clearOrder);
             grade = gradeClassNumWorkDayTimeDTO.getGrade();
@@ -202,9 +204,12 @@ public class TimeTableService {
             workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
             time = gradeClassNumWorkDayTimeDTO.getTime();
 
+            // 还课次数
             this.rollbackSubjectFrequency(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO);
-            // 后面的回溯记录表也要清空
-            this.rollbackSubjectIdCanUseMap(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO);
+            // 后面的回溯记录表也要清空,回溯点不清空可使用课程
+            if (clearOrder != order){
+                this.rollbackSubjectIdCanUseMap(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO);
+            }
             // 课表也回溯
             this.rollbackTimeTableMap(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO);
             // 教师状态回溯
@@ -213,7 +218,7 @@ public class TimeTableService {
             this.rollbackClassroom(workDay, time, timeTablingUseBacktrackingDTO);
         }
 
-        return orderGradeClassNumWorkDayTimeMap.get(order);
+        return order;
     }
 
 
