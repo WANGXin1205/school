@@ -32,8 +32,14 @@ public class TimeTableServiceTest {
     private TimeTableService timeTableService;
 
     @Test
-    public void planTimeTableTest(){
-        var cattyResult = timeTableService.planTimeTableWithDynamicWeightsAndBacktracking();
+    public void planTimeTableWithDynamicWeightsAndBacktrackingTest(){
+        var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
+
+    @Test
+    public void planTimeTableWithBacktrackingTest(){
+        var cattyResult = timeTableService.planTimeTableWithBacktracking();
         Assert.assertTrue(cattyResult.isSuccess());
     }
 

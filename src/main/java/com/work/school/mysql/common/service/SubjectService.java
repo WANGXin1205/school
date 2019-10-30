@@ -159,8 +159,8 @@ public class SubjectService {
         }
         if (!specialFlag) {
             // 早上必须有主课
-            boolean firTime = SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time);
-            if (firTime) {
+            boolean firFlag = SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time);
+            if (firFlag) {
                 this.makeChineseOrMathWeight(subjectWeightDTOList);
             }
 
@@ -185,7 +185,6 @@ public class SubjectService {
             this.makeTeacherHaveManyClassWeight(grade, classNum, subjectWeightDTOList, subjectGradeClassTeacherCountMap);
             // 如果这节课程的数目很多，要优先排课
             this.makeSubjectNumWeight(subjectWeightDTOList);
-
 
             // 保证每天有主课上
             this.makeSureChineseOrMathWeight(workDay, subjectWeightDTOList);

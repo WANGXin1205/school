@@ -1,5 +1,7 @@
 package com.work.school.mysql.timetable.service.dto;
 
+import com.work.school.mysql.common.dao.domain.SubjectDO;
+import com.work.school.mysql.common.service.dto.SubjectDTO;
 import com.work.school.mysql.common.service.dto.SubjectGradeClassDTO;
 import com.work.school.mysql.common.service.dto.SubjectWeightDTO;
 
@@ -12,7 +14,7 @@ import java.util.List;
  * @Date : 2019/9/23 6:14 PM
  * @Description
  */
-public class CheckAllCompleteIsOkDTO implements Serializable {
+public class CheckCompleteUseBacktrackingDTO implements Serializable {
     /**
      * 需要检验的时间
      */
@@ -24,7 +26,13 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
 
     private Integer workDay;
 
-    private SubjectWeightDTO subjectMaxWeightDTO;
+    private Integer subjectId;
+    /**
+     * 课程列表
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap;
+
+    private HashMap<Integer,HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
 
     private HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherMap;
 
@@ -35,6 +43,11 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
     private HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>> classroomUsedCountMap;
 
     private HashMap<Integer,Integer> classroomMaxCapacity;
+
+    /**
+     * 课程表map
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer,HashMap<Integer, Integer>>>> timeTableMap;
 
     public Integer getTime() {
         return time;
@@ -68,12 +81,20 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
         this.workDay = workDay;
     }
 
-    public SubjectWeightDTO getSubjectMaxWeightDTO() {
-        return subjectMaxWeightDTO;
+    public Integer getSubjectId() {
+        return subjectId;
     }
 
-    public void setSubjectMaxWeightDTO(SubjectWeightDTO subjectMaxWeightDTO) {
-        this.subjectMaxWeightDTO = subjectMaxWeightDTO;
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
+        return gradeSubjectDTOMap;
+    }
+
+    public void setGradeSubjectDTOMap(HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap) {
+        this.gradeSubjectDTOMap = gradeSubjectDTOMap;
     }
 
     public HashMap<SubjectGradeClassDTO, Integer> getSubjectGradeClassTeacherMap() {
@@ -108,18 +129,21 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
         this.classroomMaxCapacity = classroomMaxCapacity;
     }
 
-    @Override
-    public String toString() {
-        return "CheckAllCompleteIsOkDTO{" +
-                "time=" + time +
-                ", grade=" + grade +
-                ", classNum=" + classNum +
-                ", workDay=" + workDay +
-                ", subjectMaxWeightDTO=" + subjectMaxWeightDTO +
-                ", subjectGradeClassTeacherMap=" + subjectGradeClassTeacherMap +
-                ", teacherTeachingMap=" + teacherTeachingMap +
-                ", classroomUsedCountMap=" + classroomUsedCountMap +
-                ", classroomMaxCapacity=" + classroomMaxCapacity +
-                '}';
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getGradeClassNumSubjectFrequencyMap() {
+        return gradeClassNumSubjectFrequencyMap;
     }
+
+    public void setGradeClassNumSubjectFrequencyMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap) {
+        this.gradeClassNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
+        return timeTableMap;
+    }
+
+    public void setTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
+        this.timeTableMap = timeTableMap;
+    }
+
+
 }

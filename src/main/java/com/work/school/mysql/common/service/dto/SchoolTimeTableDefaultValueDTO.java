@@ -25,6 +25,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      */
     private static final Integer START_CLASS_TIME_INDEX = 1;
     /**
+     * 每天的上课步长
+     */
+    private static final Integer STEP = 1;
+    /**
      * 一周的课时量
      */
     private static final Integer TOTAL_FREQUENCY = WORK_DAY * CLASS_TIME;
@@ -59,7 +63,7 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
     /**
      * 班会课时间
      */
-    private static final Integer CLASS_MEETING_TIME = 7;
+        private static final Integer CLASS_MEETING_TIME = 7;
     /**
      * 书法课时间
      */
@@ -68,6 +72,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      * 校本课程时间
      */
     private static final Integer[] SCHOOL_BASED_TIME = {4, 5, 6, 7};
+    /**
+     * 分配年级开始索引
+     */
+    private static final Integer START_GRADE_INDEX = 1;
     /**
      * 分配班级开始索引
      */
@@ -120,7 +128,9 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      * 学生的连堂课时间段
      */
     private static final Integer[][] STUDENT_CONTINUE_TIME = {{1, 2}, {4, 5}, {5, 6}};
+    private static final Integer STUDENT_CONTINUE_TIME_FIRST_INDEX = 0;
     private static final Integer STUDENT_CONTINUE_TIME_LAST_INDEX = 1;
+
     /**
      * 教师的连堂课时间段
      */
@@ -132,6 +142,8 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
      * 初始化使用教室的数量
      */
     private static final Integer INIT_CLASSROOM_USED_COUNT = 0;
+
+    private static final Integer START_ORDER = 1;
 
     public static Integer getWorkDay() {
         return WORK_DAY;
@@ -267,6 +279,26 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
 
     public static Integer getWritingId() {
         return WRITING_ID;
+    }
+
+    public static Integer getStudentContinueTimeFirstIndex() {
+        return STUDENT_CONTINUE_TIME_FIRST_INDEX;
+    }
+
+    public static Integer getStep() {
+        return STEP;
+    }
+
+    public static Integer getSTEP() {
+        return STEP;
+    }
+
+    public static Integer getStartGradeIndex() {
+        return START_GRADE_INDEX;
+    }
+
+    public static Integer getStartOrder() {
+        return START_ORDER;
     }
 
     @Override
