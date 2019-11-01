@@ -36,9 +36,13 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
      */
     private Map<Integer, List<SubjectDTO>> gradeSubjectMap;
     /**
+     * 所有课程按照grade的map
+     */
+    private HashMap<Integer,HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
+    /**
      * 所有课程按照grade，classNum,workDay，Subject count 的Map
      */
-    private HashMap<Integer,HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>>> gradeClassNumWorkDaySubjectCountMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> gradeClassNumWorkDaySubjectCountMap;
     /**
      * 所有上课的教师
      */
@@ -62,7 +66,7 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
     /**
      * 教师所带年级班级和科目map
      */
-    private HashMap<Integer,List<SubjectTeacherGradeClassDTO>> teacherSubjectListMap;
+    private HashMap<Integer, List<SubjectTeacherGradeClassDTO>> teacherSubjectListMap;
     /**
      * 年级班级下对应课程权重的map
      */
@@ -70,19 +74,27 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
     /**
      * 小课教室最大容量
      */
-    private HashMap<Integer,Integer> classroomMaxCapacityMap;
+    private HashMap<Integer, Integer> classroomMaxCapacityMap;
     /**
      * 初始化特殊教室使用情况
      */
-    private HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>> classRoomUsedCountMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classRoomUsedCountMap;
+    /**
+     * 年级班级下对应课程次数的map
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap;
     /**
      * 排序关系
      */
-    private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
+    private HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
+    /**
+     * 获取科目使用的Map
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap;
     /**
      * 课程表map
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer,HashMap<Integer, Integer>>>> timeTableMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap;
 
     public List<ClassInfoDO> getAllGradeClassInfo() {
         return allGradeClassInfo;
@@ -204,12 +216,36 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.classRoomUsedCountMap = classRoomUsedCountMap;
     }
 
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getGradeClassNumSubjectFrequencyMap() {
+        return gradeClassNumSubjectFrequencyMap;
+    }
+
+    public void setGradeClassNumSubjectFrequencyMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap) {
+        this.gradeClassNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
+        return gradeSubjectDTOMap;
+    }
+
+    public void setGradeSubjectDTOMap(HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap) {
+        this.gradeSubjectDTOMap = gradeSubjectDTOMap;
+    }
+
     public HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap() {
         return orderGradeClassNumWorkDayTimeMap;
     }
 
     public void setOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap) {
         this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> getGradeClassNumWorkDayTimeSubjectIdCanUseMap() {
+        return gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    }
+
+    public void setGradeClassNumWorkDayTimeSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
+        this.gradeClassNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap;
     }
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
@@ -228,6 +264,7 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
                 ", allSubject=" + allSubject +
                 ", allSubjectNameMap=" + allSubjectNameMap +
                 ", gradeSubjectMap=" + gradeSubjectMap +
+                ", gradeSubjectDTOMap=" + gradeSubjectDTOMap +
                 ", gradeClassNumWorkDaySubjectCountMap=" + gradeClassNumWorkDaySubjectCountMap +
                 ", allWorkTeacher=" + allWorkTeacher +
                 ", teacherTeachingMap=" + teacherTeachingMap +
@@ -238,7 +275,9 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
                 ", gradeClassSubjectWeightMap=" + gradeClassSubjectWeightMap +
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
                 ", classRoomUsedCountMap=" + classRoomUsedCountMap +
+                ", gradeClassNumSubjectFrequencyMap=" + gradeClassNumSubjectFrequencyMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
+                ", gradeClassNumWorkDayTimeSubjectIdCanUseMap=" + gradeClassNumWorkDayTimeSubjectIdCanUseMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }

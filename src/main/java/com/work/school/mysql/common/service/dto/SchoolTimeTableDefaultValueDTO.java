@@ -145,6 +145,8 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
 
     private static final Integer START_ORDER = 1;
 
+    private static final Integer START_COUNT = 1;
+
     public static Integer getWorkDay() {
         return WORK_DAY;
     }
@@ -299,6 +301,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
 
     public static Integer getStartOrder() {
         return START_ORDER;
+    }
+
+    public static Integer getStartCount() {
+        return START_COUNT;
     }
 
     @Override

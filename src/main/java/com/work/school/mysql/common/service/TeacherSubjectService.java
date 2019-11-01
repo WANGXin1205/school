@@ -32,15 +32,6 @@ public class TeacherSubjectService {
     private TeacherSubjectMapper teacherSubjectMapper;
 
     /**
-     * 查询所有教师和年级班级的对应关系
-     *
-     * @return
-     */
-    public List<TeacherSubjectDO> listAllTeacherSubject() {
-        return teacherSubjectMapper.listAllTeacherSubject();
-    }
-
-    /**
      * 查询所有科目，教师，年级，班级之间的关系
      *
      * @return

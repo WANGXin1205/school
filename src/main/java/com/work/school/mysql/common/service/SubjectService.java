@@ -43,13 +43,6 @@ public class SubjectService {
     }
 
     /**
-     * 查询所有科目明细
-     */
-    public List<SubjectDetailsDO> listAllSubjectDetails() {
-        return subjectDetailsMapper.listAllSubjectDetails();
-    }
-
-    /**
      * 查询所有科目明细和科目的信息
      *
      * @return
@@ -359,22 +352,6 @@ public class SubjectService {
     }
 
     /**
-     * 筛选出最大权重的科目
-     *
-     * @param subjectWeightDTOList
-     * @return
-     */
-    public SubjectWeightDTO filterMaxSubjectWeightDTO(List<SubjectWeightDTO> subjectWeightDTOList) {
-        try {
-            return subjectWeightDTOList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
-                    .max(Comparator.comparing(SubjectWeightDTO::getWeight)).get();
-        } catch (NoSuchElementException e) {
-            LOGGER.error(e.getMessage());
-            throw new TransactionException(e);
-        }
-    }
-
-    /**
      * 组装GradeClassWorkDayTimeDTO
      *
      * @param grade
@@ -392,27 +369,6 @@ public class SubjectService {
         gradeClassWorkDayTimeDTO.setTime(time);
 
         return gradeClassWorkDayTimeDTO;
-    }
-
-    /**
-     * 重新选课
-     *
-     * @param subjectWeightDTOList
-     * @return
-     */
-    public void fixSubjectWeightDTO(List<SubjectWeightDTO> subjectWeightDTOList) {
-        if (CollectionUtils.isEmpty(subjectWeightDTOList)) {
-            throw new TransactionException("没有课程需要排课");
-        }
-        if (SchoolTimeTableDefaultValueDTO.getSubjectWeightListOneIndex().equals(subjectWeightDTOList.size())) {
-            throw new TransactionException("课程已经无法修正，必须重新设定权重");
-        }
-        if (subjectWeightDTOList.size() > SchoolTimeTableDefaultValueDTO.getSubjectWeightListOneIndex()) {
-            subjectWeightDTOList.sort(Comparator.comparing(SubjectWeightDTO::getWeight).reversed());
-            var weight = subjectWeightDTOList.get(SchoolTimeTableDefaultValueDTO.getSubjectWeightListOneIndex()).getWeight();
-            subjectWeightDTOList.get(0).setWeight(weight - SubjectWeightDefaultValueDTO.getOneStep());
-        }
-
     }
 
     /**

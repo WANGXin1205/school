@@ -35,16 +35,6 @@ public class ClassroomMaxCapacityService {
         return classroomMaxCapacityMapper.listAllClassroomMaxCapacity();
     }
 
-    /**
-     * 组装需要教室科目和教室最大容量的map
-     *
-     * @param classroomMaxCapacityDOList
-     * @return
-     */
-    public HashMap<Integer, Integer> getClassroomMaxCapacityMap(List<ClassroomMaxCapacityDO> classroomMaxCapacityDOList) {
-        return (HashMap<Integer, Integer>) classroomMaxCapacityDOList.stream()
-                .collect(Collectors.toMap(ClassroomMaxCapacityDO::getSubjectId, ClassroomMaxCapacityDO::getMaxCapacity));
-    }
 
     /**
      * 组装需要教室科目和教室最大容量的map
