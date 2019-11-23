@@ -1,13 +1,10 @@
 package com.work.school.mysql.common.service;
 
-import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.dao.domain.SubjectDO;
-import com.work.school.mysql.common.dao.domain.SubjectDetailsDO;
 import com.work.school.mysql.common.dao.mapper.SubjectDetailsMapper;
 import com.work.school.mysql.common.dao.mapper.SubjectMapper;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.timetable.service.dto.GradeClassWorkDayTimeDTO;
-import org.apache.commons.collections4.CollectionUtils;
+import com.work.school.mysql.common.service.dto.GradeClassWorkDayTimeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

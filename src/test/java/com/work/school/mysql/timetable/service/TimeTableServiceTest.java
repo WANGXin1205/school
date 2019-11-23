@@ -43,5 +43,11 @@ public class TimeTableServiceTest {
         Assert.assertTrue(cattyResult.isSuccess());
     }
 
+    @Test
+    public void planTimeTableWithGeneticAlgorithmTest(){
+        var cattyResult = timeTableService.planTimeTableWithGenetic();
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
+
 
 }

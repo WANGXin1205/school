@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @Date : 2019/9/5 7:42 AM
  * @Description
  */
-public final class SchoolTimeTableDefaultValueDTO implements Serializable{
+public final class SchoolTimeTableDefaultValueDTO implements Serializable {
     /**
      * 一周的工作天数
      */
@@ -63,7 +63,7 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable{
     /**
      * 班会课时间
      */
-        private static final Integer CLASS_MEETING_TIME = 7;
+    private static final Integer CLASS_MEETING_TIME = 7;
     /**
      * 书法课时间
      */

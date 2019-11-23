@@ -1,4 +1,4 @@
-package com.work.school.mysql.timetable.service.dto;
+package com.work.school.mysql.common.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;

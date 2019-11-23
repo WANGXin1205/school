@@ -33,6 +33,7 @@ public class MathsUtils {
 
     /**
      * 比赛计分 去掉一个最高分 去掉一个最低分 再取平均分
+     *
      * @param strings
      * @return
      */
@@ -44,11 +45,11 @@ public class MathsUtils {
             bigDecimals.add(bigDecimal);
         }
         Collections.sort(bigDecimals);
-        bigDecimals.remove(0);
-        bigDecimals.remove(bigDecimals.size()-1);
+        bigDecimals.remove(BigDecimal.ZERO);
+        bigDecimals.remove(bigDecimals.size() - 1);
 
         BigDecimal allScore = bigDecimals.stream().reduce(BigDecimal::add).get();
-        var avgScore = allScore.divide(new BigDecimal(bigDecimals.size()),2, RoundingMode.HALF_UP);
+        var avgScore = allScore.divide(new BigDecimal(bigDecimals.size()), 2, RoundingMode.HALF_UP);
         System.out.println("计算出平均分是: " + avgScore);
         return avgScore;
     }
