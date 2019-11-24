@@ -3,6 +3,7 @@ package com.work.school.mysql.timetable.service;
 import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.dto.*;
+import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
@@ -34,6 +35,10 @@ public class GeneticService {
     private static final int STEP = 1;
 
     private static final int ONLY_ONE_COUNT = 1;
+    /**
+     * 教师一天最多上4节课
+     */
+    private static final int TEACHER_MAX_TIME = 4;
     /**
      * 开始分数
      */
@@ -77,6 +82,7 @@ public class GeneticService {
                     classNoWorkDayTimeSubjectMap = new HashMap<>();
                     HashMap<Integer, HashMap<Integer, String>> workDayTimeSubjectMap = new HashMap<>();
                     HashMap<Integer, String> timeSubjectMap = new HashMap<>();
+                    timeSubjectMap.put(time, subjectName);
                     workDayTimeSubjectMap.put(workDay, timeSubjectMap);
                     classNoWorkDayTimeSubjectMap.put(classNo, workDayTimeSubjectMap);
                     timeTableMap.put(grade, classNoWorkDayTimeSubjectMap);
@@ -114,32 +120,61 @@ public class GeneticService {
         return cattyResult;
     }
 
+    /**
+     * 转换工作日和时间
+     *
+     * @param classTime
+     * @return
+     */
     private WorkDayTimeDTO convertWorkDayTime(String classTime) {
         var workDayAndTime = Integer.valueOf(classTime);
 
-        Integer workday = null;
-        for (int i = START_INDEX; i < SchoolTimeTableDefaultValueDTO.getWorkDay(); i++) {
-            var subClassTime = i * SchoolTimeTableDefaultValueDTO.getClassTime();
-            var supClassTime = (i + STEP) * SchoolTimeTableDefaultValueDTO.getClassTime();
-            if (workDayAndTime <= SchoolTimeTableDefaultValueDTO.getClassTime()) {
-                workday = SchoolTimeTableDefaultValueDTO.getStartWorkDayIndex();
-                break;
-            }
-            if (subClassTime < workDayAndTime && workDayAndTime <= supClassTime) {
-                workday = i + STEP;
-                break;
-            }
-        }
-
-        var time = workDayAndTime % SchoolTimeTableDefaultValueDTO.getClassTime();
-        if (ZERO == time) {
-            time = SchoolTimeTableDefaultValueDTO.getClassTime();
-        }
+        // 计算第几个工作日
+        var workday = this.computerWorkDay(workDayAndTime);
+        // 计算第几节课
+        var time = this.computerTime(workDayAndTime);
 
         WorkDayTimeDTO workDayTimeDTO = new WorkDayTimeDTO();
         workDayTimeDTO.setWorkDay(workday);
         workDayTimeDTO.setTime(time);
         return workDayTimeDTO;
+    }
+
+    /**
+     * 计算第几个工作日
+     *
+     * @param classTime
+     * @return
+     */
+    private Integer computerWorkDay(Integer classTime) {
+        Integer workday = null;
+        for (int i = START_INDEX; i < SchoolTimeTableDefaultValueDTO.getWorkDay(); i++) {
+            var subClassTime = i * SchoolTimeTableDefaultValueDTO.getClassTime();
+            var supClassTime = (i + STEP) * SchoolTimeTableDefaultValueDTO.getClassTime();
+            if (classTime <= SchoolTimeTableDefaultValueDTO.getClassTime()) {
+                workday = SchoolTimeTableDefaultValueDTO.getStartWorkDayIndex();
+                break;
+            }
+            if (subClassTime < classTime && classTime <= supClassTime) {
+                workday = i + STEP;
+                break;
+            }
+        }
+        return workday;
+    }
+
+    /**
+     * 计算第几节课
+     *
+     * @param classTime
+     * @return
+     */
+    private Integer computerTime(Integer classTime) {
+        var time = classTime % SchoolTimeTableDefaultValueDTO.getClassTime();
+        if (ZERO == time) {
+            time = SchoolTimeTableDefaultValueDTO.getClassTime();
+        }
+        return time;
     }
 
     /**
@@ -160,8 +195,11 @@ public class GeneticService {
         // 对已经分配好时间的基因进行分类，生成以年级班级为类别的Map
         var gradeClassNoGeneMap = this.getGradeClassNoGeneMap(initTimeGradeSubjectList);
 
-        // 遗传算法
-        geneMap = this.geneticCore(gradeClassNoGeneMap);
+        // 遗传算法 满足硬约束
+//        geneMap = this.geneticHardConstraintCore(gradeClassNoGeneMap);
+
+        // 满足硬约束和软约束 有迭代次数限制
+        geneMap = this.geneticMoreSatisfiedCore(gradeClassNoGeneMap);
 
         cattyResult.setData(geneMap);
         cattyResult.setSuccess(true);
@@ -340,23 +378,48 @@ public class GeneticService {
      * @param gradeClassNoGeneMap
      * @return
      */
-    private HashMap<String, List<String>> geneticCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
+    private HashMap<String, List<String>> geneticHardConstraintCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
 
         int score = START_SCORE;
-        while (score != 0) {
+        while (score != ZERO) {
             // 先按照班级合并
             var mergeList = this.merge(gradeClassNoGeneMap);
 
             //第一步完成交叉操作,产生新一代的父本
-            var crossoverList = this.crossover(mergeList);
+            var crossoverList = this.crossover(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
 
             // 由于没有空余时间，所以不能变异
 //            var mutateList = this.mutate(crossoverList, timeCountMap);
 
             // 计算适度函数
-            score = this.computerFitnessFunction(crossoverList);
+            score = this.computerFitnessFunction(crossoverList, FitnessFunctionEnum.HARD_SATISFIED);
 
-            //第五步将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
+            //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
+            gradeClassNoGeneMap = this.getGradeClassNoGeneMap(crossoverList);
+        }
+
+        return gradeClassNoGeneMap;
+    }
+
+    /**
+     * 遗传算法核心 交叉和变异
+     *
+     * @param gradeClassNoGeneMap
+     * @return
+     */
+    private HashMap<String, List<String>> geneticMoreSatisfiedCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
+
+        for (int i = ZERO; i < GeneticDefaultValueDTO.GENE_TIMES; i++) {
+            // 先按照班级合并
+            var mergeList = this.merge(gradeClassNoGeneMap);
+
+            //第一步完成交叉操作,产生新一代的父本
+            var crossoverList = this.crossover(mergeList, FitnessFunctionEnum.MORE_SATISFIED);
+
+            // 由于没有空余时间，所以不能变异
+//            var mutateList = this.mutate(crossoverList, timeCountMap);
+
+            //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
             gradeClassNoGeneMap = this.getGradeClassNoGeneMap(crossoverList);
         }
 
@@ -367,16 +430,17 @@ public class GeneticService {
      * 交叉操作
      *
      * @param mergeList
+     * @param fitnessFunctionEnum
      * @return
      */
-    private List<String> crossover(List<String> mergeList) {
+    private List<String> crossover(List<String> mergeList, FitnessFunctionEnum fitnessFunctionEnum) {
 
         // 进行基因交叉生成新个体
         List<String> newGeneList = this.selectGene(mergeList);
 
         // 分别计算适度函数值
-        Integer oldScore = this.computerFitnessFunction(mergeList);
-        Integer newScore = this.computerFitnessFunction(newGeneList);
+        Integer oldScore = this.computerFitnessFunction(mergeList, fitnessFunctionEnum);
+        Integer newScore = this.computerFitnessFunction(newGeneList, fitnessFunctionEnum);
 
         // 对父代和新生基因进行适度函数对比，选择适度高的基因进入下一代遗传
         if (oldScore > newScore) {
@@ -449,10 +513,11 @@ public class GeneticService {
      * @param geneList
      * @return
      */
-    private Integer constructingHardFitnessFunction(List<String> geneList) {
+    private Integer constructingHardSatisfiedFitnessFunction(List<String> geneList) {
 
         HashMap<String, Integer> gradeClassNoClassTimeCountMap = new HashMap<>();
         HashMap<String, Integer> teacherIdClassTimeCountMap = new HashMap<>();
+        HashMap<String, Integer> otherSubjectIdCountMap = new HashMap<>();
         for (String gene : geneList) {
             var fixedFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
             if (GeneticDefaultValueDTO.UN_FIXED.equals(fixedFlag)) {
@@ -474,39 +539,107 @@ public class GeneticService {
                 var teacherIdClassTime = teacherId.concat(classTime);
 
                 teacherIdClassTimeCountMap.merge(teacherIdClassTime, STEP, Integer::sum);
+
+                // 拆分课程id 和 类型
+                var subjectTypeString = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_TYPE_INDEX, gene);
+                var subjectType = Integer.valueOf(subjectTypeString);
+                if (SchoolTimeTableDefaultValueDTO.getOtherSubjectType().equals(subjectType)
+                        || SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectType)) {
+                    var subjectId = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_ID_INDEX, gene);
+
+                    var workDay = this.computerWorkDay(Integer.valueOf(classTime));
+                    var gradeClassNoOtherSubjectIdClassTime = gradeClassNo.concat(subjectId).concat(workDay.toString());
+                    otherSubjectIdCountMap.merge(gradeClassNoOtherSubjectIdClassTime, STEP, Integer::sum);
+                }
+
             }
         }
 
         // 不满足硬约束条件的次数
-        int hardCount = ZERO;
         // 同一时间同一个班上了多节课
+        int oneTimeOneClassMoreSubjectCount = ZERO;
         for (String gradeClassNoClassTime : gradeClassNoClassTimeCountMap.keySet()) {
             var gradeClassNoClassTimeCount = gradeClassNoClassTimeCountMap.get(gradeClassNoClassTime);
-            hardCount = hardCount + gradeClassNoClassTimeCount - ONLY_ONE_COUNT;
+            oneTimeOneClassMoreSubjectCount = oneTimeOneClassMoreSubjectCount + gradeClassNoClassTimeCount - ONLY_ONE_COUNT;
         }
+
         // 同一时间同一个教师上多个班的课
+        int oneTimeOneTeacherMoreClassCount = ZERO;
         for (String teacherIdClassTime : teacherIdClassTimeCountMap.keySet()) {
             var teacherIdClassTimeCount = teacherIdClassTimeCountMap.get(teacherIdClassTime);
-            hardCount = hardCount + teacherIdClassTimeCount - ONLY_ONE_COUNT;
+            oneTimeOneTeacherMoreClassCount = oneTimeOneTeacherMoreClassCount + teacherIdClassTimeCount - ONLY_ONE_COUNT;
         }
+
         // 小课每个年级的每个班每天只上一次
+        int oneClassMoreOtherSubject = ZERO;
+        for (String gradeClassNoOtherSubjectIdClassTime : otherSubjectIdCountMap.keySet()) {
+            oneClassMoreOtherSubject = oneClassMoreOtherSubject + otherSubjectIdCountMap.get(gradeClassNoOtherSubjectIdClassTime) - ONLY_ONE_COUNT;
+        }
 
 
+        int hardCount = oneTimeOneClassMoreSubjectCount + oneTimeOneTeacherMoreClassCount + oneClassMoreOtherSubject;
         return hardCount;
     }
 
-    private Integer constructingFitnessFunction(List<String> geneList) {
+    /**
+     * 满足硬约束条件和软约束条件
+     *
+     * @param geneList
+     * @return
+     */
+    private Integer constructingMoreSatisfiedFitnessFunction(List<String> geneList) {
 
         // 硬约束条件
-        var hardCount = this.constructingHardFitnessFunction(geneList);
+        var hardCount = this.constructingHardSatisfiedFitnessFunction(geneList);
+
+        HashMap<String, Integer> teacherWorkDayCountMap = new HashMap<>();
+        HashMap<Integer, Integer> subjectTypeCountMap = new HashMap<>();
+        for (String gene : geneList) {
+            var fixedFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
+            if (GeneticDefaultValueDTO.UN_FIXED.equals(fixedFlag)) {
+                var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
+                var workDay = this.computerWorkDay(Integer.valueOf(classTime));
+
+                // 获取教师id
+                var teacherId = this.cutGeneIndex(GeneticDefaultValueDTO.TEACHER_ID_INDEX, gene);
+                var teacherWorkDay = teacherId.concat(workDay.toString());
+                teacherWorkDayCountMap.merge(teacherWorkDay, STEP, Integer::sum);
+
+                // 确定第几节课程
+                var time = this.computerTime(Integer.valueOf(classTime));
+                // 如果是第一第二节课，要看是否为主课
+                if (SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time)
+                        || SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time)) {
+
+                    // 获取课程类型
+                    var subjectTypeString = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_TYPE_INDEX, gene);
+                    Integer subjectType = Integer.valueOf(subjectTypeString);
+
+                    subjectTypeCountMap.merge(subjectType, STEP, Integer::sum);
+                }
+            }
+        }
+
+        // 教师一天上课不能超过4节
+        int teacherOutMaxTimeCount = ZERO;
+        for (String teacherWorkDay : teacherWorkDayCountMap.keySet()) {
+            var count = teacherWorkDayCountMap.get(teacherWorkDay);
+            if (count > TEACHER_MAX_TIME) {
+                teacherOutMaxTimeCount = teacherOutMaxTimeCount + count - TEACHER_MAX_TIME;
+            }
+        }
+
+        // 第一二节必须是语文和数学课
+        int noMainSubjectCount = ZERO;
+        for (Integer subjectType : subjectTypeCountMap.keySet()) {
+            if (!SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectType)) {
+                var typeCount = subjectTypeCountMap.get(subjectType);
+                noMainSubjectCount = noMainSubjectCount + typeCount;
+            }
+        }
 
         // 不满足软约束条件的次数
-        int softCount = ZERO;
-
-        // 教师不能上连堂课
-
-        // 主课早上上课，小课下午上课
-
+        var softCount = teacherOutMaxTimeCount + noMainSubjectCount;
         var score = hardCount * hardCount + softCount;
 
         return score;
@@ -518,9 +651,16 @@ public class GeneticService {
      * @param geneList
      * @return
      */
-    private Integer computerFitnessFunction(List<String> geneList) {
-        // 未来会有多种适度函数,目前这个越小越好，最好0
-        return this.constructingHardFitnessFunction(geneList);
+    private Integer computerFitnessFunction(List<String> geneList, FitnessFunctionEnum fitnessFunctionEnum) {
+        Integer score = ZERO;
+        if (FitnessFunctionEnum.HARD_SATISFIED == fitnessFunctionEnum) {
+            score = this.constructingHardSatisfiedFitnessFunction(geneList);
+        }
+        if (FitnessFunctionEnum.MORE_SATISFIED == fitnessFunctionEnum) {
+            score = this.constructingMoreSatisfiedFitnessFunction(geneList);
+        }
+
+        return score;
     }
 
 //    /**

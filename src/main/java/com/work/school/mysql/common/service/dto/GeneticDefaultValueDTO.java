@@ -11,7 +11,7 @@ public final class GeneticDefaultValueDTO {
     /**
      * 遗传算法次数
      */
-    public static final int GENE_TIMES = 200;
+    public static final int GENE_TIMES = 100000;
     /**
      * 基因开始和结束索引
      */
