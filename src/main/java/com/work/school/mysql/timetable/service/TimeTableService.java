@@ -26,7 +26,47 @@ public class TimeTableService {
     @Resource
     private GeneticService geneticService;
     @Resource
+    private SimulateAnnealService simulateAnnealService;
+    @Resource
     private PrepareService prepareService;
+
+    /**
+     * 模拟退火算法 这个方法基本没有成功
+     *
+     * @return
+     */
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableWithSimulateAnneal() {
+        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
+
+        // 准备默认学校配置
+        var prepareTimeTablingUseSimulateAnnealResult = prepareService.prepareTimeTablingUseSimulateAnneal();
+        if (!prepareTimeTablingUseSimulateAnnealResult.isSuccess()) {
+            LOGGER.warn(prepareTimeTablingUseSimulateAnnealResult.getMessage());
+            cattyResult.setMessage(prepareTimeTablingUseSimulateAnnealResult.getMessage());
+            return cattyResult;
+        }
+        TimeTablingUseSimulateAnnealDTO timeTablingUseSimulateAnnealDTO = prepareTimeTablingUseSimulateAnnealResult.getData();
+
+        var algorithmInPlanTimeTableWithSimulateAnnealResult = simulateAnnealService.algorithmInPlanTimeTableWithSimulateAnneal(timeTablingUseSimulateAnnealDTO);
+        if (!algorithmInPlanTimeTableWithSimulateAnnealResult.isSuccess()) {
+            LOGGER.warn(algorithmInPlanTimeTableWithSimulateAnnealResult.getMessage());
+            cattyResult.setMessage(algorithmInPlanTimeTableWithSimulateAnnealResult.getMessage());
+            return cattyResult;
+        }
+        var geneMap = algorithmInPlanTimeTableWithSimulateAnnealResult.getData();
+
+        var convertToTimeTableNameMapResult = geneticService.convertToTimeTableNameMap(geneMap, timeTablingUseSimulateAnnealDTO.getAllSubjectNameMap());
+        if (!convertToTimeTableNameMapResult.isSuccess()) {
+            LOGGER.warn(convertToTimeTableNameMapResult.getMessage());
+            cattyResult.setMessage(convertToTimeTableNameMapResult.getMessage());
+            return cattyResult;
+        }
+        var timeTableMap = convertToTimeTableNameMapResult.getData();
+
+        cattyResult.setData(timeTableMap);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
 
     /**
      * 排课算法 回溯算法

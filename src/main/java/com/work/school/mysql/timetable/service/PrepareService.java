@@ -9,7 +9,6 @@ import com.work.school.mysql.common.service.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,6 +43,26 @@ public class PrepareService {
     private CheckingService checkingService;
 
     /**
+     * 模拟退火算法准备学校默认配置
+     *
+     * @return
+     */
+    public CattyResult<TimeTablingUseSimulateAnnealDTO> prepareTimeTablingUseSimulateAnneal() {
+        CattyResult<TimeTablingUseSimulateAnnealDTO> cattyResult = new CattyResult<>();
+
+        PrepareTimeTablingDTO prepareTimeTablingDTO = this.prepareTimeTabling();
+        var specialSubjectTimeMap = this.getSpecialSubjectTime();
+
+        TimeTablingUseSimulateAnnealDTO timeTablingUseSimulateAnnealDTO = new TimeTablingUseSimulateAnnealDTO();
+        BeanUtils.copyProperties(prepareTimeTablingDTO, timeTablingUseSimulateAnnealDTO);
+        timeTablingUseSimulateAnnealDTO.setSpecialSubjectTimeMap(specialSubjectTimeMap);
+
+        cattyResult.setData(timeTablingUseSimulateAnnealDTO);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
+    /**
      * 遗传算法准备学校默认配置
      *
      * @return
@@ -52,7 +71,7 @@ public class PrepareService {
         CattyResult<TimeTablingUseGeneticDTO> cattyResult = new CattyResult<>();
 
         PrepareTimeTablingDTO prepareTimeTablingDTO = this.prepareTimeTabling();
-        var specialSubjectTimeMap = this.getSpecialSubjectTimeInGenetic();
+        var specialSubjectTimeMap = this.getSpecialSubjectTime();
 
         TimeTablingUseGeneticDTO timeTablingUseGeneticDTO = new TimeTablingUseGeneticDTO();
         BeanUtils.copyProperties(prepareTimeTablingDTO, timeTablingUseGeneticDTO);
@@ -68,7 +87,7 @@ public class PrepareService {
      *
      * @return
      */
-    private HashMap<String, String> getSpecialSubjectTimeInGenetic() {
+    private HashMap<String, String> getSpecialSubjectTime() {
         HashMap<String, String> specialSubjectTimeMap = new HashMap<>();
         specialSubjectTimeMap.put(GeneticDefaultValueDTO.CLASS_MEETING_TIME_KEY,GeneticDefaultValueDTO.CLASS_MEETING_TIME_VALUE);
         specialSubjectTimeMap.put(GeneticDefaultValueDTO.WRITING_TIME_KEY,GeneticDefaultValueDTO.WRITING_TIME_VALUE);

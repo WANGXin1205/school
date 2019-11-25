@@ -196,10 +196,10 @@ public class GeneticService {
         var gradeClassNoGeneMap = this.getGradeClassNoGeneMap(initTimeGradeSubjectList);
 
         // 遗传算法 满足硬约束
-//        geneMap = this.geneticHardConstraintCore(gradeClassNoGeneMap);
+        geneMap = this.geneticHardConstraintCore(gradeClassNoGeneMap);
 
         // 满足硬约束和软约束 有迭代次数限制
-        geneMap = this.geneticMoreSatisfiedCore(gradeClassNoGeneMap);
+//        geneMap = this.geneticMoreSatisfiedCore(gradeClassNoGeneMap);
 
         cattyResult.setData(geneMap);
         cattyResult.setSuccess(true);
@@ -216,7 +216,7 @@ public class GeneticService {
      * @param timeTablingUseGeneticDTO
      * @return
      */
-    private HashMap<String, List<String>> initGene(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
+    public HashMap<String, List<String>> initGene(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
         var gradeSubjectMap = timeTablingUseGeneticDTO.getGradeSubjectMap();
         var gradeClassCountMap = timeTablingUseGeneticDTO.getGradeClassCountMap();
         var subjectGradeClassTeacherMap = timeTablingUseGeneticDTO.getSubjectGradeClassTeacherMap();
@@ -284,7 +284,7 @@ public class GeneticService {
      * @param gradeClassNoCountMap
      * @return
      */
-    private List<String> initTime(HashMap<String, List<String>> geneMap, HashMap<Integer, Integer> gradeClassNoCountMap) {
+    public List<String> initTime(HashMap<String, List<String>> geneMap, HashMap<Integer, Integer> gradeClassNoCountMap) {
 
         List<String> initTimeGradeSubjectList = new ArrayList<>();
         List<String> geneList = new ArrayList<>();
@@ -354,7 +354,7 @@ public class GeneticService {
      * @param initTimeGradeSubjectList
      * @return
      */
-    private HashMap<String, List<String>> getGradeClassNoGeneMap(List<String> initTimeGradeSubjectList) {
+    public HashMap<String, List<String>> getGradeClassNoGeneMap(List<String> initTimeGradeSubjectList) {
         HashMap<String, List<String>> gradeClassNoGeneMap = new HashMap<>();
         for (String gene : initTimeGradeSubjectList) {
             var gradeClassNo = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, gene);
@@ -433,7 +433,7 @@ public class GeneticService {
      * @param fitnessFunctionEnum
      * @return
      */
-    private List<String> crossover(List<String> mergeList, FitnessFunctionEnum fitnessFunctionEnum) {
+    public List<String> crossover(List<String> mergeList, FitnessFunctionEnum fitnessFunctionEnum) {
 
         // 进行基因交叉生成新个体
         List<String> newGeneList = this.selectGene(mergeList);
@@ -456,7 +456,7 @@ public class GeneticService {
      * @param gradeClassNoGeneMap
      * @return
      */
-    private List<String> merge(HashMap<String, List<String>> gradeClassNoGeneMap) {
+    public List<String> merge(HashMap<String, List<String>> gradeClassNoGeneMap) {
         List<String> geneList = new ArrayList<>();
         gradeClassNoGeneMap.values().forEach(geneList::addAll);
         return geneList;
@@ -468,7 +468,7 @@ public class GeneticService {
      * @param oldGeneList
      * @return
      */
-    private List<String> selectGene(List<String> oldGeneList) {
+    public List<String> selectGene(List<String> oldGeneList) {
         List<String> newGeneList = new ArrayList<>(oldGeneList);
         boolean flag = false;
         do {
@@ -651,7 +651,7 @@ public class GeneticService {
      * @param geneList
      * @return
      */
-    private Integer computerFitnessFunction(List<String> geneList, FitnessFunctionEnum fitnessFunctionEnum) {
+    public Integer computerFitnessFunction(List<String> geneList, FitnessFunctionEnum fitnessFunctionEnum) {
         Integer score = ZERO;
         if (FitnessFunctionEnum.HARD_SATISFIED == fitnessFunctionEnum) {
             score = this.constructingHardSatisfiedFitnessFunction(geneList);

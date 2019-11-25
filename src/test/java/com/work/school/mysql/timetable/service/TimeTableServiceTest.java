@@ -49,5 +49,10 @@ public class TimeTableServiceTest {
         Assert.assertTrue(cattyResult.isSuccess());
     }
 
+    @Test
+    public void planTimeTableWithSimulateAnnealTest(){
+       var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
 
 }
