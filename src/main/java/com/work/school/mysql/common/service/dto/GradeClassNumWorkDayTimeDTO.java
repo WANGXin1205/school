@@ -1,5 +1,7 @@
 package com.work.school.mysql.common.service.dto;
 
+import java.util.Objects;
+
 /**
  * @Author : Growlithe
  * @Date : 2019/9/24 11:58 PM
@@ -45,6 +47,22 @@ public class GradeClassNumWorkDayTimeDTO {
 
     public void setTime(Integer time) {
         this.time = time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GradeClassNumWorkDayTimeDTO that = (GradeClassNumWorkDayTimeDTO) o;
+        return Objects.equals(grade, that.grade) &&
+                Objects.equals(classNum, that.classNum) &&
+                Objects.equals(workDay, that.workDay) &&
+                Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grade, classNum, workDay, time);
     }
 
     @Override

@@ -16,8 +16,10 @@ public class CheckClassRoomIsOkDTO {
     private Integer time;
 
     private HashMap<Integer, Integer> classroomMaxCapacity;
-
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classroomUsedCountMap;
+    /**
+     * 初始化特殊教室使用情况 order subjectId workDay time count
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
 
     public Integer getSubjectId() {
         return subjectId;
@@ -51,12 +53,12 @@ public class CheckClassRoomIsOkDTO {
         this.classroomMaxCapacity = classroomMaxCapacity;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getClassroomUsedCountMap() {
-        return classroomUsedCountMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getOrderClassRoomUsedCountMap() {
+        return orderClassRoomUsedCountMap;
     }
 
-    public void setClassroomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classroomUsedCountMap) {
-        this.classroomUsedCountMap = classroomUsedCountMap;
+    public void setOrderClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap) {
+        this.orderClassRoomUsedCountMap = orderClassRoomUsedCountMap;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class CheckClassRoomIsOkDTO {
                 ", workDay=" + workDay +
                 ", time=" + time +
                 ", classroomMaxCapacity=" + classroomMaxCapacity +
-                ", classroomUsedCountMap=" + classroomUsedCountMap +
+                ", orderClassRoomUsedCountMap=" + orderClassRoomUsedCountMap +
                 '}';
     }
 }

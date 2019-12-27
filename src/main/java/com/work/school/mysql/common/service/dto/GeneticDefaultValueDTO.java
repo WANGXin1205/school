@@ -98,6 +98,7 @@ public final class GeneticDefaultValueDTO {
      * 课程固定与否
      */
     public static final String UN_FIXED = "00";
+    // 固定
     public static final String FIXED = "01";
 
     /**

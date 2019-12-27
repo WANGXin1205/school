@@ -55,6 +55,15 @@ public class SubjectGradeClassDTO implements Serializable {
         return Objects.hash(subjectId, grade, classNum);
     }
 
+    public SubjectGradeClassDTO() {
+    }
+
+    public SubjectGradeClassDTO(Integer subjectId, Integer grade, Integer classNum) {
+        this.subjectId = subjectId;
+        this.grade = grade;
+        this.classNum = classNum;
+    }
+
     @Override
     public String toString() {
         return "SubjectTeacherGradeClassDTO{" +

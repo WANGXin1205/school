@@ -38,7 +38,7 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
     /**
      * 所有课程按照grade的map
      */
-    private HashMap<Integer,HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
+    private HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
     /**
      * 所有课程按照grade，classNum,workDay，Subject count 的Map
      */
@@ -47,10 +47,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
      * 所有上课的教师
      */
     private List<TeacherDO> allWorkTeacher;
-    /**
-     * 教师获取所有教师上课时间map
-     */
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap;
     /**
      * 查询所有科目，教师，年级，班级之间的关系
      */
@@ -76,13 +72,17 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
      */
     private HashMap<Integer, Integer> classroomMaxCapacityMap;
     /**
-     * 初始化特殊教室使用情况
-     */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classRoomUsedCountMap;
-    /**
      * 年级班级下对应课程次数的map
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap;
+    /**
+     * 教师获取所有教师上课时间map order teacherId workday time 中间变量
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
+    /**
+     * 初始化特殊教室使用情况 order subjectId workDay time
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
     /**
      * 排序关系
      */
@@ -90,7 +90,7 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
     /**
      * 获取科目使用的Map
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;
     /**
      * 课程表map
      */
@@ -136,6 +136,14 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.gradeSubjectMap = gradeSubjectMap;
     }
 
+    public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
+        return gradeSubjectDTOMap;
+    }
+
+    public void setGradeSubjectDTOMap(HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap) {
+        this.gradeSubjectDTOMap = gradeSubjectDTOMap;
+    }
+
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getGradeClassNumWorkDaySubjectCountMap() {
         return gradeClassNumWorkDaySubjectCountMap;
     }
@@ -150,14 +158,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
 
     public void setAllWorkTeacher(List<TeacherDO> allWorkTeacher) {
         this.allWorkTeacher = allWorkTeacher;
-    }
-
-    public HashMap<Integer, HashMap<Integer, List<Integer>>> getTeacherTeachingMap() {
-        return teacherTeachingMap;
-    }
-
-    public void setTeacherTeachingMap(HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        this.teacherTeachingMap = teacherTeachingMap;
     }
 
     public List<SubjectTeacherGradeClassDTO> getAllSubjectTeacherGradeClassDTO() {
@@ -208,14 +208,6 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.classroomMaxCapacityMap = classroomMaxCapacityMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getClassRoomUsedCountMap() {
-        return classRoomUsedCountMap;
-    }
-
-    public void setClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classRoomUsedCountMap) {
-        this.classRoomUsedCountMap = classRoomUsedCountMap;
-    }
-
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getGradeClassNumSubjectFrequencyMap() {
         return gradeClassNumSubjectFrequencyMap;
     }
@@ -224,12 +216,20 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.gradeClassNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
-        return gradeSubjectDTOMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getOrderTeacherWorkDayTimeMap() {
+        return orderTeacherWorkDayTimeMap;
     }
 
-    public void setGradeSubjectDTOMap(HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap) {
-        this.gradeSubjectDTOMap = gradeSubjectDTOMap;
+    public void setOrderTeacherWorkDayTimeMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap) {
+        this.orderTeacherWorkDayTimeMap = orderTeacherWorkDayTimeMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getOrderClassRoomUsedCountMap() {
+        return orderClassRoomUsedCountMap;
+    }
+
+    public void setOrderClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap) {
+        this.orderClassRoomUsedCountMap = orderClassRoomUsedCountMap;
     }
 
     public HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap() {
@@ -240,12 +240,12 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
         this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> getGradeClassNumWorkDayTimeSubjectIdCanUseMap() {
-        return gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
+        return orderSubjectIdCanUseMap;
     }
 
-    public void setGradeClassNumWorkDayTimeSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
-        this.gradeClassNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public void setOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap) {
+        this.orderSubjectIdCanUseMap = orderSubjectIdCanUseMap;
     }
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
@@ -267,17 +267,17 @@ public class TimeTablingUseDynamicWeightsAndBacktrackingDTO implements Serializa
                 ", gradeSubjectDTOMap=" + gradeSubjectDTOMap +
                 ", gradeClassNumWorkDaySubjectCountMap=" + gradeClassNumWorkDaySubjectCountMap +
                 ", allWorkTeacher=" + allWorkTeacher +
-                ", teacherTeachingMap=" + teacherTeachingMap +
                 ", allSubjectTeacherGradeClassDTO=" + allSubjectTeacherGradeClassDTO +
                 ", subjectGradeClassTeacherMap=" + subjectGradeClassTeacherMap +
                 ", subjectGradeClassTeacherCountMap=" + subjectGradeClassTeacherCountMap +
                 ", teacherSubjectListMap=" + teacherSubjectListMap +
                 ", gradeClassSubjectWeightMap=" + gradeClassSubjectWeightMap +
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
-                ", classRoomUsedCountMap=" + classRoomUsedCountMap +
                 ", gradeClassNumSubjectFrequencyMap=" + gradeClassNumSubjectFrequencyMap +
+                ", orderTeacherWorkDayTimeMap=" + orderTeacherWorkDayTimeMap +
+                ", orderClassRoomUsedCountMap=" + orderClassRoomUsedCountMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
-                ", gradeClassNumWorkDayTimeSubjectIdCanUseMap=" + gradeClassNumWorkDayTimeSubjectIdCanUseMap +
+                ", orderSubjectIdCanUseMap=" + orderSubjectIdCanUseMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }

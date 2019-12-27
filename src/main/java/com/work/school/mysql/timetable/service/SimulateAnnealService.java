@@ -28,7 +28,7 @@ public class SimulateAnnealService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulateAnnealService.class);
 
     private static final int ZERO = 0;
-    private static final int GENE_TIMES = 1000;
+    private static final int GENE_TIMES = 100;
     // 初始温度
     private static final BigDecimal INIT_TEMPERATURE = new BigDecimal("100");
     // 每次下降温度
@@ -83,7 +83,7 @@ public class SimulateAnnealService {
                 // 先按照班级合并
                 var oldScore = geneticService.computerFitnessFunction(oldList, FitnessFunctionEnum.HARD_SATISFIED);
 
-                var newList = geneticService.selectGene(oldList);
+                var newList = geneticService.selectGenes(oldList,GENE_TIMES);
                 var newScore = geneticService.computerFitnessFunction(newList,FitnessFunctionEnum.HARD_SATISFIED);
                 if (newScore > oldScore){
                     oldList = newList;
@@ -96,7 +96,7 @@ public class SimulateAnnealService {
                 }
 
                 //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
-                gradeClassNoGeneMap = geneticService.getGradeClassNoGeneMap(newList);
+                gradeClassNoGeneMap = geneticService.getGradeClassNoGeneMap(oldList);
             }
 
             temperature = temperature.subtract(STEP_TEMPERATURE);
@@ -104,6 +104,5 @@ public class SimulateAnnealService {
 
         return gradeClassNoGeneMap;
     }
-
 
 }

@@ -102,39 +102,39 @@ public class TimeTableService {
         return cattyResult;
     }
 
-    /**
-     * 排课接口 使用动态权重和回溯算法
-     *
-     * @return
-     */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableUseDynamicWeightsAndBacktracking() {
-        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
-
-        // 准备默认学校配置
-        var prepareTimeTablingUseDynamicWeightsAndBacktrackingResult = prepareService.prepareTimeTablingUseDynamicWeightsAndBacktracking();
-        if (!prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.isSuccess()) {
-            LOGGER.warn(prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getMessage());
-            cattyResult.setMessage(prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getMessage());
-            return cattyResult;
-        }
-        TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO = prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getData();
-
-        // 排课核心算法
-        var algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult = backtrackingService.algorithmInPlanTimeTableWithDynamicWeightsAndBacktracking(timeTablingUseDynamicWeightsAndBacktrackingDTO);
-        if (!algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.isSuccess()) {
-            LOGGER.warn(algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getMessage());
-            cattyResult.setMessage(algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getMessage());
-            return cattyResult;
-        }
-        var timeTableMap = algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getData();
-
-        // 结果展示
-        var timeTableNameMap = backtrackingService.convertTimeTableMapToTimeTableNameMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getAllSubjectNameMap(), timeTableMap);
-
-        cattyResult.setData(timeTableNameMap);
-        cattyResult.setSuccess(true);
-        return cattyResult;
-    }
+//    /**
+//     * 排课接口 使用动态权重和回溯算法
+//     *
+//     * @return
+//     */
+//    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableUseDynamicWeightsAndBacktracking() {
+//        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
+//
+//        // 准备默认学校配置
+//        var prepareTimeTablingUseDynamicWeightsAndBacktrackingResult = prepareService.prepareTimeTablingUseDynamicWeightsAndBacktracking();
+//        if (!prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.isSuccess()) {
+//            LOGGER.warn(prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getMessage());
+//            cattyResult.setMessage(prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getMessage());
+//            return cattyResult;
+//        }
+//        TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO = prepareTimeTablingUseDynamicWeightsAndBacktrackingResult.getData();
+//
+//        // 排课核心算法
+//        var algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult = backtrackingService.algorithmInPlanTimeTableWithDynamicWeightsAndBacktracking(timeTablingUseDynamicWeightsAndBacktrackingDTO);
+//        if (!algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.isSuccess()) {
+//            LOGGER.warn(algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getMessage());
+//            cattyResult.setMessage(algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getMessage());
+//            return cattyResult;
+//        }
+//        var timeTableMap = algorithmInPlanTimeTableWithDynamicWeightsAndBacktrackingResult.getData();
+//
+//        // 结果展示
+//        var timeTableNameMap = backtrackingService.convertTimeTableMapToTimeTableNameMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getAllSubjectNameMap(), timeTableMap);
+//
+//        cattyResult.setData(timeTableNameMap);
+//        cattyResult.setSuccess(true);
+//        return cattyResult;
+//    }
 
     /**
      * 排课算法 遗传算法

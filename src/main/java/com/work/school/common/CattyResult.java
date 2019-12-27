@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @Author : Growlithe
  * @Date : 2018/5/21 22:38
- * @Description 纪念我死去的卡蒂狗，因为Growlithe有拼写检查，我就用Candy了
+ * @Description 纪念我死去的卡蒂狗，因为Growlithe有拼写检查，我就用Catty了
  */
 public class CattyResult<T> implements Serializable {
 

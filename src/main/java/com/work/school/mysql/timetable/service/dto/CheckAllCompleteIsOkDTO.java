@@ -1,5 +1,6 @@
 package com.work.school.mysql.timetable.service.dto;
 
+import com.work.school.mysql.common.service.dto.SubjectDTO;
 import com.work.school.mysql.common.service.dto.SubjectGradeClassDTO;
 import com.work.school.mysql.common.service.dto.SubjectWeightDTO;
 
@@ -26,13 +27,18 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
 
     private SubjectWeightDTO subjectMaxWeightDTO;
 
+    /**
+     * 所有课程按照grade的map
+     */
+    private HashMap<Integer,HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
+
     private HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherMap;
 
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap;
     /**
-     * 初始化特殊教室使用情况
+     * 初始化特殊教室使用情况 order subjectId workDay time count
      */
-    private HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>> classroomUsedCountMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
 
     private HashMap<Integer,Integer> classroomMaxCapacity;
 
@@ -76,6 +82,14 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
         this.subjectMaxWeightDTO = subjectMaxWeightDTO;
     }
 
+    public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
+        return gradeSubjectDTOMap;
+    }
+
+    public void setGradeSubjectDTOMap(HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap) {
+        this.gradeSubjectDTOMap = gradeSubjectDTOMap;
+    }
+
     public HashMap<SubjectGradeClassDTO, Integer> getSubjectGradeClassTeacherMap() {
         return subjectGradeClassTeacherMap;
     }
@@ -84,20 +98,20 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
         this.subjectGradeClassTeacherMap = subjectGradeClassTeacherMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, List<Integer>>> getTeacherTeachingMap() {
-        return teacherTeachingMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
+        return timeTableMap;
     }
 
-    public void setTeacherTeachingMap(HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        this.teacherTeachingMap = teacherTeachingMap;
+    public void setTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
+        this.timeTableMap = timeTableMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getClassroomUsedCountMap() {
-        return classroomUsedCountMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getOrderClassRoomUsedCountMap() {
+        return orderClassRoomUsedCountMap;
     }
 
-    public void setClassroomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classroomUsedCountMap) {
-        this.classroomUsedCountMap = classroomUsedCountMap;
+    public void setOrderClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap) {
+        this.orderClassRoomUsedCountMap = orderClassRoomUsedCountMap;
     }
 
     public HashMap<Integer, Integer> getClassroomMaxCapacity() {
@@ -116,9 +130,10 @@ public class CheckAllCompleteIsOkDTO implements Serializable {
                 ", classNum=" + classNum +
                 ", workDay=" + workDay +
                 ", subjectMaxWeightDTO=" + subjectMaxWeightDTO +
+                ", gradeSubjectDTOMap=" + gradeSubjectDTOMap +
                 ", subjectGradeClassTeacherMap=" + subjectGradeClassTeacherMap +
-                ", teacherTeachingMap=" + teacherTeachingMap +
-                ", classroomUsedCountMap=" + classroomUsedCountMap +
+                ", timeTableMap=" + timeTableMap +
+                ", orderClassRoomUsedCountMap=" + orderClassRoomUsedCountMap +
                 ", classroomMaxCapacity=" + classroomMaxCapacity +
                 '}';
     }

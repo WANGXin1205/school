@@ -31,27 +31,30 @@ public class TimeTableServiceTest {
     @Resource
     private TimeTableService timeTableService;
 
-    @Test
-    public void planTimeTableWithDynamicWeightsAndBacktrackingTest(){
-        var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
-        Assert.assertTrue(cattyResult.isSuccess());
-    }
+//    @Test
+//    public void planTimeTableWithDynamicWeightsAndBacktrackingTest() {
+//        var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
+//        Assert.assertTrue(cattyResult.isSuccess());
+//    }
 
     @Test
-    public void planTimeTableWithBacktrackingTest(){
+    public void planTimeTableWithBacktrackingTest() {
         var cattyResult = timeTableService.planTimeTableWithBacktracking();
         Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
-    public void planTimeTableWithGeneticAlgorithmTest(){
+    public void planTimeTableWithGeneticAlgorithmTest() {
         var cattyResult = timeTableService.planTimeTableWithGenetic();
         Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
-    public void planTimeTableWithSimulateAnnealTest(){
-       var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
+    public void planTimeTableWithSimulateAnnealTest() {
+        long start = System.currentTimeMillis();
+        var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
         Assert.assertTrue(cattyResult.isSuccess());
     }
 

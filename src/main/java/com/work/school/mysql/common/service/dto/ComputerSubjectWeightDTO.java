@@ -32,9 +32,9 @@ public class ComputerSubjectWeightDTO implements Serializable {
      */
     private List<SubjectWeightDTO> subjectWeightDTOList;
     /**
-     * 教师获取所有教师上课时间map
+     * 教师获取所有教师上课时间map order teacherId workday time 中间变量
      */
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
     /**
      * 教师所带年级班级和科目map
      */
@@ -51,6 +51,10 @@ public class ComputerSubjectWeightDTO implements Serializable {
      * 某个科目对应教师所带班级数目的map
      */
     private HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherCountMap;
+    /**
+     * 需要教室的课程map
+     */
+    private HashMap<Integer,Integer> classroomMaxCapacityMap;
 
     public Integer getGrade() {
         return grade;
@@ -92,28 +96,12 @@ public class ComputerSubjectWeightDTO implements Serializable {
         this.subjectWeightDTOList = subjectWeightDTOList;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
-        return timeTableMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getOrderTeacherWorkDayTimeMap() {
+        return orderTeacherWorkDayTimeMap;
     }
 
-    public void setTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
-        this.timeTableMap = timeTableMap;
-    }
-
-    public HashMap<SubjectGradeClassDTO, Integer> getSubjectGradeClassTeacherCountMap() {
-        return subjectGradeClassTeacherCountMap;
-    }
-
-    public void setSubjectGradeClassTeacherCountMap(HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherCountMap) {
-        this.subjectGradeClassTeacherCountMap = subjectGradeClassTeacherCountMap;
-    }
-
-    public HashMap<Integer, HashMap<Integer, List<Integer>>> getTeacherTeachingMap() {
-        return teacherTeachingMap;
-    }
-
-    public void setTeacherTeachingMap(HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        this.teacherTeachingMap = teacherTeachingMap;
+    public void setOrderTeacherWorkDayTimeMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap) {
+        this.orderTeacherWorkDayTimeMap = orderTeacherWorkDayTimeMap;
     }
 
     public HashMap<Integer, List<SubjectTeacherGradeClassDTO>> getTeacherSubjectListMap() {
@@ -132,6 +120,30 @@ public class ComputerSubjectWeightDTO implements Serializable {
         this.gradeClassNumWorDaySubjectCountMap = gradeClassNumWorDaySubjectCountMap;
     }
 
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
+        return timeTableMap;
+    }
+
+    public void setTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
+        this.timeTableMap = timeTableMap;
+    }
+
+    public HashMap<SubjectGradeClassDTO, Integer> getSubjectGradeClassTeacherCountMap() {
+        return subjectGradeClassTeacherCountMap;
+    }
+
+    public void setSubjectGradeClassTeacherCountMap(HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherCountMap) {
+        this.subjectGradeClassTeacherCountMap = subjectGradeClassTeacherCountMap;
+    }
+
+    public HashMap<Integer, Integer> getClassroomMaxCapacityMap() {
+        return classroomMaxCapacityMap;
+    }
+
+    public void setClassroomMaxCapacityMap(HashMap<Integer, Integer> classroomMaxCapacityMap) {
+        this.classroomMaxCapacityMap = classroomMaxCapacityMap;
+    }
+
     @Override
     public String toString() {
         return "ComputerSubjectWeightDTO{" +
@@ -140,11 +152,12 @@ public class ComputerSubjectWeightDTO implements Serializable {
                 ", workDay=" + workDay +
                 ", time=" + time +
                 ", subjectWeightDTOList=" + subjectWeightDTOList +
-                ", teacherTeachingMap=" + teacherTeachingMap +
+                ", orderTeacherWorkDayTimeMap=" + orderTeacherWorkDayTimeMap +
                 ", teacherSubjectListMap=" + teacherSubjectListMap +
                 ", gradeClassNumWorDaySubjectCountMap=" + gradeClassNumWorDaySubjectCountMap +
                 ", timeTableMap=" + timeTableMap +
                 ", subjectGradeClassTeacherCountMap=" + subjectGradeClassTeacherCountMap +
+                ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
                 '}';
     }
 }

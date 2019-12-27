@@ -158,18 +158,15 @@ public class PrepareService {
         var allWorkTeacher = teacherService.listAllWorkTeacher();
 
         var classroomMaxCapacityMap = classroomMaxCapacityService.getClassroomMaxCapacityMap();
-        var classRoomUsedCountMap = subjectService.initClassRoomUsedCountMap(classroomMaxCapacityMap);
 
         // 准备求解的中间变量的默认值
         HashMap<Integer, HashMap<Integer, List<SubjectWeightDTO>>> gradeClassSubjectWeightMap = this.getGradeClassNumSubjectWeightMap(gradeClassCountMap, gradeSubjectMap);
         HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap = this.getTimeTableMap(gradeClassSubjectWeightMap);
-        HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap = this.getTeacherTeachingMap(allWorkTeacher);
         var gradeClassNumWorkDaySubjectCountMap = this.getGradeClassNumWorkDaySubjectCountMap(gradeClassCountMap, allSubjects);
         var orderGradeClassNumWorkDayTimeMap = this.getOrderGradeClassNumWorkDayTimeMap(gradeClassCountMap);
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassSubjectFrequencyMap
                 = this.getGradeClassSubjectFrequencyMap(gradeSubjectMap, gradeClassCountMap);
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>>
-                gradeClassNumWorkDayTimeSubjectIdCanUseMap = this.getGradeClassNumWorkDayTimeSubjectIdCanUseMap(gradeSubjectMap, gradeClassCountMap);
+        HashMap<Integer,HashMap<Integer, Boolean>> orderSubjectIdCanUseMap = this.getOrderSubjectIdCanUseMap(orderGradeClassNumWorkDayTimeMap,gradeSubjectMap);
         HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap = new HashMap<>();
         for (Integer grade : gradeSubjectMap.keySet()) {
             var subjectDTOList = gradeSubjectMap.get(grade);
@@ -183,11 +180,6 @@ public class PrepareService {
             throw new TransactionException(checkGradeResult.getMessage());
         }
 
-        // 检查教师和上课教师信息无误
-        CattyResult checkTeacherResult = checkingService.checkTeacher(allWorkTeacher, teacherTeachingMap);
-        if (!checkTeacherResult.isSuccess()) {
-            throw new TransactionException(checkTeacherResult.getMessage());
-        }
         // 检查问题有解
         var checkTimeTableSolutionResult = checkingService.checkTimeTableSolution(gradeSubjectMap, allSubjectNameMap, subjectGradeClassTeacherMap);
         if (!checkTimeTableSolutionResult.isSuccess()) {
@@ -203,9 +195,7 @@ public class PrepareService {
         prepareTimeTablingDTO.setGradeSubjectMap(gradeSubjectMap);
         prepareTimeTablingDTO.setGradeClassNumWorkDaySubjectCountMap(gradeClassNumWorkDaySubjectCountMap);
         prepareTimeTablingDTO.setClassroomMaxCapacityMap(classroomMaxCapacityMap);
-        prepareTimeTablingDTO.setClassRoomUsedCountMap(classRoomUsedCountMap);
         prepareTimeTablingDTO.setAllWorkTeacher(allWorkTeacher);
-        prepareTimeTablingDTO.setTeacherTeachingMap(teacherTeachingMap);
         prepareTimeTablingDTO.setAllSubjectTeacherGradeClassDTO(allSubjectTeacherGradeClassDTO);
         prepareTimeTablingDTO.setSubjectGradeClassTeacherMap(subjectGradeClassTeacherMap);
         prepareTimeTablingDTO.setSubjectGradeClassTeacherCountMap(subjectGradeClassTeacherCountMap);
@@ -213,8 +203,10 @@ public class PrepareService {
         prepareTimeTablingDTO.setGradeSubjectDTOMap(gradeSubjectDTOMap);
         prepareTimeTablingDTO.setGradeClassSubjectWeightMap(gradeClassSubjectWeightMap);
         prepareTimeTablingDTO.setGradeClassNumSubjectFrequencyMap(gradeClassSubjectFrequencyMap);
-        prepareTimeTablingDTO.setGradeClassNumWorkDayTimeSubjectIdCanUseMap(gradeClassNumWorkDayTimeSubjectIdCanUseMap);
+        prepareTimeTablingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
         prepareTimeTablingDTO.setOrderGradeClassNumWorkDayTimeMap(orderGradeClassNumWorkDayTimeMap);
+        prepareTimeTablingDTO.setOrderClassRoomUsedCountMap(new HashMap<>());
+        prepareTimeTablingDTO.setOrderTeacherWorkDayTimeMap(new HashMap<>());
         prepareTimeTablingDTO.setTimeTableMap(timeTableMap);
 
         return prepareTimeTablingDTO;
@@ -254,7 +246,8 @@ public class PrepareService {
      */
     private HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, Integer> gradeClassCountMap) {
         HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap = new HashMap<>();
-        int count = SchoolTimeTableDefaultValueDTO.getStartCount();
+
+        int order = SchoolTimeTableDefaultValueDTO.getStartCount();
         for (Integer grade : gradeClassCountMap.keySet()) {
             for (int classNum = SchoolTimeTableDefaultValueDTO.getStartClassIndex(); classNum <= gradeClassCountMap.get(grade); classNum++) {
                 for (int workDay = SchoolTimeTableDefaultValueDTO.getStartWorkDayIndex(); workDay <= SchoolTimeTableDefaultValueDTO.getWorkDay(); workDay++) {
@@ -264,13 +257,14 @@ public class PrepareService {
                         gradeClassNumWorkDayTimeDTO.setClassNum(classNum);
                         gradeClassNumWorkDayTimeDTO.setWorkDay(workDay);
                         gradeClassNumWorkDayTimeDTO.setTime(time);
-                        orderGradeClassNumWorkDayTimeMap.put(count, gradeClassNumWorkDayTimeDTO);
+                        orderGradeClassNumWorkDayTimeMap.put(order, gradeClassNumWorkDayTimeDTO);
 
-                        count = count + SubjectDefaultValueDTO.getOneCount();
+                        order = order + SubjectDefaultValueDTO.getOneCount();
                     }
                 }
             }
         }
+
         return orderGradeClassNumWorkDayTimeMap;
     }
 
@@ -278,40 +272,26 @@ public class PrepareService {
     /**
      * 获取科目使用的Map
      *
+     * @param orderGradeClassNumWorkDayTimeDTOMap
      * @param gradeSubjectMap
-     * @param gradeClassCountMap
      * @return
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> getGradeClassNumWorkDayTimeSubjectIdCanUseMap(Map<Integer, List<SubjectDTO>> gradeSubjectMap,
-                                                                                                                                                            HashMap<Integer, Integer> gradeClassCountMap) {
-        HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> subjectIdCanUseMap = new HashMap<>();
+    private HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap(HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeDTOMap,
+                                                                                   Map<Integer, List<SubjectDTO>> gradeSubjectMap) {
 
-        for (int grade = SchoolTimeTableDefaultValueDTO.getStartGradeIndex(); grade <= gradeSubjectMap.keySet().size(); grade++) {
-
-            HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>> classNumWorkDayTimeSubjectCanUseMap = new HashMap<>();
-            Integer classCount = gradeClassCountMap.get(grade);
-            for (int classNum = SchoolTimeTableDefaultValueDTO.getStartClassIndex(); classNum <= classCount; classNum++) {
-
-                HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>> workDayTimeSubjectCanUseMap = new HashMap<>();
-                for (int worDay = SchoolTimeTableDefaultValueDTO.getStartWorkDayIndex(); worDay <= SchoolTimeTableDefaultValueDTO.getWorkDay(); worDay++) {
-
-                    HashMap<Integer, HashMap<Integer, Boolean>> timeSubjectCanUseMap = new HashMap<>();
-                    for (int time = SchoolTimeTableDefaultValueDTO.getStartClassTimeIndex(); time <= SchoolTimeTableDefaultValueDTO.getClassTime(); time++) {
-
-                        HashMap<Integer, Boolean> subjectCanUseMap = new HashMap<>();
-                        for (SubjectDTO subjectDTO : gradeSubjectMap.get(grade)) {
-                            subjectCanUseMap.put(subjectDTO.getSubjectId(), true);
-                        }
-                        timeSubjectCanUseMap.put(time, subjectCanUseMap);
-                    }
-                    workDayTimeSubjectCanUseMap.put(worDay, timeSubjectCanUseMap);
-                }
-                classNumWorkDayTimeSubjectCanUseMap.put(classNum, workDayTimeSubjectCanUseMap);
+        HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap = new HashMap<>();
+        for (Integer order:orderGradeClassNumWorkDayTimeDTOMap.keySet()){
+            var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeDTOMap.get(order);
+            var grade = gradeClassNumWorkDayTimeDTO.getGrade();
+            var subjectDTOList = gradeSubjectMap.get(grade);
+            HashMap<Integer, Boolean> subjectCanUseMap = new HashMap<>();
+            for (SubjectDTO subject:subjectDTOList){
+                subjectCanUseMap.put(subject.getSubjectId(), true);
             }
-            subjectIdCanUseMap.put(grade, classNumWorkDayTimeSubjectCanUseMap);
+            orderSubjectIdCanUseMap.put(order,subjectCanUseMap);
         }
 
-        return subjectIdCanUseMap;
+        return orderSubjectIdCanUseMap;
     }
 
     /**
@@ -376,26 +356,6 @@ public class PrepareService {
         }
 
         return timeTableMap;
-    }
-
-    /**
-     * 获取所有教师上课时间map
-     *
-     * @param allWorkTeacher
-     * @return HashMap<teacherId HashMap < workDay List < time>>>
-     */
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> getTeacherTeachingMap(List<TeacherDO> allWorkTeacher) {
-        HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap = new HashMap<>();
-
-        for (TeacherDO x : allWorkTeacher) {
-            HashMap<Integer, List<Integer>> teachingMap = new HashMap<>();
-            for (int i = SchoolTimeTableDefaultValueDTO.getStartWorkDayIndex(); i <= SchoolTimeTableDefaultValueDTO.getWorkDay(); i++) {
-                teachingMap.put(i, new ArrayList<>());
-            }
-            teacherTeachingMap.put(x.getId(), teachingMap);
-        }
-
-        return teacherTeachingMap;
     }
 
     /**

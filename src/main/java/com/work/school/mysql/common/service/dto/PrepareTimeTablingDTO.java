@@ -76,6 +76,14 @@ public class PrepareTimeTablingDTO implements Serializable {
      */
     private HashMap<Integer,HashMap<Integer,HashMap<Integer,Integer>>> classRoomUsedCountMap;
     /**
+     * 教师获取所有教师上课时间map order teacherId workday time 中间变量
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
+    /**
+     * 初始化特殊教室使用情况 order subjectId workDay time count
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
+    /**
      * 排序关系
      */
     private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
@@ -90,7 +98,7 @@ public class PrepareTimeTablingDTO implements Serializable {
     /**
      * 获取科目使用的Map
      */
-    HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;
     /**
      * 课程表map
      */
@@ -216,6 +224,22 @@ public class PrepareTimeTablingDTO implements Serializable {
         this.classRoomUsedCountMap = classRoomUsedCountMap;
     }
 
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getOrderTeacherWorkDayTimeMap() {
+        return orderTeacherWorkDayTimeMap;
+    }
+
+    public void setOrderTeacherWorkDayTimeMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap) {
+        this.orderTeacherWorkDayTimeMap = orderTeacherWorkDayTimeMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getOrderClassRoomUsedCountMap() {
+        return orderClassRoomUsedCountMap;
+    }
+
+    public void setOrderClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap) {
+        this.orderClassRoomUsedCountMap = orderClassRoomUsedCountMap;
+    }
+
     public HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap() {
         return orderGradeClassNumWorkDayTimeMap;
     }
@@ -240,12 +264,12 @@ public class PrepareTimeTablingDTO implements Serializable {
         this.gradeClassNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> getGradeClassNumWorkDayTimeSubjectIdCanUseMap() {
-        return gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
+        return orderSubjectIdCanUseMap;
     }
 
-    public void setGradeClassNumWorkDayTimeSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
-        this.gradeClassNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public void setOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap) {
+        this.orderSubjectIdCanUseMap = orderSubjectIdCanUseMap;
     }
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
@@ -274,10 +298,12 @@ public class PrepareTimeTablingDTO implements Serializable {
                 ", gradeClassSubjectWeightMap=" + gradeClassSubjectWeightMap +
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
                 ", classRoomUsedCountMap=" + classRoomUsedCountMap +
+                ", orderTeacherWorkDayTimeMap=" + orderTeacherWorkDayTimeMap +
+                ", orderClassRoomUsedCountMap=" + orderClassRoomUsedCountMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
                 ", gradeSubjectDTOMap=" + gradeSubjectDTOMap +
                 ", gradeClassNumSubjectFrequencyMap=" + gradeClassNumSubjectFrequencyMap +
-                ", gradeClassNumWorkDayTimeSubjectIdCanUseMap=" + gradeClassNumWorkDayTimeSubjectIdCanUseMap +
+                ", orderSubjectIdCanUseMap=" + orderSubjectIdCanUseMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }

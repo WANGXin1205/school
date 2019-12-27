@@ -143,6 +143,8 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      */
     private static final Integer INIT_CLASSROOM_USED_COUNT = 0;
 
+    private static final Integer CLASSROOM_MAX_COUNT = 4;
+
     private static final Integer START_ORDER = 1;
 
     private static final Integer START_COUNT = 1;
@@ -163,12 +165,20 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return START_CLASS_TIME_INDEX;
     }
 
+    public static Integer getSTEP() {
+        return STEP;
+    }
+
     public static Integer getTotalFrequency() {
         return TOTAL_FREQUENCY;
     }
 
     public static Integer getMondayNum() {
         return MONDAY_NUM;
+    }
+
+    public static Integer getWednesdayNum() {
+        return WEDNESDAY_NUM;
     }
 
     public static Integer getFridayNum() {
@@ -195,8 +205,16 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return CLASS_MEETING_TIME;
     }
 
+    public static Integer getWritingTime() {
+        return WRITING_TIME;
+    }
+
     public static Integer[] getSchoolBasedTime() {
         return SCHOOL_BASED_TIME;
+    }
+
+    public static Integer getStartGradeIndex() {
+        return START_GRADE_INDEX;
     }
 
     public static Integer getStartClassIndex() {
@@ -213,6 +231,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer getSubjectClassMeetingId() {
         return SUBJECT_CLASS_MEETING_ID;
+    }
+
+    public static Integer getWritingId() {
+        return WRITING_ID;
     }
 
     public static Integer getSubjectSchoolBasedId() {
@@ -239,8 +261,16 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return SUBJECT_WEIGHT_LIST_ONE_INDEX;
     }
 
+    public static Integer getSubjectContinueTime() {
+        return SUBJECT_CONTINUE_TIME;
+    }
+
     public static Integer[][] getStudentContinueTime() {
         return STUDENT_CONTINUE_TIME;
+    }
+
+    public static Integer getStudentContinueTimeFirstIndex() {
+        return STUDENT_CONTINUE_TIME_FIRST_INDEX;
     }
 
     public static Integer getStudentContinueTimeLastIndex() {
@@ -267,36 +297,8 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return INIT_CLASSROOM_USED_COUNT;
     }
 
-    public static Integer getSubjectContinueTime() {
-        return SUBJECT_CONTINUE_TIME;
-    }
-
-    public static Integer getWednesdayNum() {
-        return WEDNESDAY_NUM;
-    }
-
-    public static Integer getWritingTime() {
-        return WRITING_TIME;
-    }
-
-    public static Integer getWritingId() {
-        return WRITING_ID;
-    }
-
-    public static Integer getStudentContinueTimeFirstIndex() {
-        return STUDENT_CONTINUE_TIME_FIRST_INDEX;
-    }
-
-    public static Integer getStep() {
-        return STEP;
-    }
-
-    public static Integer getSTEP() {
-        return STEP;
-    }
-
-    public static Integer getStartGradeIndex() {
-        return START_GRADE_INDEX;
+    public static Integer getClassroomMaxCount() {
+        return CLASSROOM_MAX_COUNT;
     }
 
     public static Integer getStartOrder() {
@@ -305,10 +307,5 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer getStartCount() {
         return START_COUNT;
-    }
-
-    @Override
-    public String toString() {
-        return "SchoolTimeTableDefaultValueDTO{}";
     }
 }

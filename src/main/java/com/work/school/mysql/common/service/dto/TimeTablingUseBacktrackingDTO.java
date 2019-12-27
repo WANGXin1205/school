@@ -44,10 +44,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
      */
     private List<TeacherDO> allWorkTeacher;
     /**
-     * 教师获取所有教师上课时间map
-     */
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap;
-    /**
      * 查询所有科目，教师，年级，班级之间的关系
      */
     private List<SubjectTeacherGradeClassDTO> allSubjectTeacherGradeClassDTO;
@@ -76,13 +72,17 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
      */
     private HashMap<Integer, Integer> classroomMaxCapacityMap;
     /**
-     * 初始化特殊教室使用情况
+     * 教师获取所有教师上课时间map order teacherId workday time 中间变量
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classRoomUsedCountMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
     /**
-     * 各班级课程使用map
+     * 初始化特殊教室使用情况 order subjectId workDay time count
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
+    /**
+     * 获取科目使用的Map
+     */
+    HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;
     /**
      * 排序关系
      */
@@ -148,14 +148,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
         this.allWorkTeacher = allWorkTeacher;
     }
 
-    public HashMap<Integer, HashMap<Integer, List<Integer>>> getTeacherTeachingMap() {
-        return teacherTeachingMap;
-    }
-
-    public void setTeacherTeachingMap(HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        this.teacherTeachingMap = teacherTeachingMap;
-    }
-
     public List<SubjectTeacherGradeClassDTO> getAllSubjectTeacherGradeClassDTO() {
         return allSubjectTeacherGradeClassDTO;
     }
@@ -212,20 +204,28 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
         this.classroomMaxCapacityMap = classroomMaxCapacityMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getClassRoomUsedCountMap() {
-        return classRoomUsedCountMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getOrderTeacherWorkDayTimeMap() {
+        return orderTeacherWorkDayTimeMap;
     }
 
-    public void setClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> classRoomUsedCountMap) {
-        this.classRoomUsedCountMap = classRoomUsedCountMap;
+    public void setOrderTeacherWorkDayTimeMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap) {
+        this.orderTeacherWorkDayTimeMap = orderTeacherWorkDayTimeMap;
     }
 
-    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> getGradeClassNumWorkDayTimeSubjectIdCanUseMap() {
-        return gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getOrderClassRoomUsedCountMap() {
+        return orderClassRoomUsedCountMap;
     }
 
-    public void setGradeClassNumWorkDayTimeSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
-        this.gradeClassNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap;
+    public void setOrderClassRoomUsedCountMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap) {
+        this.orderClassRoomUsedCountMap = orderClassRoomUsedCountMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
+        return orderSubjectIdCanUseMap;
+    }
+
+    public void setOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap) {
+        this.orderSubjectIdCanUseMap = orderSubjectIdCanUseMap;
     }
 
     public HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap() {
@@ -254,7 +254,6 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 ", allSubjectNameMap=" + allSubjectNameMap +
                 ", gradeClassNumWorkDaySubjectCountMap=" + gradeClassNumWorkDaySubjectCountMap +
                 ", allWorkTeacher=" + allWorkTeacher +
-                ", teacherTeachingMap=" + teacherTeachingMap +
                 ", allSubjectTeacherGradeClassDTO=" + allSubjectTeacherGradeClassDTO +
                 ", subjectGradeClassTeacherMap=" + subjectGradeClassTeacherMap +
                 ", subjectGradeClassTeacherCountMap=" + subjectGradeClassTeacherCountMap +
@@ -262,8 +261,9 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 ", gradeClassSubjectWeightMap=" + gradeClassSubjectWeightMap +
                 ", gradeClassNumSubjectFrequencyMap=" + gradeClassNumSubjectFrequencyMap +
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
-                ", classRoomUsedCountMap=" + classRoomUsedCountMap +
-                ", gradeClassNumWorkDayTimeSubjectIdCanUseMap=" + gradeClassNumWorkDayTimeSubjectIdCanUseMap +
+                ", orderTeacherWorkDayTimeMap=" + orderTeacherWorkDayTimeMap +
+                ", orderClassRoomUsedCountMap=" + orderClassRoomUsedCountMap +
+                ", orderSubjectIdCanUseMap=" + orderSubjectIdCanUseMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
                 ", timeTableMap=" + timeTableMap +
                 '}';

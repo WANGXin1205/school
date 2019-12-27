@@ -1,25 +1,13 @@
 package com.work.school.mysql.timetable.service;
 
 import com.work.school.common.CattyResult;
-import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.dao.domain.SubjectDO;
-import com.work.school.mysql.common.dao.domain.TeacherDO;
-import com.work.school.mysql.common.service.*;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.timetable.service.dto.CheckAllCompleteIsOkDTO;
-import com.work.school.mysql.timetable.service.dto.CheckClassRoomIsOkDTO;
-import com.work.school.mysql.timetable.service.dto.CheckCompleteUseBacktrackingDTO;
-import com.work.school.mysql.timetable.service.dto.CheckTeacherIsOkDTO;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @Author : Growlithe
@@ -47,25 +35,6 @@ public class CheckingService {
             return cattyResult;
         }
 
-        cattyResult.setSuccess(true);
-        return cattyResult;
-    }
-
-    /**
-     * 检查教师信息一致
-     *
-     * @param allTeacher
-     * @param teacherTeachingMap
-     * @return
-     */
-    public CattyResult checkTeacher(List<TeacherDO> allTeacher, HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        CattyResult cattyResult = new CattyResult();
-        for (TeacherDO x : allTeacher) {
-            if (teacherTeachingMap.get(x.getId()) == null) {
-                cattyResult.setMessage(x.getName() + "没有上课的班级");
-                return cattyResult;
-            }
-        }
         cattyResult.setSuccess(true);
         return cattyResult;
     }
