@@ -12,34 +12,6 @@ import java.util.*;
  * @Description
  */
 public class MathsUtils {
-    /**
-     * 获取最短间隔
-     *
-     * @param numList
-     * @return
-     */
-    public static Integer getMinInterval(List<Integer> numList) {
-        if (CollectionUtils.isEmpty(numList) || numList.size() == 1) {
-            return null;
-        }
-
-        int interval = 0;
-        for (int i = 0; i < numList.size() - 1; i++) {
-            Integer no = numList.get(i);
-            Integer otherNo = numList.get(i + 1);
-            if (i == 0) {
-                interval = otherNo - no;
-            } else {
-                int tempInterval = otherNo - no;
-                if (interval > tempInterval) {
-                    interval = tempInterval;
-                }
-            }
-
-        }
-
-        return interval;
-    }
 
     /**
      * 获取最大的数字

@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author : Growlithe
@@ -35,6 +36,14 @@ public class GeneticService {
 
     private static final int ONLY_ONE_COUNT = 1;
     /**
+     * 操场合适的班级数量
+     */
+    private static final int TEACHER_BEST_TEACHING_COUNT = 2;
+    private static final int MAX_TEACHER_TEACHING_SCORE = 5;
+    private static final int PE_BEST_COUNT = 2;
+    private static final int INTERVAL_STANDARD = 4;
+    private static final int MAX_INTERVAL_STANDARD_SCORE = 7;
+    /**
      * 教师一天最多上4节课
      */
     private static final int TEACHER_MAX_TIME = 4;
@@ -46,11 +55,12 @@ public class GeneticService {
      * 递加分数
      */
     private static final int ADD_SCORE = 1;
-    private static final int BIG_SCORE = 5;
+    private static final int BIG_SCORE = 2;
+    private static final int BEST_SEPARATE_SCORE = 5;
     /**
      * 初始种群
      */
-    private static final int POPULATION = 10;
+    private static final int POPULATION = 20;
     /**
      * 进化次数
      */
@@ -63,6 +73,14 @@ public class GeneticService {
      * 变异概率
      */
     private static final double MUTATE_RATE = 0.01;
+    /**
+     * 选择概率
+     */
+    private static final double SELECT_RATE = 0.6;
+    /**
+     * 主课最好的时间
+     */
+    private static final Integer[] MAIN_SUBJECT_BEST_TIMES = {1, 2, 8, 9, 15, 16, 22, 23, 29, 30};
 
     @Autowired
     private ClassroomMaxCapacityService classroomMaxCapacityService;
@@ -248,114 +266,114 @@ public class GeneticService {
      * @param timeTablingUseGeneticDTO
      * @return
      */
-    public CattyResult<HashMap<String, List<String>>> algorithmInPlanTimeTableWithPopulationGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
-        CattyResult<HashMap<String, List<String>>> cattyResult = new CattyResult<>();
-        HashMap<String, List<String>> bestGeneMap = new HashMap<>();
-
-        HashMap<Integer, List<String>> popHashMap = new HashMap<>();
-        for (int i = START_INDEX; i <= POPULATION; i++) {
-            // 获取初始基因编码
-            var geneMap = this.initGene(timeTablingUseGeneticDTO);
-
-            // 进行初步的时间分配
-            var initRandomTimeList = this.initRandomTime(geneMap);
-
-            popHashMap.put(i, initRandomTimeList);
-        }
-
-        for (int evolutionTime = START_INDEX; evolutionTime <= EVOLUTION_TIMES; evolutionTime++) {
-            // 随机交叉
-            // 计算有多少种群要交叉
-            HashMap<Integer, List<String>> crossoverPopHashMap = new HashMap<>(popHashMap);
-            double crossoverPopulation = CROSSOVER_RATE * POPULATION;
-            int crossoverNo = (int) crossoverPopulation;
-            for (int i = START_INDEX; i <= crossoverNo; i++) {
-                // 先随机选择两个种群
-                int firstNo = START_INDEX + (int) (Math.random() * POPULATION);
-                List<String> firstGeneList = crossoverPopHashMap.get(firstNo);
-                var oldFirstGeneListScore = this.computerFitnessScore(firstGeneList);
-                int secNo = START_INDEX + (int) (Math.random() * POPULATION);
-                List<String> secGeneList = crossoverPopHashMap.get(secNo);
-                var oldSecGeneListScore = this.computerFitnessScore(secGeneList);
-
-                // 计算随机基因
-                var firstRandomGeneDTO = this.computerRandomGeneDTO(firstGeneList);
-                var secRandomGeneDTO = this.computerRandomGeneDTO(secGeneList);
-
-                // 组装新基因
-                var firstNewGene = firstRandomGeneDTO.getGeneWithoutClassTime() + secRandomGeneDTO.getClassTime();
-                var secNewGene = secRandomGeneDTO.getGeneWithoutClassTime() + firstRandomGeneDTO.getClassTime();
-                firstGeneList.set(firstRandomGeneDTO.getRandomNo(), firstNewGene);
-                secGeneList.set(secRandomGeneDTO.getRandomNo(), secNewGene);
-
-                var newFirstGeneListScore = this.computerFitnessScore(firstGeneList);
-                var newSecGeneListScore = this.computerFitnessScore(secGeneList);
-                if (oldFirstGeneListScore < newFirstGeneListScore && oldFirstGeneListScore < newSecGeneListScore) {
-                    popHashMap.put(firstNo, firstGeneList);
-                }
-                if (oldSecGeneListScore < newFirstGeneListScore && oldSecGeneListScore < newSecGeneListScore) {
-                    popHashMap.put(secNo, secGeneList);
-                }
-
-            }
-
-            // 变异
-            double mutateRatePopulation = MUTATE_RATE * POPULATION;
-            int mutateNo = (int) mutateRatePopulation;
-            for (int i = START_INDEX; i <= mutateNo; i++) {
-                int random = START_INDEX + (int) (Math.random() * POPULATION);
-                List<String> geneList = crossoverPopHashMap.get(random);
-                var oldScore = this.computerFitnessScore(geneList);
-                var randomGeneDTO = this.computerRandomGeneDTO(geneList);
-                var gene = this.mutate(randomGeneDTO.getGene());
-                geneList.set(randomGeneDTO.getRandomNo(), gene);
-
-                var newScore = this.computerFitnessScore(geneList);
-                if (oldScore < newScore) {
-                    popHashMap.put(random, geneList);
-                }
-
-            }
-
-            // 解决冲突
-            for (Integer i : popHashMap.keySet()) {
-                var geneList = popHashMap.get(i);
-                geneList = this.eliminateConflicts(geneList);
-                popHashMap.put(i, geneList);
-            }
-
-            int bestScore = ZERO;
-            List<String> bestGeneList = new ArrayList<>();
-            for (Integer i : popHashMap.keySet()) {
-                var geneList = popHashMap.get(i);
-                var score = this.computerFitnessScore(geneList);
-                if (bestScore < score) {
-                    bestScore = score;
-                    bestGeneList = geneList;
-                }
-            }
-
-            var score = this.computerFitnessScore(bestGeneList);
-            System.out.println(score);
-            List<String> fixedGeneList = new ArrayList<>();
-            List<String> unFixedGeneList = new ArrayList<>();
-            for (String gene : bestGeneList) {
-                var fixFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
-                if (GeneticDefaultValueDTO.FIXED.equals(fixFlag)) {
-                    fixedGeneList.add(gene);
-                }
-                if (GeneticDefaultValueDTO.UN_FIXED.equals(fixFlag)) {
-                    unFixedGeneList.add(gene);
-                }
-            }
-            bestGeneMap.put(GeneticDefaultValueDTO.FIXED, fixedGeneList);
-            bestGeneMap.put(GeneticDefaultValueDTO.UN_FIXED, unFixedGeneList);
-        }
-
-        cattyResult.setData(bestGeneMap);
-        cattyResult.setSuccess(true);
-        return cattyResult;
-    }
+//    public CattyResult<HashMap<String, List<String>>> algorithmInPlanTimeTableWithPopulationGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
+//        CattyResult<HashMap<String, List<String>>> cattyResult = new CattyResult<>();
+//        HashMap<String, List<String>> bestGeneMap = new HashMap<>();
+//
+//        HashMap<Integer, List<String>> popHashMap = new HashMap<>();
+//        for (int i = START_INDEX; i <= POPULATION; i++) {
+//            // 获取初始基因编码
+//            var geneMap = this.initGene(timeTablingUseGeneticDTO);
+//
+//            // 进行初步的时间分配
+//            var initRandomTimeList = this.initRandomTime(geneMap);
+//
+//            popHashMap.put(i, initRandomTimeList);
+//        }
+//
+//        for (int evolutionTime = START_INDEX; evolutionTime <= EVOLUTION_TIMES; evolutionTime++) {
+//            // 随机交叉
+//            // 计算有多少种群要交叉
+//            HashMap<Integer, List<String>> crossoverPopHashMap = new HashMap<>(popHashMap);
+//            double crossoverPopulation = CROSSOVER_RATE * POPULATION;
+//            int crossoverNo = (int) crossoverPopulation;
+//            for (int i = START_INDEX; i <= crossoverNo; i++) {
+//                // 先随机选择两个种群
+//                int firstNo = START_INDEX + (int) (Math.random() * POPULATION);
+//                List<String> firstGeneList = crossoverPopHashMap.get(firstNo);
+//                var oldFirstGeneListScore = this.computerFitnessScore(firstGeneList);
+//                int secNo = START_INDEX + (int) (Math.random() * POPULATION);
+//                List<String> secGeneList = crossoverPopHashMap.get(secNo);
+//                var oldSecGeneListScore = this.computerFitnessScore(secGeneList);
+//
+//                // 计算随机基因
+//                var firstRandomGeneDTO = this.computerRandomGeneDTO(firstGeneList);
+//                var secRandomGeneDTO = this.computerRandomGeneDTO(secGeneList);
+//
+//                // 组装新基因
+//                var firstNewGene = firstRandomGeneDTO.getGeneWithoutClassTime() + secRandomGeneDTO.getClassTime();
+//                var secNewGene = secRandomGeneDTO.getGeneWithoutClassTime() + firstRandomGeneDTO.getClassTime();
+//                firstGeneList.set(firstRandomGeneDTO.getRandomNo(), firstNewGene);
+//                secGeneList.set(secRandomGeneDTO.getRandomNo(), secNewGene);
+//
+//                var newFirstGeneListScore = this.computerFitnessScore(firstGeneList);
+//                var newSecGeneListScore = this.computerFitnessScore(secGeneList);
+//                if (oldFirstGeneListScore < newFirstGeneListScore && oldFirstGeneListScore < newSecGeneListScore) {
+//                    popHashMap.put(firstNo, firstGeneList);
+//                }
+//                if (oldSecGeneListScore < newFirstGeneListScore && oldSecGeneListScore < newSecGeneListScore) {
+//                    popHashMap.put(secNo, secGeneList);
+//                }
+//
+//            }
+//
+//            // 变异
+//            double mutateRatePopulation = MUTATE_RATE * POPULATION;
+//            int mutateNo = (int) mutateRatePopulation;
+//            for (int i = START_INDEX; i <= mutateNo; i++) {
+//                int random = START_INDEX + (int) (Math.random() * POPULATION);
+//                List<String> geneList = crossoverPopHashMap.get(random);
+//                var oldScore = this.computerFitnessScore(geneList);
+//                var randomGeneDTO = this.computerRandomGeneDTO(geneList);
+//                var gene = this.mutate(randomGeneDTO.getGene());
+//                geneList.set(randomGeneDTO.getRandomNo(), gene);
+//
+//                var newScore = this.computerFitnessScore(geneList);
+//                if (oldScore < newScore) {
+//                    popHashMap.put(random, geneList);
+//                }
+//
+//            }
+//
+//            // 解决冲突
+//            for (Integer i : popHashMap.keySet()) {
+//                var geneList = popHashMap.get(i);
+//                geneList = this.eliminateConflicts(geneList);
+//                popHashMap.put(i, geneList);
+//            }
+//
+//            int bestScore = ZERO;
+//            List<String> bestGeneList = new ArrayList<>();
+//            for (Integer i : popHashMap.keySet()) {
+//                var geneList = popHashMap.get(i);
+//                var score = this.computerFitnessScore(geneList);
+//                if (bestScore < score) {
+//                    bestScore = score;
+//                    bestGeneList = geneList;
+//                }
+//            }
+//
+//            var score = this.computerFitnessScore(bestGeneList);
+//            System.out.println(score);
+//            List<String> fixedGeneList = new ArrayList<>();
+//            List<String> unFixedGeneList = new ArrayList<>();
+//            for (String gene : bestGeneList) {
+//                var fixFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
+//                if (GeneticDefaultValueDTO.FIXED.equals(fixFlag)) {
+//                    fixedGeneList.add(gene);
+//                }
+//                if (GeneticDefaultValueDTO.UN_FIXED.equals(fixFlag)) {
+//                    unFixedGeneList.add(gene);
+//                }
+//            }
+//            bestGeneMap.put(GeneticDefaultValueDTO.FIXED, fixedGeneList);
+//            bestGeneMap.put(GeneticDefaultValueDTO.UN_FIXED, unFixedGeneList);
+//        }
+//
+//        cattyResult.setData(bestGeneMap);
+//        cattyResult.setSuccess(true);
+//        return cattyResult;
+//    }
 
     /**
      * 计算随机基因
@@ -395,7 +413,8 @@ public class GeneticService {
 
         // 初始化年级班级和节次
         HashMap<String, List<Integer>> gradeClassNoClassTimeMap = new HashMap<>();
-        // 初始化小课不在早上第一二节的数量
+        // 初始化主课在早上、小课不在早上第一二节的数量
+        int mainSubjectFitnessCount = ZERO;
         int otherSubjectFitnessCount = ZERO;
         // 初始化年级班级工作日各小课的数量map
         HashMap<String, Integer> gradeClassNoWorkDayOtherSubjectCountMap = new HashMap<>();
@@ -404,8 +423,8 @@ public class GeneticService {
         // 获取年级班级时间上课数量map
         HashMap<String, Integer> gradeClassNoWorkDaySubjectCountMap = new HashMap<>();
         // 获取语文课和数学课map
-        HashMap<String, List<Integer>> gradeClassNoWorkDayChineseTimeMap = new HashMap<>();
-        HashMap<String, List<Integer>> gradeClassNoWorkDayMathsTimeMap = new HashMap<>();
+        HashMap<String, HashMap<Integer, List<Integer>>> chineseGradeClassNoWorkDayTimeMap = new HashMap<>();
+        HashMap<String, HashMap<Integer, List<Integer>>> mathGradeClassNoWorkDayTimeMap = new HashMap<>();
         // 获取教师冲突map
         HashMap<String, Integer> teacherClassTimeCountMap = new HashMap<>();
         // 获取教师工作日连堂课次数map
@@ -450,11 +469,20 @@ public class GeneticService {
             // 记录每天每个班每节课课程数量
             gradeClassNoWorkDaySubjectCountMap.merge(gradeClassNoClassTime, STEP, Integer::sum);
 
+            // 记录早上语文数学课的数量
+            boolean mainSubjectFlag = SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectType);
+            boolean mainInMorningFlag = mainSubjectFlag && time <= SchoolTimeTableDefaultValueDTO.getMorningSecTime();
+            if (mainInMorningFlag) {
+                mainSubjectFitnessCount = mainSubjectFitnessCount + STEP;
+            }
+
             // 记录小课在第三节或者下午的数量
             boolean otherSubjectFlag = SchoolTimeTableDefaultValueDTO.getOtherSubjectType().equals(subjectType)
                     || SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectType);
-            boolean otherSubjectNotInOneOrTwoClassTimeFlag = otherSubjectFlag && time > SchoolTimeTableDefaultValueDTO.getMorningSecTime();
-            if (otherSubjectNotInOneOrTwoClassTimeFlag) {
+            boolean otherSubjectFitnessCountFlag = otherSubjectFlag
+                    && SchoolTimeTableDefaultValueDTO.getMorningLastTime() < time
+                    && time <= SchoolTimeTableDefaultValueDTO.getAfternoonSecTime();
+            if (otherSubjectFitnessCountFlag) {
                 otherSubjectFitnessCount = otherSubjectFitnessCount + STEP;
             }
 
@@ -485,11 +513,11 @@ public class GeneticService {
             // 记录每天语文课和数学课间隔
             boolean chineseFlag = SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(subjectId);
             if (chineseFlag) {
-                this.markGradeClassNoWorkDayList(gradeClassNoString, workDay, time, gradeClassNoWorkDayChineseTimeMap);
+                this.markGradeClassNoWorkDayTimeListMap(gradeClassNoString, workDay, time, chineseGradeClassNoWorkDayTimeMap);
             }
             boolean mathsFlag = SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(subjectId);
             if (mathsFlag) {
-                this.markGradeClassNoWorkDayList(gradeClassNoString, workDay, time, gradeClassNoWorkDayMathsTimeMap);
+                this.markGradeClassNoWorkDayTimeListMap(gradeClassNoString, workDay, time, mathGradeClassNoWorkDayTimeMap);
             }
 
             // 记录教师上课节次，大于1说明查看冲突
@@ -502,25 +530,27 @@ public class GeneticService {
         }
 
         int fitnessScore = ZERO;
-        // 如果每个班级都有课，那么ADD_BIG_SCORE 分
-        for (String gradeClassNo : gradeClassNoClassTimeMap.keySet()) {
-            var classTimeList = gradeClassNoClassTimeMap.get(gradeClassNo);
-            var count = (int) classTimeList.stream().distinct().count();
-            fitnessScore = fitnessScore + count * BIG_SCORE;
+        // 如果教师一天课程没有超过4节，则加 ADD_SCORE 分
+        for (String teacherIdClassTime : teacherIdWorkDayCountMap.keySet()) {
+            var count = teacherIdWorkDayCountMap.get(teacherIdClassTime);
+            if (count <= SchoolTimeTableDefaultValueDTO.getTeacherTimeMinOverSize()) {
+                if (count <= TEACHER_BEST_TEACHING_COUNT) {
+                    fitnessScore = fitnessScore + count * ADD_SCORE;
+                } else {
+                    fitnessScore = fitnessScore + (MAX_TEACHER_TEACHING_SCORE - count) * ADD_SCORE;
+                }
+
+            }
         }
 
-        // 如果每天每个班每节课只有一种课程，则加 ADD_BIG_SCORE 分
-        var classTimeOnlyCount = (int) gradeClassNoWorkDaySubjectCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
-        fitnessScore = fitnessScore + classTimeOnlyCount * BIG_SCORE;
+        // 如果两节相同的主课相隔时间长，则加分，分数 = 下一节 - 本节课
+        fitnessScore = this.getMainIntervalScore(fitnessScore, chineseGradeClassNoWorkDayTimeMap);
+        fitnessScore = this.getMainIntervalScore(fitnessScore, mathGradeClassNoWorkDayTimeMap);
 
+        // 如果主课在早上，则加 ADD_SCORE 分
+        fitnessScore = fitnessScore + mainSubjectFitnessCount * BIG_SCORE;
         // 如果小课在第三节或者下午，则加 ADD_SCORE 分
         fitnessScore = fitnessScore + otherSubjectFitnessCount * ADD_SCORE;
-
-        // 如果相同的小课每个班每天只有一节，则加 ADD_BIG_SCORE 分
-        if (CollectionUtils.isNotEmpty(gradeClassNoWorkDayOtherSubjectCountMap.keySet())) {
-            int allMatchCount = (int) gradeClassNoWorkDayOtherSubjectCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
-            fitnessScore = fitnessScore + allMatchCount * BIG_SCORE;
-        }
 
         // 如果同一时间三种特殊教室没有超上限数量，则加 ADD_SCORE 分
         for (Integer subjectId : otherSubjectClassTimeCountMap.keySet()) {
@@ -529,45 +559,68 @@ public class GeneticService {
             for (Integer classTime : classTimeCountMap.keySet()) {
                 var count = classTimeCountMap.get(classTime);
                 if (count <= maxCount) {
-                    fitnessScore = fitnessScore + count * BIG_SCORE;
+                    if (SchoolTimeTableDefaultValueDTO.getSubjectPeId().equals(subjectId)) {
+                        int peScore = Math.abs(count - PE_BEST_COUNT);
+                        fitnessScore = fitnessScore + peScore * ADD_SCORE;
+                    } else {
+                        fitnessScore = fitnessScore + count * ADD_SCORE;
+                    }
                 }
             }
         }
 
-        // 如果两节相同的主课相隔时间长，则加分，分数 = 下一节 - 本节课
-        for (String gradeClassNoWorkDay : gradeClassNoWorkDayChineseTimeMap.keySet()) {
-            var timeList = gradeClassNoWorkDayChineseTimeMap.get(gradeClassNoWorkDay);
-            if (timeList.contains(SchoolTimeTableDefaultValueDTO.getMorningFirTime())
-                    || timeList.contains(SchoolTimeTableDefaultValueDTO.getMorningSecTime())) {
-                fitnessScore = fitnessScore + ADD_SCORE;
-            }
-            var minInterval = MathsUtils.getMinInterval(timeList);
-            if (minInterval != null) {
-                fitnessScore = fitnessScore + minInterval * ADD_SCORE;
-            }
-        }
-        for (String gradeClassNoWorkDay : gradeClassNoWorkDayMathsTimeMap.keySet()) {
-            var timeList = gradeClassNoWorkDayMathsTimeMap.get(gradeClassNoWorkDay);
-            if (timeList.contains(SchoolTimeTableDefaultValueDTO.getMorningFirTime())
-                    || timeList.contains(SchoolTimeTableDefaultValueDTO.getMorningSecTime())) {
-                fitnessScore = fitnessScore + ADD_SCORE;
-            }
-            var minInterval = MathsUtils.getMinInterval(timeList);
-            if (minInterval != null) {
-                fitnessScore = fitnessScore + minInterval * ADD_SCORE;
-            }
-        }
+        // 如果每个班级都有课，那么ADD_BIG_SCORE 分
+//        for (String gradeClassNo : gradeClassNoClassTimeMap.keySet()) {
+//            var classTimeList = gradeClassNoClassTimeMap.get(gradeClassNo);
+//            var count = (int) classTimeList.stream().distinct().count();
+//            fitnessScore = fitnessScore + count * BIG_SCORE;
+//        }
+
+        // 如果每天每个班每节课只有一种课程，则加 ADD_BIG_SCORE 分
+//        var classTimeOnlyCount = (int) gradeClassNoWorkDaySubjectCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
+//        fitnessScore = fitnessScore + classTimeOnlyCount * BIG_SCORE;
+
+
+        // 如果相同的小课每个班每天只有一节，则加 ADD_BIG_SCORE 分
+//        if (CollectionUtils.isNotEmpty(gradeClassNoWorkDayOtherSubjectCountMap.keySet())) {
+//            int allMatchCount = (int) gradeClassNoWorkDayOtherSubjectCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
+//            fitnessScore = fitnessScore + allMatchCount * BIG_SCORE;
+//        }
 
         // 如果教师没有冲突，则加 ADD_BIG_SCORE 分
-        var teacherClassTimeCount = (int) teacherClassTimeCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
-        fitnessScore = fitnessScore + teacherClassTimeCount * BIG_SCORE;
+//        var teacherClassTimeCount = (int) teacherClassTimeCountMap.values().stream().filter(x -> ONLY_ONE_COUNT == x).count();
+//        fitnessScore = fitnessScore + teacherClassTimeCount * BIG_SCORE;
 
-        // 如果教师一天课程没有超过4节，则加 ADD_SCORE 分
-        for (String teacherIdClassTime : teacherIdWorkDayCountMap.keySet()) {
-            var count = teacherIdWorkDayCountMap.get(teacherIdClassTime);
-            if (count <= SchoolTimeTableDefaultValueDTO.getTeacherTimeMinOverSize()) {
-                fitnessScore = fitnessScore + (SchoolTimeTableDefaultValueDTO.getTeacherTimeMinOverSize() - count) * ADD_SCORE;
+        return fitnessScore;
+    }
+
+    /**
+     * 获取间隔分数
+     *
+     * @param fitnessScore
+     * @param gradeClassNoWorkDayTimeMap
+     * @return
+     */
+    private Integer getMainIntervalScore(Integer fitnessScore, HashMap<String, HashMap<Integer, List<Integer>>> gradeClassNoWorkDayTimeMap) {
+        for (String gradeClassNo : gradeClassNoWorkDayTimeMap.keySet()) {
+            var workDayTimeListMap = gradeClassNoWorkDayTimeMap.get(gradeClassNo);
+            for (Integer workDay : workDayTimeListMap.keySet()) {
+                var timeList = workDayTimeListMap.get(workDay);
+                if (timeList.size() == ONLY_ONE_COUNT) {
+                    fitnessScore = fitnessScore + BEST_SEPARATE_SCORE;
+                } else {
+                    for (int i = 0; i < timeList.size() - 1; i++) {
+                        Collections.sort(timeList);
+                        int interval = timeList.get(i + 1) - timeList.get(i);
+                        if (interval < INTERVAL_STANDARD) {
+                            fitnessScore = fitnessScore + interval * ADD_SCORE;
+                        } else {
+                            fitnessScore = fitnessScore + (MAX_INTERVAL_STANDARD_SCORE - interval) * ADD_SCORE;
+                        }
+                    }
+                }
             }
+
         }
 
         return fitnessScore;
@@ -579,22 +632,36 @@ public class GeneticService {
      * @param gradeClassNoString
      * @param workDay
      * @param time
-     * @param gradeClassNoWorkDayMap
+     * @param gradeClassNoWorkDayTimeListMap
      * @return
      */
-    private HashMap<String, List<Integer>> markGradeClassNoWorkDayList(String gradeClassNoString, Integer workDay, Integer time, HashMap<String, List<Integer>> gradeClassNoWorkDayMap) {
-        var gradeClassNoWorkDay = gradeClassNoString + workDay;
-        if (gradeClassNoWorkDayMap.get(gradeClassNoWorkDay) == null) {
+    private HashMap<String, HashMap<Integer, List<Integer>>> markGradeClassNoWorkDayTimeListMap(String gradeClassNoString, Integer workDay, Integer time, HashMap<String, HashMap<Integer, List<Integer>>> gradeClassNoWorkDayTimeListMap) {
+        if (gradeClassNoWorkDayTimeListMap.get(gradeClassNoString) == null) {
             List<Integer> timeList = new ArrayList<>();
             timeList.add(time);
-            gradeClassNoWorkDayMap.put(gradeClassNoWorkDay, timeList);
+            HashMap<Integer, List<Integer>> workTimeListMap = new HashMap<>();
+            workTimeListMap.put(workDay, timeList);
+            gradeClassNoWorkDayTimeListMap.put(gradeClassNoString, workTimeListMap);
         } else {
-            var timeList = gradeClassNoWorkDayMap.get(gradeClassNoWorkDay);
-            timeList.add(time);
-            gradeClassNoWorkDayMap.put(gradeClassNoWorkDay, timeList);
+            HashMap<Integer, List<Integer>> workTimeListMap = gradeClassNoWorkDayTimeListMap.get(gradeClassNoString);
+            if (workTimeListMap == null) {
+                List<Integer> timeList = new ArrayList<>();
+                timeList.add(time);
+                workTimeListMap = new HashMap<>();
+                workTimeListMap.put(workDay, timeList);
+                gradeClassNoWorkDayTimeListMap.put(gradeClassNoString, workTimeListMap);
+            } else {
+                List<Integer> timeList = workTimeListMap.get(workDay);
+                if (CollectionUtils.isEmpty(timeList)) {
+                    timeList = new ArrayList<>();
+                }
+                timeList.add(time);
+                workTimeListMap.put(workDay, timeList);
+                gradeClassNoWorkDayTimeListMap.put(gradeClassNoString, workTimeListMap);
+            }
         }
 
-        return gradeClassNoWorkDayMap;
+        return gradeClassNoWorkDayTimeListMap;
     }
 
     /**
@@ -738,6 +805,48 @@ public class GeneticService {
     }
 
     /**
+     * 初始化课程的时间分配
+     *
+     * @param geneMap
+     * @param gradeClassNoCountMap
+     * @return
+     */
+    public List<String> initTimeByClassNo(HashMap<String, List<String>> geneMap, HashMap<Integer, Integer> gradeClassNoCountMap) {
+        List<String> geneList = new ArrayList<>();
+        for (String gene : geneMap.keySet()) {
+            geneList.addAll(geneMap.get(gene));
+        }
+
+        // 首先按照班级分配
+        var gradeClassNoGeneMap = getGradeClassNoGeneMap(geneList);
+
+        // 班级一个一个赋予时间
+        List<String> initGeneList = new ArrayList<>();
+        for (var gradeClassNo : gradeClassNoGeneMap.keySet()) {
+            var gradeClassNoGeneList = gradeClassNoGeneMap.get(gradeClassNo);
+            var timeCountMap = this.initEveryGradeClassNoTimeMap(gradeClassNoGeneList, gradeClassNoCountMap);
+
+            for (String gene : gradeClassNoGeneList) {
+                var fixFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
+                if (GeneticDefaultValueDTO.UN_FIXED.equals(fixFlag)) {
+                    var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX,gene);
+                    Integer time = this.rouletteWheelSelection(timeCountMap);
+                    var classTime = this.getStandard(time.toString(), GeneticDefaultValueDTO.CLASS_STANDARD_LENGTH);
+                    var newGene = geneWithoutClassTime + classTime;
+                    initGeneList.add(newGene);
+                }
+                if (GeneticDefaultValueDTO.FIXED.equals(fixFlag)) {
+                    initGeneList.add(gene);
+                }
+            }
+
+        }
+
+        return initGeneList;
+    }
+
+
+    /**
      * 截取基因
      *
      * @param partName
@@ -828,7 +937,8 @@ public class GeneticService {
         }
 
         // 记录分数
-        this.markToTXT(String.valueOf(ZERO), fitnessScoreList);
+        String name = String.valueOf(System.currentTimeMillis());
+        this.markToTXT(name, fitnessScoreList);
 
         return gradeClassNoGeneMap;
     }
@@ -929,20 +1039,48 @@ public class GeneticService {
         List<String> newGeneList = new ArrayList<>(oldGeneList);
         boolean flag = false;
         do {
-            // 只选择有冲突的个体，有可能早熟
-//            int firstRandomNo = this.getGeneIndex(oldGeneList);
-            // 生成两个随机数
             int firstRandomNo = (int) (Math.random() * (oldGeneList.size()));
+
+//            if (Math.random() < SELECT_RATE) {
+//                // 只选择有冲突的个体，有可能早熟
+//                firstRandomNo = this.getGeneIndex(oldGeneList);
+//            } else {
+//                // 生成两个随机数
+//                firstRandomNo = (int) (Math.random() * (oldGeneList.size()));
+//            }
+
             int secRandomNo = (int) (Math.random() * (oldGeneList.size()));
             // 选取对应的两条基因
             var firstGene = newGeneList.get(firstRandomNo);
             var secGene = newGeneList.get(secRandomNo);
+
             // 判断是否固定时间的基因，如果是就重新选择
             var firstGeneFixedNo = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, firstGene);
             var secGeneFixedNo = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, secGene);
             var fixedFlag = GeneticDefaultValueDTO.FIXED.equals(firstGeneFixedNo) || GeneticDefaultValueDTO.FIXED.equals(secGeneFixedNo);
             // 如果不是相同基因或者固定基因，就可以选择这两条基因
             boolean selectFlag = !(firstRandomNo == secRandomNo || fixedFlag);
+
+//            var timeFitFlag = false;
+//            var firstGeneSubjectType = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_TYPE_INDEX,firstGene);
+//            // 如果科目为1类 那么第二条时间只为1，2，8，9，15，16，22，23，29，30
+//            if (SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(Integer.valueOf(firstGeneSubjectType))){
+//                var secGeneClassTimeString = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX,secGene);
+//                var secGeneClassTime = Integer.valueOf(secGeneClassTimeString);
+//                timeFitFlag = Arrays.asList(MAIN_SUBJECT_BEST_TIMES).contains(secGeneClassTime);
+//                selectFlag = selectFlag && timeFitFlag;
+//            }
+//
+//            var subjectFitFlag = false;
+//            var firstGeneClassTimeString = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX,firstGene);
+//            // 如果第一条基因时间为1，2，8，9，15，16，22，23，29，30节课 那么第二条科目只为1类
+//            if (Arrays.asList(MAIN_SUBJECT_BEST_TIMES).contains(Integer.valueOf(firstGeneClassTimeString))){
+//                var secGeneSubjectTypeString = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_TYPE_INDEX,secGene);
+//                var secGeneSubjectType = Integer.valueOf(secGeneSubjectTypeString);
+//                subjectFitFlag = SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(secGeneSubjectType);
+//                selectFlag = selectFlag && subjectFitFlag;
+//            }
+
             if (selectFlag) {
                 // 获取两条基因的时间
                 String firstClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, firstGene);
@@ -1169,12 +1307,12 @@ public class GeneticService {
 
         // 第一二节必须是语文和数学课
         int noMainSubjectCount = ZERO;
-        for (Integer subjectType : subjectTypeCountMap.keySet()) {
-            if (!SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectType)) {
-                var typeCount = subjectTypeCountMap.get(subjectType);
-                noMainSubjectCount = noMainSubjectCount + typeCount;
-            }
-        }
+//        for (Integer subjectType : subjectTypeCountMap.keySet()) {
+//            if (!SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectType)) {
+//                var typeCount = subjectTypeCountMap.get(subjectType);
+//                noMainSubjectCount = noMainSubjectCount + typeCount;
+//            }
+//        }
 
         // 不满足软约束条件的次数
         var softCount = teacherOutMaxTimeCount + noMainSubjectCount;
@@ -1332,6 +1470,32 @@ public class GeneticService {
         HashMap<Integer, Integer> timeCountMap = new HashMap<>();
         for (int time = START_INDEX; time <= GeneticDefaultValueDTO.MAX_TIME; time++) {
             timeCountMap.put(time, totalClassCount);
+        }
+
+        for (String gene : geneList) {
+            var fixedFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
+            if (GeneticDefaultValueDTO.FIXED.equals(fixedFlag)) {
+                var classTimeString = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
+                var classTime = Integer.valueOf(classTimeString);
+                var oldCount = timeCountMap.get(classTime);
+                var newCount = oldCount - STEP;
+                timeCountMap.put(classTime, newCount);
+            }
+        }
+
+        return timeCountMap;
+    }
+
+    /**
+     * 初始化 可使用的所有时间
+     *
+     * @param gradeClassCountMap
+     * @return
+     */
+    private HashMap<Integer, Integer> initEveryGradeClassNoTimeMap(List<String> geneList, HashMap<Integer, Integer> gradeClassCountMap) {
+        HashMap<Integer, Integer> timeCountMap = new HashMap<>();
+        for (int time = START_INDEX; time <= GeneticDefaultValueDTO.MAX_TIME; time++) {
+            timeCountMap.put(time, START_INDEX);
         }
 
         for (String gene : geneList) {

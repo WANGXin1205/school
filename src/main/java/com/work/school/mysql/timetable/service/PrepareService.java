@@ -118,24 +118,6 @@ public class PrepareService {
     }
 
     /**
-     * 动态权重回溯算法准备默认学校配置
-     *
-     * @return
-     */
-    public CattyResult<TimeTablingUseDynamicWeightsAndBacktrackingDTO> prepareTimeTablingUseDynamicWeightsAndBacktracking() {
-        CattyResult<TimeTablingUseDynamicWeightsAndBacktrackingDTO> cattyResult = new CattyResult<>();
-
-        PrepareTimeTablingDTO prepareTimeTablingDTO = this.prepareTimeTabling();
-
-        TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO = new TimeTablingUseDynamicWeightsAndBacktrackingDTO();
-        BeanUtils.copyProperties(prepareTimeTablingDTO, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-
-        cattyResult.setSuccess(true);
-        cattyResult.setData(timeTablingUseDynamicWeightsAndBacktrackingDTO);
-        return cattyResult;
-    }
-
-    /**
      * 准备默认学校配置
      *
      * @return

@@ -57,6 +57,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      */
     private static final Integer MORNING_LAST_TIME = 3;
     /**
+     * 下午第5节课
+     */
+     private static final Integer AFTERNOON_SEC_TIME = 5;
+    /**
      * 上一节课
      */
     private static final Integer PAST_TIME = 1;
@@ -88,6 +92,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      * 数学
      */
     private static final Integer SUBJECT_MATHS_ID = 2;
+    /**
+     * 体育
+     */
+    private static final Integer SUBJECT_PE_ID = 8;
     /**
      * 班队会课 编号
      */
@@ -307,5 +315,13 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer getStartCount() {
         return START_COUNT;
+    }
+
+    public static Integer getAfternoonSecTime() {
+        return AFTERNOON_SEC_TIME;
+    }
+
+    public static Integer getSubjectPeId() {
+        return SUBJECT_PE_ID;
     }
 }

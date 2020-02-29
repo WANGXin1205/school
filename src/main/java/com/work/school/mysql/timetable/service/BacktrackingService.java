@@ -4,12 +4,12 @@ import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.*;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.timetable.service.dto.CheckAllCompleteIsOkDTO;
-import com.work.school.mysql.timetable.service.dto.CheckClassRoomIsOkDTO;
-import com.work.school.mysql.timetable.service.dto.CheckCompleteUseBacktrackingDTO;
+import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
+import com.work.school.mysql.timetable.service.dto.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,7 +38,7 @@ public class BacktrackingService {
      * @param timeTablingUseBacktrackingDTO
      * @return
      */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> algorithmInPlanTimeTableWithBacktracking(TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> algorithmInPlanTimeTableWithBacktracking(TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO, BacktrackingTypeEnum backtrackingTypeEnum) {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> cattyResult = new CattyResult<>();
 
         var gradeClassNumSubjectFrequencyMap = timeTablingUseBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
@@ -65,7 +65,10 @@ public class BacktrackingService {
                 // 检查是否有回溯课程
                 var backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                 if (backFlag) {
-                    order = this.rollback(order, timeTablingUseBacktrackingDTO);
+                    var rollbackDTO = this.getRollbackDTO(order, timeTablingUseBacktrackingDTO);
+                    this.rollback(rollbackDTO);
+                    this.getTimeTablingUseBacktrackingDTO(rollbackDTO, timeTablingUseBacktrackingDTO);
+                    order = rollbackDTO.getOrder();
                     gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
                     grade = gradeClassNumWorkDayTimeDTO.getGrade();
                     classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
@@ -74,20 +77,26 @@ public class BacktrackingService {
                 }
                 if (!backFlag) {
                     // 选择一个课程
-                    Integer firstCanUseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                    Integer chooseSubjectId = null;
+                    if (BacktrackingTypeEnum.BA.equals(backtrackingTypeEnum)){
+                        chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                    }
+                    if (BacktrackingTypeEnum.DY_BA.equals(backtrackingTypeEnum)){
+                        chooseSubjectId = this.getMaxWeightSubjectId(grade,classNum,workDay,time,subjectIdCanUseMap,timeTablingUseBacktrackingDTO);
+                    }
 
                     // 更新课程使用状态
-                    subjectIdCanUseMap.put(firstCanUseSubjectId, false);
+                    subjectIdCanUseMap.put(chooseSubjectId, false);
 
                     // 检查是否满足排课需求
-                    var checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, firstCanUseSubjectId, timeTablingUseBacktrackingDTO);
+                    var checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, chooseSubjectId, timeTablingUseBacktrackingDTO);
                     boolean completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                     if (completeFlag) {
-                        this.updateAllStatus(order, firstCanUseSubjectId, timeTablingUseBacktrackingDTO);
+                        this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
                         var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
                                 timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
                         var score = geneticService.computerFitnessScore(geneList);
-//                        System.out.println(score);
+                        System.out.println(score);
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -96,24 +105,27 @@ public class BacktrackingService {
                         backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                         if (!backFlag) {
                             // 回溯点不清零，记录该点的排课课程，下次不再选择这么课程
-                            firstCanUseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                            chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
                             // 更新课程使用状态
-                            subjectIdCanUseMap.put(firstCanUseSubjectId, false);
+                            subjectIdCanUseMap.put(chooseSubjectId, false);
                             // 检查是否满足排课需求
-                            checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, firstCanUseSubjectId, timeTablingUseBacktrackingDTO);
+                            checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, chooseSubjectId, timeTablingUseBacktrackingDTO);
                             completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                             if (completeFlag) {
-                                this.updateAllStatus(order, firstCanUseSubjectId, timeTablingUseBacktrackingDTO);
+                                this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
                                 var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
                                         timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
                                 var score = geneticService.computerFitnessScore(geneList);
-//                                System.out.println(score);
+                                System.out.println(score);
                             }
                         }
 
                         // 如果课程使用完毕，则找上一层的回溯点
                         if (backFlag) {
-                            order = this.rollback(order, timeTablingUseBacktrackingDTO);
+                            var rollbackDTO = this.getRollbackDTO(order, timeTablingUseBacktrackingDTO);
+                            this.rollback(rollbackDTO);
+                            this.getTimeTablingUseBacktrackingDTO(rollbackDTO, timeTablingUseBacktrackingDTO);
+                            order = rollbackDTO.getOrder();
                             gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
                             grade = gradeClassNumWorkDayTimeDTO.getGrade();
                             classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
@@ -133,27 +145,58 @@ public class BacktrackingService {
         return cattyResult;
     }
 
+
     /**
-     * 回溯数据状态
+     * 获取RollBackDTO
      *
      * @param order
      * @param timeTablingUseBacktrackingDTO
+     * @return
      */
-    private Integer rollback(Integer order, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+    private RollbackDTO getRollbackDTO(Integer order, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+        RollbackDTO rollbackDTO = new RollbackDTO();
+        rollbackDTO.setOrder(order);
+        BeanUtils.copyProperties(timeTablingUseBacktrackingDTO, rollbackDTO);
+        return rollbackDTO;
+    }
+
+    /**
+     * 获取 timeTablingUseBacktrackingDTO
+     *
+     * @param rollbackDTO
+     * @param timeTablingUseBacktrackingDTO
+     * @return
+     */
+    private TimeTablingUseBacktrackingDTO getTimeTablingUseBacktrackingDTO(RollbackDTO rollbackDTO, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+        BeanUtils.copyProperties(rollbackDTO, timeTablingUseBacktrackingDTO);
+        return timeTablingUseBacktrackingDTO;
+    }
+
+    /**
+     * 回溯数据状态
+     *
+     * @param rollbackDTO
+     * @return
+     */
+    private void rollback(RollbackDTO rollbackDTO) {
+        Integer order = rollbackDTO.getOrder();
         if (SchoolTimeTableDefaultValueDTO.getStartOrder().equals(order)) {
             throw new TransactionException("不能回溯");
         }
+
+        var orderSubjectIdCanUseMap = rollbackDTO.getOrderSubjectIdCanUseMap();
 
         // 确定回溯点
         boolean flag;
         HashMap<Integer, Boolean> subjectIdCanUseMap;
         do {
             order = order - SchoolTimeTableDefaultValueDTO.getSTEP();
-            subjectIdCanUseMap = this.getSubjectIdCanUseMap(order, timeTablingUseBacktrackingDTO.getOrderSubjectIdCanUseMap());
+            subjectIdCanUseMap = this.getSubjectIdCanUseMap(order, orderSubjectIdCanUseMap);
             flag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
         } while (flag);
 
-        var orderGradeClassNumWorkDayTimeMap = timeTablingUseBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
+        rollbackDTO.setOrder(order);
+        var orderGradeClassNumWorkDayTimeMap = rollbackDTO.getOrderGradeClassNumWorkDayTimeMap();
 
         // 回溯
         for (int clearOrder = order; clearOrder <= orderGradeClassNumWorkDayTimeMap.size(); clearOrder++) {
@@ -165,99 +208,19 @@ public class BacktrackingService {
 
             // 后面的回溯记录表也要清空,回溯点不清空可使用课程
             if (clearOrder != order) {
-                this.rollbackSubjectIdCanUseMap(clearOrder, timeTablingUseBacktrackingDTO.getOrderSubjectIdCanUseMap());
+                this.rollbackSubjectIdCanUseMap(clearOrder, orderSubjectIdCanUseMap);
             }
 
             // 还课次数
-            this.rollbackSubjectFrequency(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO);
+            this.rollbackSubjectFrequency(grade, classNum, workDay, time, rollbackDTO.getGradeClassNumSubjectFrequencyMap(), rollbackDTO.getTimeTableMap());
             // 教室状态回溯
-            this.rollbackClassroom(clearOrder, timeTablingUseBacktrackingDTO.getOrderClassRoomUsedCountMap());
+            this.rollbackClassroom(clearOrder, rollbackDTO.getOrderClassRoomUsedCountMap());
             // 课表也回溯
-            this.rollbackTimeTableMap(grade, classNum, workDay, time, timeTablingUseBacktrackingDTO.getTimeTableMap());
+            this.rollbackTimeTableMap(grade, classNum, workDay, time, rollbackDTO.getTimeTableMap());
         }
 
-        return order;
     }
 
-    /**
-     * 回溯数据状态
-     *
-     * @param order
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private Integer rollback(Integer order, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        if (SchoolTimeTableDefaultValueDTO.getStartOrder().equals(order)) {
-//            throw new TransactionException("不能回溯");
-//        }
-//
-//        var orderGradeClassNumWorkDayTimeMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
-//        var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
-//        var grade = gradeClassNumWorkDayTimeDTO.getGrade();
-//        var classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-//        var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-//        var time = gradeClassNumWorkDayTimeDTO.getTime();
-//
-//        // 确定回溯点
-//        var gradeClassNumWorkDayTimeSubjectIdCanUseMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderSubjectIdCanUseMap();
-//        boolean flag;
-//        HashMap<Integer, Boolean> subjectIdCanUseMap;
-//        do {
-//            order = order - SchoolTimeTableDefaultValueDTO.getSTEP();
-//            subjectIdCanUseMap = this.getSubjectIdCanUseMap(order, orderGradeClassNumWorkDayTimeMap, gradeClassNumWorkDayTimeSubjectIdCanUseMap);
-//            flag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
-//        } while (flag);
-//
-//        // 回溯
-//        for (int clearOrder = order + SchoolTimeTableDefaultValueDTO.getSTEP(); clearOrder <= orderGradeClassNumWorkDayTimeMap.size(); clearOrder++) {
-//            gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(clearOrder);
-//            grade = gradeClassNumWorkDayTimeDTO.getGrade();
-//            classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-//            workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-//            time = gradeClassNumWorkDayTimeDTO.getTime();
-//
-//            var timeTableMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap();
-//            var classNoWorkDayTimeSubjectMap = timeTableMap.get(grade);
-//            var workDayTimeSubjectMap = classNoWorkDayTimeSubjectMap.get(classNum);
-//            var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
-//            var subjectId = timeSubjectMap.get(time);
-//            if (subjectId == null) {
-//                break;
-//            }
-//
-//            // 还教室
-//            var gradeSubjectDTOMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeSubjectDTOMap();
-//            var subjectMap = gradeSubjectDTOMap.get(grade);
-//            var subjectDTO = subjectMap.get(subjectId);
-//            if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectDTO.getType())) {
-//
-//            }
-//
-//            // 还课
-//            var gradeClassNumSubjectFrequencyMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
-//            var classNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap.get(grade);
-//            var subjectFrequencyMap = classNumSubjectFrequencyMap.get(classNum);
-//            var frequency = subjectFrequencyMap.get(subjectId);
-//            subjectFrequencyMap.put(subjectId, frequency + SchoolTimeTableDefaultValueDTO.getSTEP());
-//
-//
-//            // 后面的回溯记录表也要清空,回溯点不清空可使用课程
-////            this.rollbackSubjectIdCanUseMap(grade, classNum, workDay, time, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//
-////            // 还课次数
-////            this.rollbackSubjectFrequency(grade, classNum, workDay, time, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-////
-////            // 教室状态回溯
-////            this.rollbackClassroom(workDay, time, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-////
-//            // 教师
-//
-//
-////            // 课表也回溯
-////            this.rollbackTimeTableMap(clearOrder, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//        }
-//
-//        return order;
-//    }
 
     /**
      * 获取可用的课程列表
@@ -271,68 +234,6 @@ public class BacktrackingService {
     }
 
     /**
-     * 获取可用的课程列表
-     *
-     * @param order
-     * @param orderGradeClassNumWorkDayTimeMap
-     * @param gradeClassNumWorkDayTimeSubjectIdCanUseMap
-     * @return
-     */
-    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer order,
-                                                            HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap,
-                                                            HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
-
-        var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
-        var grade = gradeClassNumWorkDayTimeDTO.getGrade();
-        var classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-        var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-        var time = gradeClassNumWorkDayTimeDTO.getTime();
-
-        var classNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap.get(grade);
-        var workDayTimeSubjectIdCanUseMap = classNumWorkDayTimeSubjectIdCanUseMap.get(classNum);
-        var timeSubjectIdCanUseMap = workDayTimeSubjectIdCanUseMap.get(workDay);
-        return timeSubjectIdCanUseMap.get(time);
-    }
-
-    /**
-     * 获取可用的课程列表
-     *
-     * @param grade
-     * @param classNum
-     * @param workDay
-     * @param time
-     * @param gradeClassNumWorkDayTimeSubjectIdCanUseMap
-     * @return
-     */
-    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer grade,
-                                                            Integer classNum,
-                                                            Integer workDay,
-                                                            Integer time,
-                                                            HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Boolean>>>>> gradeClassNumWorkDayTimeSubjectIdCanUseMap) {
-
-        var classNumWorkDayTimeSubjectIdCanUseMap = gradeClassNumWorkDayTimeSubjectIdCanUseMap.get(grade);
-        var workDayTimeSubjectIdCanUseMap = classNumWorkDayTimeSubjectIdCanUseMap.get(classNum);
-        var timeSubjectIdCanUseMap = workDayTimeSubjectIdCanUseMap.get(workDay);
-        return timeSubjectIdCanUseMap.get(time);
-    }
-
-    /**
-     * 回溯可使用课程
-     *
-     * @param grade
-     * @param classNum
-     * @param workDay
-     * @param time
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private void rollbackSubjectIdCanUseMap(Integer grade, Integer classNum, Integer workDay, Integer time,
-//                                            TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        var gradeClassNumWorkDayTimeSubjectIdCanUseMap = this.rollbackSubjectIdCanUseMapCore(grade, classNum, workDay, time,
-//                timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumWorkDayTimeSubjectIdCanUseMap(), timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap());
-//        timeTablingUseDynamicWeightsAndBacktrackingDTO.setGradeClassNumWorkDayTimeSubjectIdCanUseMap(gradeClassNumWorkDayTimeSubjectIdCanUseMap);
-//    }
-
-    /**
      * 回溯可使用课程
      *
      * @param order
@@ -343,56 +244,6 @@ public class BacktrackingService {
         subjectIdCanUsedMap.replaceAll((key, value) -> true);
     }
 
-
-    /**
-     * 清除教师上课状态
-     *
-     * @param workDay
-     * @param time
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private void rollbackTeacherTeaching(Integer workDay, Integer time, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        var teacherTeachingMap = rollbackTeacherTeachingCore(workDay, time, timeTablingUseDynamicWeightsAndBacktrackingDTO.getTeacherTeachingMap());
-//        timeTablingUseDynamicWeightsAndBacktrackingDTO.setTeacherTeachingMap(teacherTeachingMap);
-//    }
-
-    /**
-     * 清除教师上课状态核心
-     *
-     * @param workDay
-     * @param time
-     * @param teacherTeachingMap
-     * @return
-     */
-    private HashMap<Integer, HashMap<Integer, List<Integer>>> rollbackTeacherTeachingCore(Integer workDay, Integer time, HashMap<Integer, HashMap<Integer, List<Integer>>> teacherTeachingMap) {
-        for (Integer teacherId : teacherTeachingMap.keySet()) {
-            var workDayTimeListMap = teacherTeachingMap.get(teacherId);
-            var timeList = workDayTimeListMap.get(workDay);
-            if (CollectionUtils.isNotEmpty(timeList)) {
-                for (int i = SchoolTimeTableDefaultValueDTO.getStartClassTimeIndex(); i < timeList.size(); i++) {
-                    if (timeList.get(i).equals(time)) {
-                        timeList.remove(i--);
-                    }
-                }
-            }
-            workDayTimeListMap.put(workDay, timeList);
-            teacherTeachingMap.put(teacherId, workDayTimeListMap);
-        }
-
-        return teacherTeachingMap;
-    }
-
-    /**
-     * 归还所有教室
-     *
-     * @param workDay
-     * @param time
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private void rollbackClassroom(Integer workDay, Integer time, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        var classRoomUsedCountMap = rollbackClassRoomUsedCountMapCore(workDay, time, timeTablingUseDynamicWeightsAndBacktrackingDTO.getClassRoomUsedCountMap());
-//        timeTablingUseDynamicWeightsAndBacktrackingDTO.setClassRoomUsedCountMap(classRoomUsedCountMap);
-//    }
 
     /**
      * 归还所有教室
@@ -423,23 +274,6 @@ public class BacktrackingService {
         return orderClassRoomUsedCountMap;
     }
 
-    /**
-     * 还课
-     *
-     * @param order
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private void rollbackSubjectFrequency(Integer order, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//
-//
-//        var subjectId = this.getSubjectIdFromTimeTableMap(grade, classNum, workDay, time, timeTableMap);
-//        if (subjectId == null) {
-//            return;
-//        }
-//
-//        var gradeClassNumSubjectFrequencyMap = this.rollbackSubjectFrequencyCore(grade, classNum, subjectId, timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap());
-//        timeTablingUseDynamicWeightsAndBacktrackingDTO.setGradeClassNumSubjectFrequencyMap(gradeClassNumSubjectFrequencyMap);
-//    }
 
     /**
      * 还课
@@ -448,17 +282,18 @@ public class BacktrackingService {
      * @param classNum
      * @param workDay
      * @param time
-     * @param timeTablingUseBacktrackingDTO
+     * @param gradeClassNumSubjectFrequencyMap
+     * @param timeTableMap
      */
-    private void rollbackSubjectFrequency(Integer grade, Integer classNum, Integer workDay, Integer time, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
-        var timeTableMap = timeTablingUseBacktrackingDTO.getTimeTableMap();
+    private void rollbackSubjectFrequency(Integer grade, Integer classNum, Integer workDay, Integer time,
+                                          HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassNumSubjectFrequencyMap,
+                                          HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
         var subjectId = this.getSubjectIdFromTimeTableMap(grade, classNum, workDay, time, timeTableMap);
         if (subjectId == null) {
             return;
         }
 
-        var gradeClassNumSubjectFrequencyMap = this.rollbackSubjectFrequencyCore(grade, classNum, subjectId, timeTablingUseBacktrackingDTO.getGradeClassNumSubjectFrequencyMap());
-        timeTablingUseBacktrackingDTO.setGradeClassNumSubjectFrequencyMap(gradeClassNumSubjectFrequencyMap);
+        this.rollbackSubjectFrequencyCore(grade, classNum, subjectId, gradeClassNumSubjectFrequencyMap);
     }
 
     /**
@@ -494,32 +329,6 @@ public class BacktrackingService {
         var workDayTimeSubjectIdMap = classNumWorkDayTimeSubjectIdMap.get(classNum);
         var timeSubjectIdMap = workDayTimeSubjectIdMap.get(workDay);
         return timeSubjectIdMap.get(time);
-    }
-
-    /**
-     * 回溯课程表
-     *
-     * @param order
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-    private void rollbackTimeTableMap(Integer order, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-        var timeTableMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap();
-        var orderMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
-
-        for (int i = order; order < orderMap.size(); i++) {
-            var gradeClassNumWorkDayTimeDTO = orderMap.get(i);
-            var grade = gradeClassNumWorkDayTimeDTO.getGrade();
-            var classNo = gradeClassNumWorkDayTimeDTO.getClassNum();
-            var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-            var time = gradeClassNumWorkDayTimeDTO.getTime();
-            var classNoWorkDayTimeSubjectMap = timeTableMap.get(grade);
-            var workDayTimeSubjectMap = classNoWorkDayTimeSubjectMap.get(classNo);
-            var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
-            if (timeSubjectMap.get(time) == null) {
-                break;
-            }
-            timeSubjectMap.put(time, null);
-        }
     }
 
     /**
@@ -602,65 +411,6 @@ public class BacktrackingService {
     }
 
     /**
-     * 更新一系列状态
-     *
-     * @param grade
-     * @param classNum
-     * @param worDay
-     * @param time
-     * @param firstCanUseSubjectId
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     */
-//    private void updateAllStatus(Integer grade, Integer classNum, Integer worDay, Integer time,
-//                                 Integer firstCanUseSubjectId,
-//                                 TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        var subjectGradeClassTeacherMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getSubjectGradeClassTeacherMap();
-//        var teacherTeachingMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getTeacherTeachingMap();
-//        var gradeSubjectDTOMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeSubjectDTOMap();
-//        var classRoomUsedCountMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getClassRoomUsedCountMap();
-//        var timeTableMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap();
-//
-//        var subjectDTOMap = gradeSubjectDTOMap.get(grade);
-//        var subjectDTO = subjectDTOMap.get(firstCanUseSubjectId);
-//
-//        // 课程中的次数减少1次
-//        this.updateFrequency(firstCanUseSubjectId, grade, classNum, timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap());
-//
-//        if (!SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(subjectDTO.getType())) {
-//            // 更新教师状态
-//            var teacherId = this.getTeacherId(firstCanUseSubjectId, grade, classNum, subjectGradeClassTeacherMap);
-//            var workDayTimeMap = teacherTeachingMap.get(teacherId);
-//            var timeList = workDayTimeMap.get(worDay);
-//            if (!timeList.contains(time)) {
-//                timeList.add(time);
-//                workDayTimeMap.put(worDay, timeList);
-//                teacherTeachingMap.put(teacherId, workDayTimeMap);
-//            }
-//
-//            // 如果使用教室 更新教室状态
-//            if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectDTO.getType())) {
-//                var gradeWorkDayTimeClassRoomUsedCountMap = classRoomUsedCountMap.get(subjectDTO.getSubjectId());
-//                var workDayTimeClassRoomUsedCountMap = gradeWorkDayTimeClassRoomUsedCountMap.get(worDay);
-//                var count = workDayTimeClassRoomUsedCountMap.get(time);
-//                workDayTimeClassRoomUsedCountMap.put(time, count);
-//                gradeWorkDayTimeClassRoomUsedCountMap.put(worDay, workDayTimeClassRoomUsedCountMap);
-//                classRoomUsedCountMap.put(firstCanUseSubjectId, gradeWorkDayTimeClassRoomUsedCountMap);
-//            }
-//
-//        }
-//
-//        // 如果满足要求 给timeTableMap 赋值
-//        var classNumWorkDayTimeSubjectIdMap = timeTableMap.get(grade);
-//        var workDayTimeSubjectIdMap = classNumWorkDayTimeSubjectIdMap.get(classNum);
-//        var timeSubjectIdMap = workDayTimeSubjectIdMap.get(worDay);
-//        timeSubjectIdMap.put(time, firstCanUseSubjectId);
-//        workDayTimeSubjectIdMap.put(worDay, timeSubjectIdMap);
-//        classNumWorkDayTimeSubjectIdMap.put(classNum, workDayTimeSubjectIdMap);
-//        timeTableMap.put(grade, classNumWorkDayTimeSubjectIdMap);
-//        timeTablingUseDynamicWeightsAndBacktrackingDTO.setTimeTableMap(timeTableMap);
-//    }
-
-    /**
      * 获取教师id
      *
      * @param subjectId
@@ -717,29 +467,81 @@ public class BacktrackingService {
      * @param workDay
      * @param time
      * @param subjectIdCanUseMap
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
+     * @param timeTablingUseBacktrackingDTO
      * @return
      */
-//    private Integer getMaxWeightSubjectId(Integer grade, Integer classNum, Integer workDay, Integer time,
-//                                          HashMap<Integer, Boolean> subjectIdCanUseMap, TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//
-//        var gradeClassSubjectWeightMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassSubjectWeightMap();
-//
-//        // 筛选出某个年级下某个班级要赋值的课程,并且初始化所有课程的权重
-//        var subjectWeightDTOList = this.listSubjectWeightDTO(grade, classNum, gradeClassSubjectWeightMap);
-//
-//        // 组装computerSubjectWeightDTO
-//        var computerSubjectWeightDTO = this.packComputerSubjectWeightDTO(grade, classNum, workDay, time, subjectWeightDTOList, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//
-//        // 计算权重
-//        subjectService.computerSubjectWeightDTO(computerSubjectWeightDTO);
-//
-//        // 返回最大权重的课程
-//        return subjectWeightDTOList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
-//                .filter(x -> subjectIdCanUseMap.get(x.getSubjectId()).equals(true))
-//                .max(Comparator.comparing(SubjectWeightDTO::getWeight))
-//                .map(SubjectWeightDTO::getSubjectId).get();
-//    }
+    private Integer getMaxWeightSubjectId(Integer grade, Integer classNum, Integer workDay, Integer time,
+                                          HashMap<Integer, Boolean> subjectIdCanUseMap, TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+
+        var gradeClassSubjectWeightMap = timeTablingUseBacktrackingDTO.getGradeClassSubjectWeightMap();
+
+        // 筛选出某个年级下某个班级要赋值的课程,并且初始化所有课程的权重
+        var subjectWeightDTOList = this.listSubjectWeightDTO(grade, classNum, gradeClassSubjectWeightMap);
+
+        // 组装computerSubjectWeightDTO
+        var computerSubjectWeightDTO = this.packComputerSubjectWeightDTO(grade, classNum, workDay, time, subjectWeightDTOList, timeTablingUseBacktrackingDTO);
+
+        // 计算权重
+        subjectService.computerSubjectWeightDTO(computerSubjectWeightDTO);
+
+        // 返回最大权重的课程
+        return subjectWeightDTOList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
+                .filter(x -> subjectIdCanUseMap.get(x.getSubjectId()).equals(true))
+                .max(Comparator.comparing(SubjectWeightDTO::getWeight))
+                .map(SubjectWeightDTO::getSubjectId).get();
+    }
+
+    /**
+     * 筛选出需要某年级某班级需要排课的课程
+     *
+     * @param grade
+     * @param classNum
+     * @param gradeClassSubjectWeightMap
+     * @return
+     */
+    private List<SubjectWeightDTO> listSubjectWeightDTO(Integer grade,
+                                                        Integer classNum,
+                                                        HashMap<Integer, HashMap<Integer, List<SubjectWeightDTO>>> gradeClassSubjectWeightMap) {
+        var classSubjectWeightMap = gradeClassSubjectWeightMap.get(grade);
+        var subjectWeightList = classSubjectWeightMap.get(classNum);
+        subjectWeightList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
+                .forEach(x -> x.setWeight(x.getFrequency() * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType() - x.getType())));
+        return subjectWeightList;
+    }
+
+    /**
+     * 组装ComputerSubjectWeightDTO
+     *
+     * @param grade
+     * @param classNum
+     * @param workDay
+     * @param time
+     * @param subjectWeightDTOList
+     * @param timeTablingUseBacktrackingDTO
+     * @return
+     */
+    private ComputerSubjectWeightDTO packComputerSubjectWeightDTO(Integer grade,
+                                                                  Integer classNum,
+                                                                  Integer workDay,
+                                                                  Integer time,
+                                                                  List<SubjectWeightDTO> subjectWeightDTOList,
+                                                                  TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+        ComputerSubjectWeightDTO computerSubjectWeightDTO = new ComputerSubjectWeightDTO();
+
+        computerSubjectWeightDTO.setGrade(grade);
+        computerSubjectWeightDTO.setClassNum(classNum);
+        computerSubjectWeightDTO.setWorkDay(workDay);
+        computerSubjectWeightDTO.setTime(time);
+        computerSubjectWeightDTO.setSubjectWeightDTOList(subjectWeightDTOList);
+        computerSubjectWeightDTO.setSubjectGradeClassTeacherCountMap(timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherCountMap());
+        computerSubjectWeightDTO.setOrderTeacherWorkDayTimeMap(timeTablingUseBacktrackingDTO.getOrderTeacherWorkDayTimeMap());
+        computerSubjectWeightDTO.setTeacherSubjectListMap(timeTablingUseBacktrackingDTO.getTeacherSubjectListMap());
+        computerSubjectWeightDTO.setGradeClassNumWorDaySubjectCountMap(timeTablingUseBacktrackingDTO.getGradeClassNumWorkDaySubjectCountMap());
+        computerSubjectWeightDTO.setTimeTableMap(timeTablingUseBacktrackingDTO.getTimeTableMap());
+        computerSubjectWeightDTO.setClassroomMaxCapacityMap(timeTablingUseBacktrackingDTO.getClassroomMaxCapacityMap());
+
+        return computerSubjectWeightDTO;
+    }
 
     /**
      * 根据上课次数和时间点判断是否能够选择的课程
@@ -797,112 +599,6 @@ public class BacktrackingService {
     }
 
     /**
-     * 排课核心算法
-     *
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     * @return
-     */
-//    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> algorithmInPlanTimeTableWithDynamicWeightsAndBacktracking(TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> cattyResult = new CattyResult<>();
-//        var timeTableMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap();
-//
-//        var orderGradeClassNumWorkDayTimeMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
-//        var gradeClassNumSubjectFrequencyMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
-//        var gradeClassNumWorkDayTimeSubjectIdCanUseMap = timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumWorkDayTimeSubjectIdCanUseMap();
-//
-//        for (int order = SchoolTimeTableDefaultValueDTO.getStartOrder(); order <= orderGradeClassNumWorkDayTimeMap.keySet().size(); order++) {
-//            var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
-//            var grade = gradeClassNumWorkDayTimeDTO.getGrade();
-//            var classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-//            var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-//            var time = gradeClassNumWorkDayTimeDTO.getTime();
-//
-//            while (timeTableMap.get(grade).get(classNum).get(workDay).get(time) == null) {
-//                // 获取某个年级某个班的课程和使用次数
-//                var classNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap.get(grade);
-//                var subjectFrequencyMap = classNumSubjectFrequencyMap.get(classNum);
-//
-//                // 获取课程使用表
-//                var subjectIdCanUseMap = this.getSubjectIdCanUseMap(order, orderGradeClassNumWorkDayTimeMap, gradeClassNumWorkDayTimeSubjectIdCanUseMap);
-//
-//                // 根据上课次数和时间点判断是否能够选择的课程
-//                this.updateSubjectIdCanUseMap(subjectIdCanUseMap, subjectFrequencyMap, workDay, time);
-//
-//                // 检查是否有回溯课程
-//                var backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
-//                if (!backFlag) {
-//
-//                    // 选择权重最大的课程
-//                    Integer maxWeightSubjectId = this.getMaxWeightSubjectId(grade, classNum, workDay, time, subjectIdCanUseMap, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//
-//                    // 更新课程使用状态
-//                    subjectIdCanUseMap.put(maxWeightSubjectId, false);
-//
-//                    // 检查是否满足排课需求
-//                    var checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, maxWeightSubjectId, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                    boolean completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
-//                    // 如果不满足排课需求，就需要回溯
-//                    while (!completeFlag) {
-//                        // 判断这一层的回溯点是否都已经使用，如果没有使用完毕，不需要回溯，选择下一个课程
-//                        subjectIdCanUseMap = this.getSubjectIdCanUseMap(order, orderGradeClassNumWorkDayTimeMap, gradeClassNumWorkDayTimeSubjectIdCanUseMap);
-//                        backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
-//                        if (!backFlag) {
-//                            // 回溯点不清零，记录该点的排课课程，下次不再选择这么课程
-//                            maxWeightSubjectId = this.getMaxWeightSubjectId(grade, classNum, workDay, time, subjectIdCanUseMap, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                            // 更新课程使用状态
-//                            subjectIdCanUseMap.put(maxWeightSubjectId, false);
-//                            // 检查是否满足排课需求
-//                            checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, maxWeightSubjectId, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                            completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
-//                            if (completeFlag) {
-//                                this.updateAllStatus(grade, classNum, workDay, time, maxWeightSubjectId, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                                var geneList = this.convertToGeneList(timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap(), timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeSubjectDTOMap(),
-//                                        timeTablingUseDynamicWeightsAndBacktrackingDTO.getSubjectGradeClassTeacherMap());
-//                                var score = geneticService.computerFitnessScore(geneList);
-//                                System.out.println(score);
-//                            }
-//                        }
-//
-//                        // 如果课程使用完毕，则找上一层的回溯点
-//                        if (backFlag) {
-//                            order = this.rollback(order, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                            gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
-//                            grade = gradeClassNumWorkDayTimeDTO.getGrade();
-//                            classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-//                            workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-//                            time = gradeClassNumWorkDayTimeDTO.getTime();
-//                            completeFlag = true;
-//                        }
-//
-//                    }
-//
-//                    // 更新所有数据准状态
-//                    this.updateAllStatus(grade, classNum, workDay, time, maxWeightSubjectId, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                    var geneList = this.convertToGeneList(timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap(), timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeSubjectDTOMap(),
-//                            timeTablingUseDynamicWeightsAndBacktrackingDTO.getSubjectGradeClassTeacherMap());
-//                    var score = geneticService.computerFitnessScore(geneList);
-//                    System.out.println(score);
-//                }
-//                if (backFlag) {
-//                    order = this.rollback(order, timeTablingUseDynamicWeightsAndBacktrackingDTO);
-//                    gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
-//                    grade = gradeClassNumWorkDayTimeDTO.getGrade();
-//                    classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
-//                    workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
-//                    time = gradeClassNumWorkDayTimeDTO.getTime();
-//                }
-//
-//            }
-//        }
-//
-//
-//        cattyResult.setSuccess(true);
-//        cattyResult.setData(timeTableMap);
-//        return cattyResult;
-//    }
-
-
-    /**
      * TimeTableMap转换为TimeTableNameMap
      *
      * @param timeTableMap
@@ -938,59 +634,6 @@ public class BacktrackingService {
         }
 
         return timeTableNameMap;
-    }
-
-    /**
-     * 筛选出需要某年级某班级需要排课的课程
-     *
-     * @param grade
-     * @param classNum
-     * @param gradeClassSubjectWeightMap
-     * @return
-     */
-    private List<SubjectWeightDTO> listSubjectWeightDTO(Integer grade,
-                                                        Integer classNum,
-                                                        HashMap<Integer, HashMap<Integer, List<SubjectWeightDTO>>> gradeClassSubjectWeightMap) {
-        var classSubjectWeightMap = gradeClassSubjectWeightMap.get(grade);
-        var subjectWeightList = classSubjectWeightMap.get(classNum);
-        subjectWeightList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
-                .forEach(x -> x.setWeight(x.getFrequency() * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType() - x.getType())));
-        return subjectWeightList;
-    }
-
-
-    /**
-     * 组装ComputerSubjectWeightDTO
-     *
-     * @param grade
-     * @param classNum
-     * @param workDay
-     * @param time
-     * @param subjectWeightDTOList
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     * @return
-     */
-    private ComputerSubjectWeightDTO packComputerSubjectWeightDTO(Integer grade,
-                                                                  Integer classNum,
-                                                                  Integer workDay,
-                                                                  Integer time,
-                                                                  List<SubjectWeightDTO> subjectWeightDTOList,
-                                                                  TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-        ComputerSubjectWeightDTO computerSubjectWeightDTO = new ComputerSubjectWeightDTO();
-
-        computerSubjectWeightDTO.setGrade(grade);
-        computerSubjectWeightDTO.setClassNum(classNum);
-        computerSubjectWeightDTO.setWorkDay(workDay);
-        computerSubjectWeightDTO.setTime(time);
-        computerSubjectWeightDTO.setSubjectWeightDTOList(subjectWeightDTOList);
-        computerSubjectWeightDTO.setSubjectGradeClassTeacherCountMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getSubjectGradeClassTeacherCountMap());
-        computerSubjectWeightDTO.setOrderTeacherWorkDayTimeMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderTeacherWorkDayTimeMap());
-        computerSubjectWeightDTO.setTeacherSubjectListMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getTeacherSubjectListMap());
-        computerSubjectWeightDTO.setGradeClassNumWorDaySubjectCountMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumWorkDaySubjectCountMap());
-        computerSubjectWeightDTO.setTimeTableMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap());
-        computerSubjectWeightDTO.setClassroomMaxCapacityMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getClassroomMaxCapacityMap());
-
-        return computerSubjectWeightDTO;
     }
 
 
@@ -1031,41 +674,6 @@ public class BacktrackingService {
 
         return checkCompleteUseBacktrackingDTO;
     }
-
-    /**
-     * 组装CheckAllCompleteIsOkDTO
-     *
-     * @param grade
-     * @param classNum
-     * @param workDay
-     * @param time
-     * @param subjectId
-     * @param timeTablingUseDynamicWeightsAndBacktrackingDTO
-     * @return
-     */
-//    private CheckCompleteUseBacktrackingDTO packCheckCompleteUseBacktrackingDTO(Integer grade,
-//                                                                                Integer classNum,
-//                                                                                Integer workDay,
-//                                                                                Integer time,
-//                                                                                Integer subjectId,
-//                                                                                TimeTablingUseDynamicWeightsAndBacktrackingDTO timeTablingUseDynamicWeightsAndBacktrackingDTO) {
-//
-//        CheckCompleteUseBacktrackingDTO checkCompleteUseBacktrackingDTO = new CheckCompleteUseBacktrackingDTO();
-//        checkCompleteUseBacktrackingDTO.setSubjectId(subjectId);
-//        checkCompleteUseBacktrackingDTO.setGradeClassNumSubjectFrequencyMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeClassNumSubjectFrequencyMap());
-//        checkCompleteUseBacktrackingDTO.setTimeTableMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getTimeTableMap());
-//        checkCompleteUseBacktrackingDTO.setGradeSubjectDTOMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getGradeSubjectDTOMap());
-//        checkCompleteUseBacktrackingDTO.setSubjectGradeClassTeacherMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getSubjectGradeClassTeacherMap());
-//        checkCompleteUseBacktrackingDTO.setOrderTeacherWorkDayTimeMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderTeacherWorkDayTimeMap());
-//        checkCompleteUseBacktrackingDTO.setClassroomMaxCapacity(timeTablingUseDynamicWeightsAndBacktrackingDTO.getClassroomMaxCapacityMap());
-//        checkCompleteUseBacktrackingDTO.setOrderClassRoomUsedCountMap(timeTablingUseDynamicWeightsAndBacktrackingDTO.getOrderClassRoomUsedCountMap());
-//        checkCompleteUseBacktrackingDTO.setGrade(grade);
-//        checkCompleteUseBacktrackingDTO.setClassNum(classNum);
-//        checkCompleteUseBacktrackingDTO.setWorkDay(workDay);
-//        checkCompleteUseBacktrackingDTO.setTime(time);
-//
-//        return checkCompleteUseBacktrackingDTO;
-//    }
 
     /**
      * 检查所有条件都满足要求
@@ -1355,34 +963,6 @@ public class BacktrackingService {
         return count <= maxCount;
     }
 
-    /**
-     * 组装CheckAllCompleteIsOkDTO
-     *
-     * @param checkCompleteUseBacktrackingDTO
-     * @return
-     */
-    private CheckAllCompleteIsOkDTO packCheckAllCompleteIsOkDTO(CheckCompleteUseBacktrackingDTO checkCompleteUseBacktrackingDTO) {
-
-        var subjectDTO = checkCompleteUseBacktrackingDTO.getSubjectDTO();
-        var subjectId = subjectDTO.getSubjectId();
-        SubjectWeightDTO subjectWeightDTO = new SubjectWeightDTO();
-        subjectWeightDTO.setSubjectId(subjectId);
-        subjectWeightDTO.setType(subjectDTO.getType());
-
-        CheckAllCompleteIsOkDTO checkAllCompleteIsOkDTO = new CheckAllCompleteIsOkDTO();
-        checkAllCompleteIsOkDTO.setGrade(checkCompleteUseBacktrackingDTO.getGrade());
-        checkAllCompleteIsOkDTO.setClassNum(checkCompleteUseBacktrackingDTO.getClassNum());
-        checkAllCompleteIsOkDTO.setWorkDay(checkCompleteUseBacktrackingDTO.getWorkDay());
-        checkAllCompleteIsOkDTO.setTime(checkCompleteUseBacktrackingDTO.getTime());
-        checkAllCompleteIsOkDTO.setSubjectMaxWeightDTO(subjectWeightDTO);
-        checkAllCompleteIsOkDTO.setClassroomMaxCapacity(checkCompleteUseBacktrackingDTO.getClassroomMaxCapacity());
-        checkAllCompleteIsOkDTO.setOrderClassRoomUsedCountMap(checkCompleteUseBacktrackingDTO.getOrderClassRoomUsedCountMap());
-        checkAllCompleteIsOkDTO.setGradeSubjectDTOMap(checkCompleteUseBacktrackingDTO.getGradeSubjectDTOMap());
-        checkAllCompleteIsOkDTO.setTimeTableMap(checkCompleteUseBacktrackingDTO.getTimeTableMap());
-        checkAllCompleteIsOkDTO.setSubjectGradeClassTeacherMap(checkCompleteUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
-
-        return checkAllCompleteIsOkDTO;
-    }
 
     /**
      * 检查教师是否空闲
@@ -1415,7 +995,7 @@ public class BacktrackingService {
                 var workDayTimeMap = teacherWorkDayTimeMap.get(teacherId);
                 if (workDayTimeMap != null) {
                     var time = workDayTimeMap.get(checkCompleteUseBacktrackingDTO.getWorkDay());
-                    if (checkCompleteUseBacktrackingDTO.getTime().equals(time)){
+                    if (checkCompleteUseBacktrackingDTO.getTime().equals(time)) {
                         return false;
                     }
                 }
@@ -1423,71 +1003,6 @@ public class BacktrackingService {
         }
 
         return true;
-    }
-
-
-    /**
-     * 组装 CheckClassRoomIsOkDTO
-     *
-     * @param checkAllCompleteIsOkDTO
-     * @return
-     */
-    private CheckClassRoomIsOkDTO packCheckClassRoomIsOkDTO(CheckAllCompleteIsOkDTO checkAllCompleteIsOkDTO) {
-        CheckClassRoomIsOkDTO checkClassRoomIsOkDTO = new CheckClassRoomIsOkDTO();
-
-        var subjectMaxWeightDTO = checkAllCompleteIsOkDTO.getSubjectMaxWeightDTO();
-
-        checkClassRoomIsOkDTO.setSubjectId(subjectMaxWeightDTO.getSubjectId());
-        checkClassRoomIsOkDTO.setWorkDay(checkAllCompleteIsOkDTO.getWorkDay());
-        checkClassRoomIsOkDTO.setTime(checkAllCompleteIsOkDTO.getTime());
-        checkClassRoomIsOkDTO.setClassroomMaxCapacity(checkAllCompleteIsOkDTO.getClassroomMaxCapacity());
-        checkClassRoomIsOkDTO.setOrderClassRoomUsedCountMap(checkAllCompleteIsOkDTO.getOrderClassRoomUsedCountMap());
-
-        return checkClassRoomIsOkDTO;
-    }
-
-
-    /**
-     * 检查教室是否ok
-     *
-     * @param checkClassRoomIsOkDTO
-     * @return
-     */
-//    private boolean checkClassRoomIsOk(CheckClassRoomIsOkDTO checkClassRoomIsOkDTO) {
-//
-//        var subjectId = checkClassRoomIsOkDTO.getSubjectId();
-//        var workDay = checkClassRoomIsOkDTO.getWorkDay();
-//        var time = checkClassRoomIsOkDTO.getTime();
-//        var classroomMaxCapacity = checkClassRoomIsOkDTO.getClassroomMaxCapacity();
-//        var classroomUsedCountMap = checkClassRoomIsOkDTO.getClassroomUsedCountMap();
-//
-//        var workDayTimeClassRoomUsedCountMap = classroomUsedCountMap.get(subjectId);
-//        var maxCapacity = classroomMaxCapacity.get(subjectId);
-//        var timeClassRoomUsedCountMap = workDayTimeClassRoomUsedCountMap.get(workDay);
-//        var usedCapacity = timeClassRoomUsedCountMap.get(time);
-//        if (usedCapacity > maxCapacity) {
-//            return false;
-//        }
-//        return true;
-//    }
-
-
-    /**
-     * 组装subjectGradeClassDTO
-     *
-     * @param subjectMaxWeightDTO
-     * @param grade
-     * @param classNum
-     * @return
-     */
-    private SubjectGradeClassDTO packSubjectGradeClassDTO(SubjectWeightDTO subjectMaxWeightDTO,
-                                                          Integer grade,
-                                                          Integer classNum) {
-        SubjectGradeClassDTO subjectGradeClassDTO = new SubjectGradeClassDTO();
-        subjectGradeClassDTO.setSubjectId(subjectMaxWeightDTO.getSubjectId());
-        subjectGradeClassDTO.setGrade(grade);
-        subjectGradeClassDTO.setClassNum(classNum);
-        return subjectGradeClassDTO;
     }
 
     /**

@@ -34,7 +34,7 @@ public class ComputerSubjectWeightDTO implements Serializable {
     /**
      * 教师获取所有教师上课时间map order teacherId workday time 中间变量
      */
-    private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
+        private HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap;
     /**
      * 教师所带年级班级和科目map
      */

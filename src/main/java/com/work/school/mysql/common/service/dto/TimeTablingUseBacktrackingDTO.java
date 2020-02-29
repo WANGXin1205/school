@@ -28,6 +28,10 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
      */
     private List<SubjectDO> allSubject;
     /**
+     * 所有课程按照grade的map
+     */
+    private Map<Integer, List<SubjectDTO>> gradeSubjectMap;
+    /**
      * 课程Map
      */
     private HashMap<Integer,HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap;
@@ -114,6 +118,14 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
 
     public void setAllSubject(List<SubjectDO> allSubject) {
         this.allSubject = allSubject;
+    }
+
+    public Map<Integer, List<SubjectDTO>> getGradeSubjectMap() {
+        return gradeSubjectMap;
+    }
+
+    public void setGradeSubjectMap(Map<Integer, List<SubjectDTO>> gradeSubjectMap) {
+        this.gradeSubjectMap = gradeSubjectMap;
     }
 
     public HashMap<Integer, HashMap<Integer, SubjectDTO>> getGradeSubjectDTOMap() {
@@ -250,6 +262,7 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 "allGradeClassInfo=" + allGradeClassInfo +
                 ", gradeClassCountMap=" + gradeClassCountMap +
                 ", allSubject=" + allSubject +
+                ", gradeSubjectMap=" + gradeSubjectMap +
                 ", gradeSubjectDTOMap=" + gradeSubjectDTOMap +
                 ", allSubjectNameMap=" + allSubjectNameMap +
                 ", gradeClassNumWorkDaySubjectCountMap=" + gradeClassNumWorkDaySubjectCountMap +
@@ -268,4 +281,5 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 ", timeTableMap=" + timeTableMap +
                 '}';
     }
+
 }

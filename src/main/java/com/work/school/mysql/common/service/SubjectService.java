@@ -5,6 +5,7 @@ import com.work.school.mysql.common.dao.mapper.SubjectDetailsMapper;
 import com.work.school.mysql.common.dao.mapper.SubjectMapper;
 import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.dto.GradeClassWorkDayTimeDTO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.javassist.runtime.Inner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,91 +92,136 @@ public class SubjectService {
      * @param computerSubjectWeightDTO
      * @return
      */
-//    public void computerSubjectWeightDTO(ComputerSubjectWeightDTO computerSubjectWeightDTO) {
-//
-//        Integer grade = computerSubjectWeightDTO.getGrade();
-//        Integer classNum = computerSubjectWeightDTO.getClassNum();
-//        Integer workDay = computerSubjectWeightDTO.getWorkDay();
-//        Integer time = computerSubjectWeightDTO.getTime();
-//        List<SubjectWeightDTO> subjectWeightDTOList = computerSubjectWeightDTO.getSubjectWeightDTOList();
-//        var gradeClassWorkDaySubjectCountMap = computerSubjectWeightDTO.getGradeClassNumWorDaySubjectCountMap();
-//        var timeTableMap = computerSubjectWeightDTO.getTimeTableMap();
-//        var classWorkDayTimeSubjectIdMap = timeTableMap.get(grade);
-//        var workDayTimeSubjectIdMap = classWorkDayTimeSubjectIdMap.get(classNum);
-//        var timeSubjectIdMap = workDayTimeSubjectIdMap.get(workDay);
-//        HashMap<Integer, Integer> maxClassroomMap = computerSubjectWeightDTO.getClassroomMaxCapacityMap();
-//
-//        //首先判断是周几的第几节课，如果不是特殊课程，走普通课程的流程，如果是特殊课程，走特殊课程的流程。
-//        boolean classMeetingFlag = SchoolTimeTableDefaultValueDTO.getMondayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getClassMeetingTime().equals(time);
-//        boolean writingFlag = SchoolTimeTableDefaultValueDTO.getWednesdayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getWritingTime().equals(time);
-//        boolean schoolBasedFlag = SchoolTimeTableDefaultValueDTO.getFridayNum().equals(workDay) && Arrays.asList(SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()).contains(time);
-//        boolean specialFlag = classMeetingFlag || writingFlag || schoolBasedFlag;
-//        if (specialFlag) {
-//            if (classMeetingFlag) {
-//                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId(), subjectWeightDTOList);
-//            }
-//            if (writingFlag) {
-//                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getWritingId(), subjectWeightDTOList);
-//            }
-//            if (schoolBasedFlag) {
-//                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId(), subjectWeightDTOList);
-//            }
-//        }
-//        if (!specialFlag) {
-//            // 早上必须有主课
-//            boolean firFlag = SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time);
-//            if (firFlag) {
-//                this.makeChineseOrMathWeight(subjectWeightDTOList);
-//            }
-//
-//            boolean secTime = SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time);
-//            if (secTime) {
-//                var firstClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningFirTime());
-//                this.makeChineseOrMathWeight(subjectWeightDTOList, firstClassSubjectId);
-//            }
-//
-//            // 早上要有语文数学课
-//            boolean thirdTime = SchoolTimeTableDefaultValueDTO.getMorningLastTime().equals(time);
-//            if (thirdTime) {
-//                var firstClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningFirTime());
-//                var secClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningSecTime());
-//                this.makeChineseOrMathMaxWeight(subjectWeightDTOList, firstClassSubjectId, secClassSubjectId);
-//            }
-//
-//            var subjectGradeClassTeacherCountMap = computerSubjectWeightDTO.getSubjectGradeClassTeacherCountMap();
-//            // 小课要优先排课
-//            this.makeSmallSubjectWeight(subjectWeightDTOList);
-//            // 如果一个老师带多个班级的小课，要优先排课
-//            this.makeTeacherHaveManyClassWeight(grade, classNum, subjectWeightDTOList, subjectGradeClassTeacherCountMap);
-//            // 如果这节课程的数目很多，要优先排课
-//            this.makeSubjectNumWeight(subjectWeightDTOList);
-//            // 如果这节课是需要教室的课程，需要优先排课
-//            this.makeOtherNeedClassroomSubjectWeight(subjectWeightDTOList,maxClassroomMap);
-//
-//            // 保证每天有主课上
-//            this.makeSureChineseOrMathWeight(workDay, subjectWeightDTOList);
-//
-//            // 判断学生的连堂课(上限为3)，如果连堂课则清零
-//            var gradeClassWorkDayTimeDTO = this.packGradeClassWorkDayTimeDTO(grade, classNum, workDay, time);
-//            this.clearStudentContinueSubject(gradeClassWorkDayTimeDTO, subjectWeightDTOList, timeTableMap);
-//
-//            // 判断每门课程的上限(上限为2)，如果一天上同一门主课2次则权重清零
-//            this.clearRepeatSubject(grade, classNum, workDay, time, subjectWeightDTOList, gradeClassWorkDaySubjectCountMap);
-//
-//            // 判断教师的连堂课(上限为4)，如果当天该老师连堂课，那么连堂的那节课所带的所有课程权重为0
-//            // 一个教师一天最多上4节课，若果超过4节课，权重清零
-//            var teacherTeachingMap = computerSubjectWeightDTO.getTeacherTeachingMap();
-//            var teacherSubjectListMap = computerSubjectWeightDTO.getTeacherSubjectListMap();
-//            this.clearTeacherContinueAndMaxTimeSubject(gradeClassWorkDayTimeDTO, subjectWeightDTOList, teacherTeachingMap, teacherSubjectListMap);
-//
-//            // 如果当天上过这个小课，则不能再排课，设置权重为0
-//            this.clearSmallSubjectWeight(subjectWeightDTOList, timeSubjectIdMap);
-//
-//            // 非特殊时间，特殊课程权重设置为0
-//            this.clearSpecialWeight(subjectWeightDTOList);
-//        }
-//
-//    }
+    public void computerSubjectWeightDTO(ComputerSubjectWeightDTO computerSubjectWeightDTO) {
+
+        Integer grade = computerSubjectWeightDTO.getGrade();
+        Integer classNum = computerSubjectWeightDTO.getClassNum();
+        Integer workDay = computerSubjectWeightDTO.getWorkDay();
+        Integer time = computerSubjectWeightDTO.getTime();
+        List<SubjectWeightDTO> subjectWeightDTOList = computerSubjectWeightDTO.getSubjectWeightDTOList();
+        var gradeClassWorkDaySubjectCountMap = computerSubjectWeightDTO.getGradeClassNumWorDaySubjectCountMap();
+        var timeTableMap = computerSubjectWeightDTO.getTimeTableMap();
+        var classWorkDayTimeSubjectIdMap = timeTableMap.get(grade);
+        var workDayTimeSubjectIdMap = classWorkDayTimeSubjectIdMap.get(classNum);
+        var timeSubjectIdMap = workDayTimeSubjectIdMap.get(workDay);
+        HashMap<Integer, Integer> maxClassroomMap = computerSubjectWeightDTO.getClassroomMaxCapacityMap();
+
+        //首先判断是周几的第几节课，如果不是特殊课程，走普通课程的流程，如果是特殊课程，走特殊课程的流程。
+        boolean classMeetingFlag = SchoolTimeTableDefaultValueDTO.getMondayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getClassMeetingTime().equals(time);
+        boolean writingFlag = SchoolTimeTableDefaultValueDTO.getWednesdayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getWritingTime().equals(time);
+        boolean schoolBasedFlag = SchoolTimeTableDefaultValueDTO.getFridayNum().equals(workDay) && Arrays.asList(SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()).contains(time);
+        boolean specialFlag = classMeetingFlag || writingFlag || schoolBasedFlag;
+        if (specialFlag) {
+            if (classMeetingFlag) {
+                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId(), subjectWeightDTOList);
+            }
+            if (writingFlag) {
+                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getWritingId(), subjectWeightDTOList);
+            }
+            if (schoolBasedFlag) {
+                this.computerSpecialWeight(SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId(), subjectWeightDTOList);
+            }
+        }
+        if (!specialFlag) {
+            // 早上必须有主课
+            boolean firFlag = SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time);
+            if (firFlag) {
+                this.makeChineseOrMathWeight(subjectWeightDTOList);
+            }
+
+            boolean secTime = SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time);
+            if (secTime) {
+                var firstClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningFirTime());
+                this.makeChineseOrMathWeight(subjectWeightDTOList, firstClassSubjectId);
+            }
+
+            // 早上要有语文数学课
+            boolean thirdTime = SchoolTimeTableDefaultValueDTO.getMorningLastTime().equals(time);
+            if (thirdTime) {
+                var firstClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningFirTime());
+                var secClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningSecTime());
+                this.makeChineseOrMathMaxWeight(subjectWeightDTOList, firstClassSubjectId, secClassSubjectId);
+            }
+
+            var subjectGradeClassTeacherCountMap = computerSubjectWeightDTO.getSubjectGradeClassTeacherCountMap();
+            // 小课要优先排课
+            this.makeSmallSubjectWeight(subjectWeightDTOList);
+            // 如果一个老师带多个班级的小课，要优先排课
+            this.makeTeacherHaveManyClassWeight(grade, classNum, subjectWeightDTOList, subjectGradeClassTeacherCountMap);
+            // 如果这节课程的数目很多，要优先排课
+            this.makeSubjectNumWeight(subjectWeightDTOList);
+            // 如果这节课是需要教室的课程，需要优先排课
+            this.makeOtherNeedClassroomSubjectWeight(subjectWeightDTOList,maxClassroomMap);
+
+            // 保证每天有主课上
+            this.makeSureChineseOrMathWeight(workDay, subjectWeightDTOList);
+
+            // 判断学生的连堂课(上限为3)，如果连堂课则清零
+            var gradeClassWorkDayTimeDTO = this.packGradeClassWorkDayTimeDTO(grade, classNum, workDay, time);
+            this.clearStudentContinueSubject(gradeClassWorkDayTimeDTO, subjectWeightDTOList, timeTableMap);
+
+            // 判断每门课程的上限(上限为2)，如果一天上同一门主课2次则权重清零
+            this.clearRepeatSubject(grade, classNum, workDay, time, subjectWeightDTOList, gradeClassWorkDaySubjectCountMap);
+
+            // 判断教师的连堂课(上限为4)，如果当天该老师连堂课，那么连堂的那节课所带的所有课程权重为0
+            // 一个教师一天最多上4节课，若果超过4节课，权重清零
+            var orderTeacherWorkDayTimeMap = computerSubjectWeightDTO.getOrderTeacherWorkDayTimeMap();
+            var teacherTeachingMap = this.getTeacherTeachingMap(orderTeacherWorkDayTimeMap);
+            var teacherSubjectListMap = computerSubjectWeightDTO.getTeacherSubjectListMap();
+            this.clearTeacherContinueAndMaxTimeSubject(gradeClassWorkDayTimeDTO, subjectWeightDTOList, teacherTeachingMap, teacherSubjectListMap);
+
+            // 如果当天上过这个小课，则不能再排课，设置权重为0
+            this.clearSmallSubjectWeight(subjectWeightDTOList, timeSubjectIdMap);
+
+            // 非特殊时间，特殊课程权重设置为0
+            this.clearSpecialWeight(subjectWeightDTOList);
+        }
+
+    }
+
+    /**
+     * 获取教师每天的工作时间
+     * @param orderTeacherWorkDayTimeMap
+     * @return
+     */
+    private HashMap<Integer,HashMap<Integer,List<Integer>>> getTeacherTeachingMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> orderTeacherWorkDayTimeMap){
+        HashMap<Integer,HashMap<Integer,List<Integer>>> teacherWorkDayTimesMap = new HashMap<>();
+        var teacherWorkDayTimeList = orderTeacherWorkDayTimeMap.values().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        for (HashMap<Integer, HashMap<Integer, Integer>> teacherWorkDayTimeMap:teacherWorkDayTimeList){
+            for (Integer teacherId:teacherWorkDayTimeMap.keySet()){
+                var workDayTimeMap = teacherWorkDayTimeMap.get(teacherId);
+                for (Integer workDay:workDayTimeMap.keySet()){
+                    var time = workDayTimeMap.get(workDay);
+                    var workDayTimesMap = teacherWorkDayTimesMap.get(teacherId);
+                    if (workDayTimesMap == null){
+                        List<Integer> times = new ArrayList<>();
+                        times.add(time);
+                        workDayTimesMap = new HashMap<>();
+                        workDayTimesMap.put(workDay,times);
+                        teacherWorkDayTimesMap.put(teacherId,workDayTimesMap);
+                    }else {
+                       var times = workDayTimesMap.get(workDay);
+                       if (CollectionUtils.isEmpty(times)){
+                           times = new ArrayList<>();
+                           times.add(time);
+                           workDayTimesMap.put(workDay,times);
+                           teacherWorkDayTimesMap.put(teacherId,workDayTimesMap);
+                       }else {
+                           if (!times.contains(time)){
+                               times.add(time);
+                               workDayTimesMap.put(workDay,times);
+                               teacherWorkDayTimesMap.put(teacherId,workDayTimesMap);
+                           }
+                       }
+                    }
+
+                }
+            }
+        }
+
+        return teacherWorkDayTimesMap;
+    }
+
 
     /**
      * 计算特殊课程的权重
@@ -248,12 +294,13 @@ public class SubjectService {
      * @param subjectWeightDTOList
      */
     private void makeChineseOrMathWeight(List<SubjectWeightDTO> subjectWeightDTOList, Integer firstSubjectId) {
-        if (SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(firstSubjectId)
-                || SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(firstSubjectId)) {
-            return;
-        }
+        boolean chineseFlag = SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(firstSubjectId);
+        boolean mathsFlag = SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(firstSubjectId);
         for (SubjectWeightDTO x : subjectWeightDTOList) {
-            if (SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(x.getType())) {
+            if (chineseFlag && SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(x.getSubjectId())) {
+                x.setWeight(SubjectWeightDefaultValueDTO.getMaxWeight());
+            }
+            if (mathsFlag && SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(x.getSubjectId())) {
                 x.setWeight(SubjectWeightDefaultValueDTO.getMaxWeight());
             }
         }
@@ -463,6 +510,9 @@ public class SubjectService {
         for (Integer x : teacherTeachingMap.keySet()) {
             var teacherWorkDayMap = teacherTeachingMap.get(x);
             var teachingTimeList = teacherWorkDayMap.get(gradeClassWorkDayTimeDTO.getWorkDay());
+            if (CollectionUtils.isEmpty(teachingTimeList)){
+                continue;
+            }
             for (Integer[] y : SchoolTimeTableDefaultValueDTO.getTeacherContinueTime()) {
                 if (y[SchoolTimeTableDefaultValueDTO.getTeacherContinueTimeLastIndex()].equals(pastTime)) {
                     boolean flag = (SchoolTimeTableDefaultValueDTO.getTeacherContinueTimeMaxSize().equals(teachingTimeList.size()) && teachingTimeList.contains(pastTime))
