@@ -93,10 +93,10 @@ public class BacktrackingService {
                     boolean completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                     if (completeFlag) {
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-                        var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
-                                timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
-                        var score = geneticService.computerFitnessScore(geneList);
-                        System.out.println(score);
+//                        var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
+//                                timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
+//                        var score = geneticService.computerFitnessScore(geneList);
+//                        System.out.println(score);
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -113,10 +113,10 @@ public class BacktrackingService {
                             completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                             if (completeFlag) {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-                                var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
-                                        timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
-                                var score = geneticService.computerFitnessScore(geneList);
-                                System.out.println(score);
+//                                var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
+//                                        timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
+//                                var score = geneticService.computerFitnessScore(geneList);
+//                                System.out.println(score);
                             }
                         }
 

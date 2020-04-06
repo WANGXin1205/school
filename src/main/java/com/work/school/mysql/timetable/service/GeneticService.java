@@ -60,23 +60,35 @@ public class GeneticService {
     /**
      * 初始种群
      */
-    private static final int POPULATION = 20;
+    private static final int POPULATION = 100;
     /**
      * 进化次数
      */
-    private static final int EVOLUTION_TIMES = 500;
+    private static final int EVOLUTION_TIMES = 1000;
     /**
      * 交叉概率
      */
-    private static final double CROSSOVER_RATE = 0.6;
+    private static final double CROSSOVER_RATE = 0.8;
+    /**
+     * 交叉次数
+     */
+    private static final int CROSSOVER_TIMES = (int) (CROSSOVER_RATE * POPULATION);
+    /**
+     * 保留数量
+     */
+    private static final int KEEP_POPULATION = (int) (POPULATION * (1 - CROSSOVER_RATE));
     /**
      * 变异概率
      */
     private static final double MUTATE_RATE = 0.01;
     /**
-     * 选择概率
+     * 保留数量
      */
-    private static final double SELECT_RATE = 0.6;
+    private static final int MUTATE_POPULATION = (int) (POPULATION * MUTATE_RATE);
+    /**
+     * 初始冲突数
+     */
+    private static final int INIT_CONFLICT_NO = 999;
     /**
      * 主课最好的时间
      */
@@ -223,10 +235,25 @@ public class GeneticService {
     public CattyResult<HashMap<String, List<String>>> algorithmInPlanTimeTableWithGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
         CattyResult<HashMap<String, List<String>>> cattyResult = new CattyResult<>();
 
-        // 获取初始基因编码
-        int bestScore = ZERO;
+        // 最为原始的遗传算法
+//        var bestGeneMap = this.originGenetic(timeTablingUseGeneticDTO);
+
+        // 解决冲突的遗传算法
+        var bestGeneMap = this.reduceConflictGenetic(timeTablingUseGeneticDTO);
+
+        cattyResult.setData(bestGeneMap);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
+    /**
+     * 解决冲突的遗传算法
+     * @param timeTablingUseGeneticDTO
+     * @return
+     */
+    private HashMap<String, List<String>> reduceConflictGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO){
+        // 初始化种群
         List<HashMap<String, List<String>>> allGeneMapList = new ArrayList<>();
-        // 产生初始种群
         for (int i = ZERO; i < POPULATION; i++) {
             var geneMap = this.initGene(timeTablingUseGeneticDTO);
 
@@ -239,166 +266,145 @@ public class GeneticService {
             allGeneMapList.add(gradeClassNoGeneMap);
         }
 
-        // 遗传算法 满足硬约束
         HashMap<String, List<String>> bestGeneMap = new HashMap<>();
-        for (var map : allGeneMapList) {
-            var geneMap = this.geneticHardConstraintCore(map);
-            var geneList = this.merge(geneMap);
-            var score = this.computerFitnessScore(geneList);
-            if (bestScore < score) {
-                bestScore = score;
-//                System.out.println(bestScore);
-                bestGeneMap = geneMap;
+        int conflictNo = INIT_CONFLICT_NO;
+        while(conflictNo != ZERO) {
+
+            List<HashMap<String, List<String>>> newGeneMapList = new ArrayList<>();
+            for (var geneMap : allGeneMapList) {
+                var mergeList = this.merge(geneMap);
+                double random = Math.random();
+                // 交叉
+                if (CROSSOVER_RATE > random) {
+                    mergeList = this.crossover(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
+                }
+                // 变异
+                if (MUTATE_RATE > random) {
+                    mergeList = this.crossover(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
+                }
+
+                conflictNo = this.computerFitnessFunction(mergeList,FitnessFunctionEnum.HARD_SATISFIED);
+                if (conflictNo == ZERO){
+                    bestGeneMap = this.getGradeClassNoGeneMap(mergeList);
+                    break;
+                }
+                geneMap = this.getGradeClassNoGeneMap(mergeList);
+
+                newGeneMapList.add(geneMap);
             }
+
+            allGeneMapList = newGeneMapList;
         }
 
-        // 满足硬约束和软约束 有迭代次数限制
-//        geneMap = this.geneticMoreSatisfiedCore(gradeClassNoGeneMap);
+        var mergeList = this.merge(bestGeneMap);
+        var score = this.computerFitnessScore(mergeList);
+        System.out.println(score);
 
-        cattyResult.setData(bestGeneMap);
-        cattyResult.setSuccess(true);
-        return cattyResult;
+        return bestGeneMap;
     }
 
     /**
-     * 使用遗传算法排课
+     * 最为原始的遗传算法
      *
      * @param timeTablingUseGeneticDTO
      * @return
      */
-//    public CattyResult<HashMap<String, List<String>>> algorithmInPlanTimeTableWithPopulationGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
-//        CattyResult<HashMap<String, List<String>>> cattyResult = new CattyResult<>();
-//        HashMap<String, List<String>> bestGeneMap = new HashMap<>();
-//
-//        HashMap<Integer, List<String>> popHashMap = new HashMap<>();
-//        for (int i = START_INDEX; i <= POPULATION; i++) {
-//            // 获取初始基因编码
-//            var geneMap = this.initGene(timeTablingUseGeneticDTO);
-//
-//            // 进行初步的时间分配
-//            var initRandomTimeList = this.initRandomTime(geneMap);
-//
-//            popHashMap.put(i, initRandomTimeList);
-//        }
-//
-//        for (int evolutionTime = START_INDEX; evolutionTime <= EVOLUTION_TIMES; evolutionTime++) {
-//            // 随机交叉
-//            // 计算有多少种群要交叉
-//            HashMap<Integer, List<String>> crossoverPopHashMap = new HashMap<>(popHashMap);
-//            double crossoverPopulation = CROSSOVER_RATE * POPULATION;
-//            int crossoverNo = (int) crossoverPopulation;
-//            for (int i = START_INDEX; i <= crossoverNo; i++) {
-//                // 先随机选择两个种群
-//                int firstNo = START_INDEX + (int) (Math.random() * POPULATION);
-//                List<String> firstGeneList = crossoverPopHashMap.get(firstNo);
-//                var oldFirstGeneListScore = this.computerFitnessScore(firstGeneList);
-//                int secNo = START_INDEX + (int) (Math.random() * POPULATION);
-//                List<String> secGeneList = crossoverPopHashMap.get(secNo);
-//                var oldSecGeneListScore = this.computerFitnessScore(secGeneList);
-//
-//                // 计算随机基因
-//                var firstRandomGeneDTO = this.computerRandomGeneDTO(firstGeneList);
-//                var secRandomGeneDTO = this.computerRandomGeneDTO(secGeneList);
-//
-//                // 组装新基因
-//                var firstNewGene = firstRandomGeneDTO.getGeneWithoutClassTime() + secRandomGeneDTO.getClassTime();
-//                var secNewGene = secRandomGeneDTO.getGeneWithoutClassTime() + firstRandomGeneDTO.getClassTime();
-//                firstGeneList.set(firstRandomGeneDTO.getRandomNo(), firstNewGene);
-//                secGeneList.set(secRandomGeneDTO.getRandomNo(), secNewGene);
-//
-//                var newFirstGeneListScore = this.computerFitnessScore(firstGeneList);
-//                var newSecGeneListScore = this.computerFitnessScore(secGeneList);
-//                if (oldFirstGeneListScore < newFirstGeneListScore && oldFirstGeneListScore < newSecGeneListScore) {
-//                    popHashMap.put(firstNo, firstGeneList);
-//                }
-//                if (oldSecGeneListScore < newFirstGeneListScore && oldSecGeneListScore < newSecGeneListScore) {
-//                    popHashMap.put(secNo, secGeneList);
-//                }
-//
-//            }
-//
-//            // 变异
-//            double mutateRatePopulation = MUTATE_RATE * POPULATION;
-//            int mutateNo = (int) mutateRatePopulation;
-//            for (int i = START_INDEX; i <= mutateNo; i++) {
-//                int random = START_INDEX + (int) (Math.random() * POPULATION);
-//                List<String> geneList = crossoverPopHashMap.get(random);
-//                var oldScore = this.computerFitnessScore(geneList);
-//                var randomGeneDTO = this.computerRandomGeneDTO(geneList);
-//                var gene = this.mutate(randomGeneDTO.getGene());
-//                geneList.set(randomGeneDTO.getRandomNo(), gene);
-//
-//                var newScore = this.computerFitnessScore(geneList);
-//                if (oldScore < newScore) {
-//                    popHashMap.put(random, geneList);
-//                }
-//
-//            }
-//
-//            // 解决冲突
-//            for (Integer i : popHashMap.keySet()) {
-//                var geneList = popHashMap.get(i);
-//                geneList = this.eliminateConflicts(geneList);
-//                popHashMap.put(i, geneList);
-//            }
-//
-//            int bestScore = ZERO;
-//            List<String> bestGeneList = new ArrayList<>();
-//            for (Integer i : popHashMap.keySet()) {
-//                var geneList = popHashMap.get(i);
-//                var score = this.computerFitnessScore(geneList);
-//                if (bestScore < score) {
-//                    bestScore = score;
-//                    bestGeneList = geneList;
-//                }
-//            }
-//
-//            var score = this.computerFitnessScore(bestGeneList);
-//            System.out.println(score);
-//            List<String> fixedGeneList = new ArrayList<>();
-//            List<String> unFixedGeneList = new ArrayList<>();
-//            for (String gene : bestGeneList) {
-//                var fixFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
-//                if (GeneticDefaultValueDTO.FIXED.equals(fixFlag)) {
-//                    fixedGeneList.add(gene);
-//                }
-//                if (GeneticDefaultValueDTO.UN_FIXED.equals(fixFlag)) {
-//                    unFixedGeneList.add(gene);
-//                }
-//            }
-//            bestGeneMap.put(GeneticDefaultValueDTO.FIXED, fixedGeneList);
-//            bestGeneMap.put(GeneticDefaultValueDTO.UN_FIXED, unFixedGeneList);
-//        }
-//
-//        cattyResult.setData(bestGeneMap);
-//        cattyResult.setSuccess(true);
-//        return cattyResult;
-//    }
+    private HashMap<String, List<String>> originGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
+        // 获取初始基因编码
+        TreeMap<Integer, HashMap<Integer, HashMap<String, List<String>>>> allGeneMap = new TreeMap<>(Collections.reverseOrder());
+        // 产生初始种群
+        for (int i = ZERO; i < POPULATION; i++) {
+            var geneMap = this.initGene(timeTablingUseGeneticDTO);
 
-    /**
-     * 计算随机基因
-     *
-     * @param geneList
-     * @return
-     */
-    private RandomGeneDTO computerRandomGeneDTO(List<String> geneList) {
-        int geneIndex;
-        String gene;
-        String fixed;
-        do {
-            geneIndex = START_INDEX + (int) (Math.random() * geneList.size() - START_INDEX);
-            gene = geneList.get(geneIndex);
-            fixed = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
-        } while (GeneticDefaultValueDTO.FIXED.equals(fixed));
-        var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX, gene);
-        var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
-        RandomGeneDTO randomGeneDTO = new RandomGeneDTO();
-        randomGeneDTO.setRandomNo(geneIndex);
-        randomGeneDTO.setGene(gene);
-        randomGeneDTO.setGeneWithoutClassTime(geneWithoutClassTime);
-        randomGeneDTO.setClassTime(classTime);
-        return randomGeneDTO;
+            // 进行初步的时间分配
+            var initTimeGradeSubjectList = this.initTime(geneMap, timeTablingUseGeneticDTO.getGradeClassCountMap());
+
+            // 计算适应度评分
+            var score = this.computerFitnessScore(initTimeGradeSubjectList);
+
+            // 对已经分配好时间的基因进行分类，生成以年级班级为类别的Map
+            var gradeClassNoGeneMap = this.getGradeClassNoGeneMap(initTimeGradeSubjectList);
+
+            var indexMap = allGeneMap.get(score);
+            if (indexMap == null) {
+                indexMap = new HashMap<>();
+                indexMap.put(ZERO, gradeClassNoGeneMap);
+            } else {
+                indexMap.put(indexMap.keySet().size(), gradeClassNoGeneMap);
+            }
+            allGeneMap.put(score, indexMap);
+        }
+
+        for (int evolutionTime = ZERO; evolutionTime < EVOLUTION_TIMES; evolutionTime++) {
+            // 保存适应度高的基因
+            TreeMap<Integer, HashMap<Integer, HashMap<String, List<String>>>> evolutionGeneMap = new TreeMap<>(Collections.reverseOrder());
+            int count = ZERO;
+            for (int score : allGeneMap.keySet()) {
+                if (KEEP_POPULATION <= count) {
+                    break;
+                }
+                var indexGeneMap = allGeneMap.get(score);
+                evolutionGeneMap.put(score, indexGeneMap);
+                count = count + indexGeneMap.values().size();
+            }
+
+            // 将基因重新保存
+            HashMap<Integer, HashMap<String, List<String>>> geneMap = new HashMap<>();
+            count = ZERO;
+            for (Integer score : allGeneMap.keySet()) {
+                var indexGeneMap = allGeneMap.get(score);
+                for (Integer index : indexGeneMap.keySet()) {
+                    geneMap.put(count, indexGeneMap.get(index));
+                    count++;
+                }
+            }
+
+            // 交叉和变异
+            int evolutionTimes = CROSSOVER_TIMES + MUTATE_POPULATION;
+            for (int i = ZERO; i < evolutionTimes; i++) {
+                int randomPopulationIndex = (int) (Math.random() * geneMap.size());
+                var gradeClassNoGeneMap = geneMap.get(randomPopulationIndex);
+
+                // 先按照班级合并
+                var mergeList = this.merge(gradeClassNoGeneMap);
+
+                // 第一步完成交叉操作,产生新一代的父本
+                var crossoverList = this.crossover(mergeList);
+
+                // 计算适应度函数
+                var score = this.computerFitnessScore(crossoverList);
+
+                //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
+                gradeClassNoGeneMap = this.getGradeClassNoGeneMap(crossoverList);
+
+                var indexGeneMap = evolutionGeneMap.get(score);
+                if (indexGeneMap == null) {
+                    indexGeneMap = new HashMap<>();
+                    indexGeneMap.put(ZERO, gradeClassNoGeneMap);
+                } else {
+                    indexGeneMap.put(indexGeneMap.keySet().size(), gradeClassNoGeneMap);
+                }
+                evolutionGeneMap.put(score, indexGeneMap);
+            }
+
+            // 剔除多余的基因
+            allGeneMap.clear();
+            geneMap.clear();
+            count = ZERO;
+            for (int score : evolutionGeneMap.keySet()) {
+                if (KEEP_POPULATION <= count) {
+                    break;
+                }
+                var indexGeneMap = evolutionGeneMap.get(score);
+                allGeneMap.put(score, indexGeneMap);
+                count = count + indexGeneMap.values().size();
+            }
+
+        }
+
+        return allGeneMap.get(allGeneMap.firstKey()).get(ZERO);
     }
+
 
     /**
      * 计算适应度函数
@@ -738,40 +744,6 @@ public class GeneticService {
      * 初始化课程的时间分配
      *
      * @param geneMap
-     * @return
-     */
-    public List<String> initRandomTime(HashMap<String, List<String>> geneMap) {
-
-        List<String> initRandomList = new ArrayList<>();
-        List<String> geneList = new ArrayList<>();
-        for (String gene : geneMap.keySet()) {
-            geneList.addAll(geneMap.get(gene));
-        }
-
-        for (String geneKey : geneMap.keySet()) {
-            if (GeneticDefaultValueDTO.UN_FIXED.equals(geneKey)) {
-                var unFixedGeneList = geneMap.get(geneKey);
-                for (String gene : unFixedGeneList) {
-                    int time = GeneticDefaultValueDTO.MIN_TIME + (int) (Math.random() * (GeneticDefaultValueDTO.MAX_TIME));
-                    var classTime = this.getStandard(String.valueOf(time), GeneticDefaultValueDTO.CLASS_STANDARD_LENGTH);
-                    var initGene = gene.substring(GeneticDefaultValueDTO.GENE_BEGIN_INDEX, GeneticDefaultValueDTO.GENE_END_INDEX) + classTime;
-                    initRandomList.add(initGene);
-                }
-
-            }
-            if (GeneticDefaultValueDTO.FIXED.equals(geneKey)) {
-                initRandomList.addAll(geneMap.get(geneKey));
-            }
-        }
-
-        return initRandomList;
-    }
-
-
-    /**
-     * 初始化课程的时间分配
-     *
-     * @param geneMap
      * @param gradeClassNoCountMap
      * @return
      */
@@ -829,7 +801,7 @@ public class GeneticService {
             for (String gene : gradeClassNoGeneList) {
                 var fixFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
                 if (GeneticDefaultValueDTO.UN_FIXED.equals(fixFlag)) {
-                    var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX,gene);
+                    var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX, gene);
                     Integer time = this.rouletteWheelSelection(timeCountMap);
                     var classTime = this.getStandard(time.toString(), GeneticDefaultValueDTO.CLASS_STANDARD_LENGTH);
                     var newGene = geneWithoutClassTime + classTime;
@@ -906,44 +878,6 @@ public class GeneticService {
     }
 
     /**
-     * 遗传算法核心 交叉和变异
-     *
-     * @param gradeClassNoGeneMap
-     * @return
-     */
-    private HashMap<String, List<String>> geneticHardConstraintCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
-
-        List<Integer> fitnessScoreList = new ArrayList<>();
-        int score = START_SCORE;
-        while (score != ZERO) {
-            // 先按照班级合并
-            var mergeList = this.merge(gradeClassNoGeneMap);
-
-            //第一步完成交叉操作,产生新一代的父本
-            var crossoverList = this.crossover(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
-
-            // 由于没有空余时间，所以不能变异
-//            var mutateList = this.mutate(crossoverList, timeCountMap);
-
-            // 计算适度函数
-            score = this.computerFitnessFunction(crossoverList, FitnessFunctionEnum.HARD_SATISFIED);
-
-            // 计算适度函数
-            var fitnessScore = this.computerFitnessScore(crossoverList);
-            fitnessScoreList.add(fitnessScore);
-
-            //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
-            gradeClassNoGeneMap = this.getGradeClassNoGeneMap(crossoverList);
-        }
-
-        // 记录分数
-        String name = String.valueOf(System.currentTimeMillis());
-        this.markToTXT(name, fitnessScoreList);
-
-        return gradeClassNoGeneMap;
-    }
-
-    /**
      * 记录分数到txt
      *
      * @param txtName
@@ -968,29 +902,15 @@ public class GeneticService {
         }
     }
 
+
     /**
-     * 遗传算法核心 交叉和变异
+     * 交叉操作
      *
-     * @param gradeClassNoGeneMap
+     * @param mergeList
      * @return
      */
-    private HashMap<String, List<String>> geneticMoreSatisfiedCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
-
-        for (int i = ZERO; i < GeneticDefaultValueDTO.GENE_TIMES; i++) {
-            // 先按照班级合并
-            var mergeList = this.merge(gradeClassNoGeneMap);
-
-            //第一步完成交叉操作,产生新一代的父本
-            var crossoverList = this.crossover(mergeList, FitnessFunctionEnum.MORE_SATISFIED);
-
-            // 由于没有空余时间，所以不能变异
-//            var mutateList = this.mutate(crossoverList, timeCountMap);
-
-            //将冲突消除后的个体再次进行分割，按班级进行分配准备进入下一次的进化
-            gradeClassNoGeneMap = this.getGradeClassNoGeneMap(crossoverList);
-        }
-
-        return gradeClassNoGeneMap;
+    public List<String> crossover(List<String> mergeList) {
+        return this.selectGene(mergeList);
     }
 
     /**
@@ -1104,69 +1024,6 @@ public class GeneticService {
         return newGeneList;
     }
 
-    /**
-     * 获取一条基因
-     *
-     * @param oldGeneList
-     * @return
-     */
-    public Integer getGeneIndex(List<String> oldGeneList) {
-        HashMap<String, String> gradeClassNoClassTimeMap = new HashMap<>();
-        HashMap<String, String> teacherIdClassTimeMap = new HashMap<>();
-        HashMap<String, String> otherSubjectIdMap = new HashMap<>();
-        int num = ZERO;
-        for (String gene : oldGeneList) {
-            var fixedFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
-            if (GeneticDefaultValueDTO.UN_FIXED.equals(fixedFlag)) {
-                // 截取时间
-                var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
-
-                // 课程冲突 同一时间一个班级上了多门课
-                var gradeClassNo = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, gene);
-
-                // 拼接同一时间一个年级的班级
-                var gradeClassNoClassTime = gradeClassNo.concat(classTime);
-
-                if (gradeClassNoClassTimeMap.get(gradeClassNoClassTime) == null) {
-                    gradeClassNoClassTimeMap.put(gradeClassNoClassTime, gene);
-                } else {
-                    return num;
-                }
-
-                // 教师冲突 同一时间一个教师上多个班的课
-                var teacherId = this.cutGeneIndex(GeneticDefaultValueDTO.TEACHER_ID_INDEX, gene);
-
-                // 拼接教师时间
-                var teacherIdClassTime = teacherId.concat(classTime);
-
-                if (teacherIdClassTimeMap.get(teacherIdClassTime) == null) {
-                    teacherIdClassTimeMap.put(teacherIdClassTime, gene);
-                } else {
-                    return num;
-                }
-
-                // 拆分课程id 和 类型
-                var subjectTypeString = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_TYPE_INDEX, gene);
-                var subjectType = Integer.valueOf(subjectTypeString);
-                if (SchoolTimeTableDefaultValueDTO.getOtherSubjectType().equals(subjectType)
-                        || SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectType)) {
-                    var subjectId = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_ID_INDEX, gene);
-
-                    var workDay = this.computerWorkDay(Integer.valueOf(classTime));
-                    var gradeClassNoOtherSubjectIdClassTime = gradeClassNo.concat(subjectId).concat(workDay.toString());
-                    if (otherSubjectIdMap.get(gradeClassNoOtherSubjectIdClassTime) == null) {
-                        otherSubjectIdMap.put(gradeClassNoOtherSubjectIdClassTime, gene);
-                    } else {
-                        return num;
-                    }
-                }
-
-            }
-            num++;
-        }
-
-        return num;
-    }
 
     /**
      * 进行基因交叉生成新个体
@@ -1339,121 +1196,6 @@ public class GeneticService {
         return score;
     }
 
-    /**
-     * 变异
-     *
-     * @param gene
-     * @return
-     */
-    private String mutate(String gene) {
-        var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX, gene);
-        int time = GeneticDefaultValueDTO.MIN_TIME + (int) (Math.random() * (GeneticDefaultValueDTO.MAX_TIME));
-        var classTime = this.getStandard(String.valueOf(time), GeneticDefaultValueDTO.CLASS_STANDARD_LENGTH);
-        var newGene = geneWithoutClassTime + classTime;
-        return newGene;
-    }
-
-    /**
-     * 消除冲突
-     *
-     * @param geneList
-     * @return
-     */
-    private List<String> eliminateConflicts(List<String> geneList) {
-
-        // 消除同一时间一个班级上多节课冲突
-        HashMap<String, List<String>> gradeClassNoGeneMap = new HashMap<>();
-        HashMap<String, List<String>> gradeClassNoClassTimeMap = new HashMap<>();
-        for (int i = ZERO; i < geneList.size(); i++) {
-            var gene = geneList.get(i);
-            var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
-            var gradeClassNo = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, gene);
-
-            var gradeClassNoGeneList = gradeClassNoGeneMap.get(gradeClassNo);
-            if (CollectionUtils.isEmpty(gradeClassNoGeneList)) {
-                gradeClassNoGeneList = new ArrayList<>();
-                gradeClassNoGeneList.add(gene);
-                gradeClassNoGeneMap.put(gradeClassNo, gradeClassNoGeneList);
-            } else {
-                gradeClassNoGeneList.add(gene);
-                gradeClassNoGeneMap.put(gradeClassNo, gradeClassNoGeneList);
-            }
-
-            var classTimeList = gradeClassNoClassTimeMap.get(gradeClassNo);
-            if (CollectionUtils.isEmpty(classTimeList)) {
-                classTimeList = new ArrayList<>();
-                classTimeList.add(classTime);
-                gradeClassNoClassTimeMap.put(gradeClassNo, classTimeList);
-            } else {
-                if (!classTimeList.contains(classTime)) {
-                    classTimeList.add(classTime);
-                    gradeClassNoClassTimeMap.put(gradeClassNo, classTimeList);
-                }
-            }
-        }
-
-        List<String> newGeneList = new ArrayList<>();
-        for (String gradeClassNo : gradeClassNoClassTimeMap.keySet()) {
-
-            var classTimeList = gradeClassNoClassTimeMap.get(gradeClassNo);
-            if (classTimeList.size() != GeneticDefaultValueDTO.MAX_TIME) {
-                var classTimeUsedMap = this.getClassTimeUsedMap();
-                var gradeClassNoGeneList = gradeClassNoGeneMap.get(gradeClassNo);
-                for (int i = ZERO; i < gradeClassNoGeneList.size(); i++) {
-
-                    var gene = gradeClassNoGeneList.get(i);
-                    String fixed = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
-                    if (GeneticDefaultValueDTO.FIXED.equals(fixed)) {
-                        continue;
-                    }
-                    var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, gene);
-                    if (classTimeUsedMap.get(Integer.valueOf(classTime)).equals(Boolean.TRUE)) {
-                        String newTime = this.randomTime(gene, gradeClassNoGeneList);
-                        var geneWithoutClassTime = this.cutGeneIndex(GeneticDefaultValueDTO.GENE_INDEX, gene);
-                        var newGene = geneWithoutClassTime.concat(newTime);
-                        gradeClassNoGeneList.set(i, newGene);
-                    } else {
-                        classTimeUsedMap.put(Integer.valueOf(classTime), true);
-                    }
-                }
-                newGeneList.addAll(gradeClassNoGeneList);
-            }
-
-        }
-
-        return newGeneList;
-    }
-
-    /**
-     * 获取新时间
-     *
-     * @param gene
-     * @param geneList
-     * @return
-     */
-    private String randomTime(String gene, List<String> geneList) {
-        var goalGradeClassNo = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, gene);
-        HashMap<Integer, Boolean> classTimeUsedMap = this.getClassTimeUsedMap();
-        for (String x : geneList) {
-            var gradeClassNo = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, x);
-            if (goalGradeClassNo.equals(gradeClassNo)) {
-                var classTime = this.cutGeneIndex(GeneticDefaultValueDTO.CLASS_TIME_INDEX, x);
-                classTimeUsedMap.put(Integer.valueOf(classTime), true);
-            }
-        }
-
-        List<Integer> unUsedClassTimeList = new ArrayList<>();
-        for (Integer classTime : classTimeUsedMap.keySet()) {
-            var usedFlag = classTimeUsedMap.get(classTime);
-            if (!usedFlag) {
-                unUsedClassTimeList.add(classTime);
-            }
-        }
-
-        var index = ZERO + (int) (Math.random() * unUsedClassTimeList.size());
-        var time = unUsedClassTimeList.get(index);
-        return this.getStandard(time.toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
-    }
 
     /**
      * 初始化 可使用的所有时间
@@ -1512,18 +1254,6 @@ public class GeneticService {
         return timeCountMap;
     }
 
-    /**
-     * 获取时间表
-     *
-     * @return
-     */
-    private HashMap<Integer, Boolean> getClassTimeUsedMap() {
-        HashMap<Integer, Boolean> classTimeUsedMap = new HashMap<>();
-        for (int i = START_INDEX; i <= GeneticDefaultValueDTO.MAX_TIME; i++) {
-            classTimeUsedMap.put(i, Boolean.FALSE);
-        }
-        return classTimeUsedMap;
-    }
 
     /**
      * 轮盘赌选择

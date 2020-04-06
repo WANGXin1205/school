@@ -53,7 +53,7 @@ public class SimulateAnnealService {
     private GeneticService geneticService;
 
     /**
-     * 模拟退火算发
+     * 模拟退火算法
      *
      * @param timeTablingUseSimulateAnnealDTO
      * @return
@@ -96,8 +96,8 @@ public class SimulateAnnealService {
                 // 先按照班级合并
                 var oldScore = geneticService.computerFitnessFunction(oldList, FitnessFunctionEnum.HARD_SATISFIED);
 
-//                var oldFitnessScore = geneticService.computerFitnessScore(oldList);
-//                System.out.println(oldFitnessScore);
+                var oldFitnessScore = geneticService.computerFitnessScore(oldList);
+                System.out.println(oldFitnessScore);
 
                 var newList = geneticService.selectGenes(oldList, SELECT_NUM);
                 var newScore = geneticService.computerFitnessFunction(newList, FitnessFunctionEnum.HARD_SATISFIED);
@@ -105,8 +105,8 @@ public class SimulateAnnealService {
                     oldList = newList;
                     if (ZERO == newScore) {
 
-//                        var newFitnessScore = geneticService.computerFitnessScore(newList);
-//                        System.out.println(newFitnessScore);
+                        var newFitnessScore = geneticService.computerFitnessScore(newList);
+                        System.out.println(newFitnessScore);
 
                         return geneticService.getGradeClassNoGeneMap(newList);
                     }
