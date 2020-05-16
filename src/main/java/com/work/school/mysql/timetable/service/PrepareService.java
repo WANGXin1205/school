@@ -6,6 +6,7 @@ import com.work.school.mysql.common.dao.domain.SubjectDO;
 import com.work.school.mysql.common.dao.domain.TeacherDO;
 import com.work.school.mysql.common.service.*;
 import com.work.school.mysql.common.service.dto.*;
+import com.work.school.mysql.timetable.service.dto.OrderDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -111,6 +112,7 @@ public class PrepareService {
 
         TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = new TimeTablingUseBacktrackingDTO();
         BeanUtils.copyProperties(prepareTimeTablingDTO, timeTablingUseBacktrackingDTO);
+        timeTablingUseBacktrackingDTO.setTimeTableConstraintDTOList(new ArrayList<>());
 
         cattyResult.setData(timeTablingUseBacktrackingDTO);
         cattyResult.setSuccess(true);
@@ -145,10 +147,11 @@ public class PrepareService {
         HashMap<Integer, HashMap<Integer, List<SubjectWeightDTO>>> gradeClassSubjectWeightMap = this.getGradeClassNumSubjectWeightMap(gradeClassCountMap, gradeSubjectMap);
         HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap = this.getTimeTableMap(gradeClassSubjectWeightMap);
         var gradeClassNumWorkDaySubjectCountMap = this.getGradeClassNumWorkDaySubjectCountMap(gradeClassCountMap, allSubjects);
-        var orderGradeClassNumWorkDayTimeMap = this.getOrderGradeClassNumWorkDayTimeMap(gradeClassCountMap);
+        var orderDTO = this.getOrderGradeClassNumWorkDayTimeMap(gradeClassCountMap);
+
         HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> gradeClassSubjectFrequencyMap
                 = this.getGradeClassSubjectFrequencyMap(gradeSubjectMap, gradeClassCountMap);
-        HashMap<Integer,HashMap<Integer, Boolean>> orderSubjectIdCanUseMap = this.getOrderSubjectIdCanUseMap(orderGradeClassNumWorkDayTimeMap,gradeSubjectMap);
+        HashMap<Integer,HashMap<Integer, Boolean>> orderSubjectIdCanUseMap = this.getOrderSubjectIdCanUseMap(orderDTO.getOrderGradeClassNumWorkDayTimeMap(),gradeSubjectMap);
         HashMap<Integer, HashMap<Integer, SubjectDTO>> gradeSubjectDTOMap = new HashMap<>();
         for (Integer grade : gradeSubjectMap.keySet()) {
             var subjectDTOList = gradeSubjectMap.get(grade);
@@ -186,7 +189,8 @@ public class PrepareService {
         prepareTimeTablingDTO.setGradeClassSubjectWeightMap(gradeClassSubjectWeightMap);
         prepareTimeTablingDTO.setGradeClassNumSubjectFrequencyMap(gradeClassSubjectFrequencyMap);
         prepareTimeTablingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
-        prepareTimeTablingDTO.setOrderGradeClassNumWorkDayTimeMap(orderGradeClassNumWorkDayTimeMap);
+        prepareTimeTablingDTO.setOrderGradeClassNumWorkDayTimeMap(orderDTO.getOrderGradeClassNumWorkDayTimeMap());
+        prepareTimeTablingDTO.setGradeClassNumWorkDayTimeOrderMap(orderDTO.getGradeClassNumWorkDayTimeOrderMap());
         prepareTimeTablingDTO.setOrderClassRoomUsedCountMap(new HashMap<>());
         prepareTimeTablingDTO.setOrderTeacherWorkDayTimeMap(new HashMap<>());
         prepareTimeTablingDTO.setTimeTableMap(timeTableMap);
@@ -226,8 +230,10 @@ public class PrepareService {
      * @param gradeClassCountMap
      * @return
      */
-    private HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, Integer> gradeClassCountMap) {
+    private OrderDTO getOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, Integer> gradeClassCountMap) {
+        OrderDTO orderDTO = new OrderDTO();
         HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap = new HashMap<>();
+        HashMap<GradeClassNumWorkDayTimeDTO,Integer> gradeClassNumWorkDayTimeOrderMap = new HashMap<>();
 
         int order = SchoolTimeTableDefaultValueDTO.getStartCount();
         for (Integer grade : gradeClassCountMap.keySet()) {
@@ -240,6 +246,7 @@ public class PrepareService {
                         gradeClassNumWorkDayTimeDTO.setWorkDay(workDay);
                         gradeClassNumWorkDayTimeDTO.setTime(time);
                         orderGradeClassNumWorkDayTimeMap.put(order, gradeClassNumWorkDayTimeDTO);
+                        gradeClassNumWorkDayTimeOrderMap.put(gradeClassNumWorkDayTimeDTO,order);
 
                         order = order + SubjectDefaultValueDTO.getOneCount();
                     }
@@ -247,9 +254,10 @@ public class PrepareService {
             }
         }
 
-        return orderGradeClassNumWorkDayTimeMap;
+        orderDTO.setOrderGradeClassNumWorkDayTimeMap(orderGradeClassNumWorkDayTimeMap);
+        orderDTO.setGradeClassNumWorkDayTimeOrderMap(gradeClassNumWorkDayTimeOrderMap);
+        return orderDTO;
     }
-
 
     /**
      * 获取科目使用的Map

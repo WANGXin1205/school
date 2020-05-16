@@ -15,7 +15,7 @@ import java.util.Map;
  * @Date : 2019/9/22 2:29 AM
  * @Description
  */
-public class TimeTablingUseBacktrackingDTO implements Serializable {
+public class TimeTablingUseFCDWBacktrackingDTO implements Serializable {
     /**
      * 查询所有年级下的班级
      */
@@ -104,6 +104,10 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
      * 课程表map
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap;
+    /**
+     * 课程表 order
+     */
+    private HashMap<Integer,Integer> orderSubjectIdMap;
 
     public List<ClassInfoDO> getAllGradeClassInfo() {
         return allGradeClassInfo;
@@ -281,9 +285,17 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
         this.timeTableMap = timeTableMap;
     }
 
+    public HashMap<Integer, Integer> getOrderSubjectIdMap() {
+        return orderSubjectIdMap;
+    }
+
+    public void setOrderSubjectIdMap(HashMap<Integer, Integer> orderSubjectIdMap) {
+        this.orderSubjectIdMap = orderSubjectIdMap;
+    }
+
     @Override
     public String toString() {
-        return "TimeTablingUseBacktrackingDTO{" +
+        return "TimeTablingUseFCDWBacktrackingDTO{" +
                 "allGradeClassInfo=" + allGradeClassInfo +
                 ", gradeClassCountMap=" + gradeClassCountMap +
                 ", allSubject=" + allSubject +
@@ -306,6 +318,7 @@ public class TimeTablingUseBacktrackingDTO implements Serializable {
                 ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +
                 ", timeTableConstraintDTOList=" + timeTableConstraintDTOList +
                 ", timeTableMap=" + timeTableMap +
+                ", orderSubjectIdMap=" + orderSubjectIdMap +
                 '}';
     }
 

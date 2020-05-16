@@ -324,4 +324,5 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
     public static Integer getSubjectPeId() {
         return SUBJECT_PE_ID;
     }
+
 }

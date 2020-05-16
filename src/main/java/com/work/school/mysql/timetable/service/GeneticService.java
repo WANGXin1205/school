@@ -9,6 +9,7 @@ import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -235,11 +236,14 @@ public class GeneticService {
     public CattyResult<HashMap<String, List<String>>> algorithmInPlanTimeTableWithGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
         CattyResult<HashMap<String, List<String>>> cattyResult = new CattyResult<>();
 
+        // 陈璐论文使用的方法
+        var bestGeneMap = this.chenGenetic(timeTablingUseGeneticDTO);
+
         // 最为原始的遗传算法
 //        var bestGeneMap = this.originGenetic(timeTablingUseGeneticDTO);
 
         // 解决冲突的遗传算法
-        var bestGeneMap = this.reduceConflictGenetic(timeTablingUseGeneticDTO);
+//        var bestGeneMap = this.reduceConflictGenetic(timeTablingUseGeneticDTO);
 
         cattyResult.setData(bestGeneMap);
         cattyResult.setSuccess(true);
@@ -247,11 +251,57 @@ public class GeneticService {
     }
 
     /**
-     * 解决冲突的遗传算法
+     * 陈璐论文使用的方法，这个方法很水有漏洞，我要是审稿人肯定退稿了
+     *
      * @param timeTablingUseGeneticDTO
      * @return
      */
-    private HashMap<String, List<String>> reduceConflictGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO){
+    private HashMap<String, List<String>> chenGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
+        // 初始化种群
+        List<HashMap<String, List<String>>> allGeneMapList = new ArrayList<>();
+        for (int i = ZERO; i < POPULATION; i++) {
+            var geneMap = this.initGene(timeTablingUseGeneticDTO);
+
+            // 进行初步的时间分配
+            var initTimeGradeSubjectList = this.initTime(geneMap, timeTablingUseGeneticDTO.getGradeClassCountMap());
+
+            // 对已经分配好时间的基因进行分类，生成以年级班级为类别的Map
+            var gradeClassNoGeneMap = this.getGradeClassNoGeneMap(initTimeGradeSubjectList);
+
+            var mergeList = this.merge(gradeClassNoGeneMap);
+
+            var score = this.computerFitnessFunction(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
+
+            while (!score.equals(ZERO)) {
+                List<String> tempList = mergeList;
+                tempList = selectGene(tempList);
+                var newScore = this.computerFitnessFunction(tempList, FitnessFunctionEnum.HARD_SATISFIED);
+                if (score > newScore) {
+                    score = newScore;
+                    mergeList = tempList;
+                }
+            }
+
+            gradeClassNoGeneMap = this.getGradeClassNoGeneMap(mergeList);
+            allGeneMapList.add(gradeClassNoGeneMap);
+        }
+
+        // 进行交叉操作，不要变异操作
+
+
+        // 获取最好的基因
+        HashMap<String, List<String>> bestGeneMap = new HashMap<>();
+
+        return bestGeneMap;
+    }
+
+    /**
+     * 解决冲突的遗传算法
+     *
+     * @param timeTablingUseGeneticDTO
+     * @return
+     */
+    private HashMap<String, List<String>> reduceConflictGenetic(TimeTablingUseGeneticDTO timeTablingUseGeneticDTO) {
         // 初始化种群
         List<HashMap<String, List<String>>> allGeneMapList = new ArrayList<>();
         for (int i = ZERO; i < POPULATION; i++) {
@@ -268,7 +318,7 @@ public class GeneticService {
 
         HashMap<String, List<String>> bestGeneMap = new HashMap<>();
         int conflictNo = INIT_CONFLICT_NO;
-        while(conflictNo != ZERO) {
+        while (conflictNo != ZERO) {
 
             List<HashMap<String, List<String>>> newGeneMapList = new ArrayList<>();
             for (var geneMap : allGeneMapList) {
@@ -283,8 +333,8 @@ public class GeneticService {
                     mergeList = this.crossover(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
                 }
 
-                conflictNo = this.computerFitnessFunction(mergeList,FitnessFunctionEnum.HARD_SATISFIED);
-                if (conflictNo == ZERO){
+                conflictNo = this.computerFitnessFunction(mergeList, FitnessFunctionEnum.HARD_SATISFIED);
+                if (conflictNo == ZERO) {
                     bestGeneMap = this.getGradeClassNoGeneMap(mergeList);
                     break;
                 }

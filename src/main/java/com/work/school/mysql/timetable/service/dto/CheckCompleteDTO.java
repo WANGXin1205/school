@@ -1,32 +1,34 @@
 package com.work.school.mysql.timetable.service.dto;
 
-import com.work.school.mysql.common.dao.domain.SubjectDO;
+import com.work.school.mysql.common.service.dto.GradeClassNumWorkDayTimeDTO;
 import com.work.school.mysql.common.service.dto.SubjectDTO;
 import com.work.school.mysql.common.service.dto.SubjectGradeClassDTO;
-import com.work.school.mysql.common.service.dto.SubjectWeightDTO;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @Author : Growlithe
  * @Date : 2019/9/23 6:14 PM
  * @Description
  */
-public class CheckCompleteUseBacktrackingDTO implements Serializable {
+public class CheckCompleteDTO implements Serializable {
     /**
-     * 需要检验的时间
+     * 科目
      */
-    private Integer time;
-
-    private Integer grade;
-
-    private Integer classNum;
-
-    private Integer workDay;
-
     private SubjectDTO subjectDTO;
+    /**
+     * 次序
+     */
+    private Integer order;
+    /**
+     * 排序关系
+     */
+    private HashMap<Integer,GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap;
+    /**
+     * 获取科目使用的Map
+     */
+    private HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;
     /**
      * 课程列表
      */
@@ -44,50 +46,12 @@ public class CheckCompleteUseBacktrackingDTO implements Serializable {
      * 初始化特殊教室使用情况 order subjectId workDay time count
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> orderClassRoomUsedCountMap;
-    /**
-     * 课程上限
-     */
+
     private HashMap<Integer,Integer> classroomMaxCapacity;
-    /**
-     * 获取科目使用的Map
-     */
-    HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;;
     /**
      * 课程表map
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer,HashMap<Integer, Integer>>>> timeTableMap;
-
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
-    public Integer getClassNum() {
-        return classNum;
-    }
-
-    public void setClassNum(Integer classNum) {
-        this.classNum = classNum;
-    }
-
-    public Integer getWorkDay() {
-        return workDay;
-    }
-
-    public void setWorkDay(Integer workDay) {
-        this.workDay = workDay;
-    }
 
     public SubjectDTO getSubjectDTO() {
         return subjectDTO;
@@ -95,6 +59,30 @@ public class CheckCompleteUseBacktrackingDTO implements Serializable {
 
     public void setSubjectDTO(SubjectDTO subjectDTO) {
         this.subjectDTO = subjectDTO;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public HashMap<Integer, GradeClassNumWorkDayTimeDTO> getOrderGradeClassNumWorkDayTimeMap() {
+        return orderGradeClassNumWorkDayTimeMap;
+    }
+
+    public void setOrderGradeClassNumWorkDayTimeMap(HashMap<Integer, GradeClassNumWorkDayTimeDTO> orderGradeClassNumWorkDayTimeMap) {
+        this.orderGradeClassNumWorkDayTimeMap = orderGradeClassNumWorkDayTimeMap;
+    }
+
+    public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
+        return orderSubjectIdCanUseMap;
+    }
+
+    public void setOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap) {
+        this.orderSubjectIdCanUseMap = orderSubjectIdCanUseMap;
     }
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>> getGradeClassNumSubjectFrequencyMap() {
@@ -151,13 +139,5 @@ public class CheckCompleteUseBacktrackingDTO implements Serializable {
 
     public void setTimeTableMap(HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> timeTableMap) {
         this.timeTableMap = timeTableMap;
-    }
-
-    public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
-        return orderSubjectIdCanUseMap;
-    }
-
-    public void setOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap) {
-        this.orderSubjectIdCanUseMap = orderSubjectIdCanUseMap;
     }
 }

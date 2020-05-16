@@ -48,6 +48,12 @@ public class TimeTableServiceTest {
     }
 
     @Test
+    public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingTest() {
+        var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking();
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
+
+    @Test
     public void planTimeTableWithGeneticAlgorithmTest() {
         var cattyResult = timeTableService.planTimeTableWithGenetic();
         Assert.assertTrue(cattyResult.isSuccess());

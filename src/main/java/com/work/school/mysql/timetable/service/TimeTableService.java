@@ -6,11 +6,10 @@ import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -34,6 +33,7 @@ public class TimeTableService {
 
     /**
      * 准备默认学校配置
+     *
      * @return
      */
     private TimeTablingUseBacktrackingDTO getTimeTablingUseBacktrackingDTO() {
@@ -46,6 +46,49 @@ public class TimeTableService {
         return prepareTimeTablingUseBacktrackingResult.getData();
     }
 
+    /**
+     * 准备默认学校配置
+     *
+     * @return
+     */
+    private TimeTablingUseFCDWBacktrackingDTO getTimeTablingUseFCDWBacktrackingDTO(TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+        TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO = new TimeTablingUseFCDWBacktrackingDTO();
+        BeanUtils.copyProperties(timeTablingUseBacktrackingDTO, timeTablingUseFCDWBacktrackingDTO);
+        backtrackingService.getDefaultConstraint(timeTablingUseFCDWBacktrackingDTO);
+        HashMap<Integer, Integer> orderSubjectIdMap = new HashMap<>();
+        for (Integer order:timeTablingUseBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap().keySet()){
+            orderSubjectIdMap.put(order,null);
+        }
+        timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdMap(orderSubjectIdMap);
+        return timeTablingUseFCDWBacktrackingDTO;
+    }
+
+    /**
+     * 排课算法 前行检测和动态回溯回溯算法
+     *
+     * @return
+     */
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableWithForwardCheckDynamicWeightBacktracking() {
+        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
+
+        // 准备默认学校配置
+        TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = this.getTimeTablingUseBacktrackingDTO();
+        TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO = this.getTimeTablingUseFCDWBacktrackingDTO(timeTablingUseBacktrackingDTO);
+
+        var forwardCheckDynamicWeightBacktrackingResult = backtrackingService.forwardCheckDynamicWeightBacktracking(timeTablingUseFCDWBacktrackingDTO);
+        if (!forwardCheckDynamicWeightBacktrackingResult.isSuccess()) {
+            cattyResult.setMessage(forwardCheckDynamicWeightBacktrackingResult.getMessage());
+            return cattyResult;
+        }
+        var timeTableMap = forwardCheckDynamicWeightBacktrackingResult.getData();
+
+        // 结果展示
+        var timeTableNameMap = backtrackingService.convertTimeTableMapToTimeTableNameMap(timeTablingUseBacktrackingDTO.getAllSubjectNameMap(), timeTableMap);
+
+        cattyResult.setData(timeTableNameMap);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
 
     /**
      * 排课算法 回溯算法
@@ -59,7 +102,7 @@ public class TimeTableService {
         TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = this.getTimeTablingUseBacktrackingDTO();
 
         // 排课核心算法
-        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.algorithmInPlanTimeTableWithBacktracking(timeTablingUseBacktrackingDTO, BacktrackingTypeEnum.BA);
+        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.backtracking(timeTablingUseBacktrackingDTO, BacktrackingTypeEnum.BA);
         if (!algorithmInPlanTimeTableWithBacktrackingResult.isSuccess()) {
             LOGGER.warn(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());
             cattyResult.setMessage(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());
@@ -87,7 +130,7 @@ public class TimeTableService {
         TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = this.getTimeTablingUseBacktrackingDTO();
 
         // 排课核心算法
-        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.algorithmInPlanTimeTableWithBacktracking(timeTablingUseBacktrackingDTO,BacktrackingTypeEnum.DY_BA);
+        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.backtracking(timeTablingUseBacktrackingDTO, BacktrackingTypeEnum.DY_BA);
         if (!algorithmInPlanTimeTableWithBacktrackingResult.isSuccess()) {
             LOGGER.warn(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());
             cattyResult.setMessage(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());
