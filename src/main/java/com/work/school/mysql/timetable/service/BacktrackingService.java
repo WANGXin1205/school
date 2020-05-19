@@ -8,6 +8,9 @@ import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import com.work.school.mysql.timetable.service.dto.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.AnnotationUtils;
+import org.apache.logging.log4j.core.util.SetUtils;
+import org.checkerframework.checker.units.qual.Current;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +31,10 @@ public class BacktrackingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BacktrackingService.class);
 
+    private static final int ONLY_ONE_COUNT = 1;
+    private static final int ADD_SCORE = 1;
+    private static final int BIG_SCORE = 10;
+
     @Resource
     private SubjectService subjectService;
     @Resource
@@ -44,7 +51,7 @@ public class BacktrackingService {
 
         var gradeClassNumSubjectFrequencyMap = timeTablingUseBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
         var orderGradeClassNumWorkDayTimeMap = timeTablingUseBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
-
+        List<String> messageList = new ArrayList<>();
         for (int order = SchoolTimeTableDefaultValueDTO.getStartOrder(); order <= orderGradeClassNumWorkDayTimeMap.keySet().size(); order++) {
             var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
             var grade = gradeClassNumWorkDayTimeDTO.getGrade();
@@ -94,10 +101,21 @@ public class BacktrackingService {
                     boolean completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                     if (completeFlag) {
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-//                        var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
-//                                timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
-//                        var score = geneticService.computerFitnessScore(geneList);
-//                        System.out.println(score);
+                        var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                        var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                        String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
+                                + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
+                                + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
+                                + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
+                                + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
+                                + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
+                                + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
+                                + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
+                                + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
+                                + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
+                                + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
+                                + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
+                        messageList.add(message);
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -114,10 +132,21 @@ public class BacktrackingService {
                             completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                             if (completeFlag) {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-//                                var geneList = this.convertToGeneList(timeTablingUseBacktrackingDTO.getTimeTableMap(), timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap(),
-//                                        timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
-//                                var score = geneticService.computerFitnessScore(geneList);
-//                                System.out.println(score);
+                                var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                                var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                                String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
+                                        + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
+                                        + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
+                                        + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
+                                        + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
+                                        + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
+                                        + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
+                                        + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
+                                        + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
+                                        + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
+                                        + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
+                                        + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
+                                messageList.add(message);
                             }
                         }
 
@@ -141,22 +170,354 @@ public class BacktrackingService {
             }
         }
 
+//        long start = System.currentTimeMillis();
+//        geneticService.markToTXT(String.valueOf(start), messageList);
         cattyResult.setData(timeTablingUseBacktrackingDTO.getTimeTableMap());
         cattyResult.setSuccess(true);
         return cattyResult;
     }
 
+    /**
+     * 组装适应度函数类
+     *
+     * @param timeTablingUseFCDWBacktrackingDTO
+     * @return
+     */
+    private CheckFitnessScoreDTO packFitnessScore(TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+        CheckFitnessScoreDTO checkFitnessScoreDTO = new CheckFitnessScoreDTO();
+        checkFitnessScoreDTO.setGradeClassCountMap(timeTablingUseFCDWBacktrackingDTO.getGradeClassCountMap());
+        checkFitnessScoreDTO.setTimeTableMap(timeTablingUseFCDWBacktrackingDTO.getTimeTableMap());
+        checkFitnessScoreDTO.setGradeSubjectDTOMap(timeTablingUseFCDWBacktrackingDTO.getGradeSubjectDTOMap());
+        checkFitnessScoreDTO.setSubjectGradeClassTeacherMap(timeTablingUseFCDWBacktrackingDTO.getSubjectGradeClassTeacherMap());
+        checkFitnessScoreDTO.setClassroomMaxCapacity(timeTablingUseFCDWBacktrackingDTO.getClassroomMaxCapacityMap());
+
+        return checkFitnessScoreDTO;
+    }
+
+    /**
+     * 组装适应度函数类
+     *
+     * @param timeTablingUseBacktrackingDTO
+     * @return
+     */
+    private CheckFitnessScoreDTO packFitnessScore(TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO) {
+        CheckFitnessScoreDTO checkFitnessScoreDTO = new CheckFitnessScoreDTO();
+        checkFitnessScoreDTO.setGradeClassCountMap(timeTablingUseBacktrackingDTO.getGradeClassCountMap());
+        checkFitnessScoreDTO.setTimeTableMap(timeTablingUseBacktrackingDTO.getTimeTableMap());
+        checkFitnessScoreDTO.setGradeSubjectDTOMap(timeTablingUseBacktrackingDTO.getGradeSubjectDTOMap());
+        checkFitnessScoreDTO.setSubjectGradeClassTeacherMap(timeTablingUseBacktrackingDTO.getSubjectGradeClassTeacherMap());
+        checkFitnessScoreDTO.setClassroomMaxCapacity(timeTablingUseBacktrackingDTO.getClassroomMaxCapacityMap());
+
+        return checkFitnessScoreDTO;
+    }
+
+    /**
+     * 计算适应度函数评分
+     *
+     * @param checkFitnessScoreDTO
+     * @return
+     */
+    private FitnessScoreDTO computerFitnessScore(CheckFitnessScoreDTO checkFitnessScoreDTO) {
+        var timeTableMap = checkFitnessScoreDTO.getTimeTableMap();
+        var gradeClassCountMap = checkFitnessScoreDTO.getGradeClassCountMap();
+        // 计算总共的班级数量
+        int totalClassNum = 0;
+        for (Integer grade : gradeClassCountMap.keySet()) {
+            var classNumCount = gradeClassCountMap.get(grade);
+            totalClassNum = totalClassNum + classNumCount;
+        }
+        var subjectGradeClassTeacherMap = checkFitnessScoreDTO.getSubjectGradeClassTeacherMap();
+        var gradeSubjectDTOMap = checkFitnessScoreDTO.getGradeSubjectDTOMap();
+
+        var allSize = totalClassNum * SchoolTimeTableDefaultValueDTO.getWorkDay() * SchoolTimeTableDefaultValueDTO.getClassTime();
+        HashMap<String, Integer> everyTimeHaveClassMap = new HashMap<>();
+        HashMap<String, Integer> oneTimeOneClassMoreSubjectMap = new HashMap<>();
+        HashMap<Integer, HashMap<Integer, List<Integer>>> oneTimeOneTeacherMoreClassMap = new HashMap<>();
+        HashMap<Integer, List<String>> fixedSubjectTimeMap = new HashMap<>();
+        HashMap<String, List<Integer>> oneClassMoreOtherSubjectMap = new HashMap<>();
+        HashMap<Integer, HashMap<String, List<String>>> otherNeedAreaSubjectIdCountMap = new HashMap<>();
+        HashMap<String, Integer> mainSubjectCountMap = new HashMap<>();
+        HashMap<String, List<Integer>> continueSubjectMap = new HashMap<>();
+        for (Integer grade : timeTableMap.keySet()) {
+            var gradeStandard = geneticService.getStandard(grade.toString(), GeneticDefaultValueDTO.GRADE_STANDARD_LENGTH);
+            var classNumWorkDayTimeSubjectMap = timeTableMap.get(grade);
+            for (Integer classNum : classNumWorkDayTimeSubjectMap.keySet()) {
+                var classNumStandard = geneticService.getStandard(classNum.toString(), GeneticDefaultValueDTO.CLASS_STANDARD_LENGTH);
+                var workDayTimeSubjectMap = classNumWorkDayTimeSubjectMap.get(classNum);
+                for (Integer workDay : workDayTimeSubjectMap.keySet()) {
+                    var workDayStandard = geneticService.getStandard(workDay.toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                    var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
+                    for (Integer time : timeSubjectMap.keySet()) {
+
+                        var timeStandard = geneticService.getStandard(time.toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                        var subjectId = timeSubjectMap.get(time);
+                        // 任何时刻都要有人上课
+                        var gradeClassWorkDay = gradeStandard.concat(classNumStandard).concat(workDayStandard);
+                        String gradeClassNumWorkDayTime = gradeClassWorkDay.concat(timeStandard);
+                        everyTimeHaveClassMap.put(gradeClassNumWorkDayTime, subjectId);
+
+                        // 同一时间一个班级上了多节课
+                        oneTimeOneClassMoreSubjectMap.put(gradeClassNumWorkDayTime, subjectId);
+
+                        // 同一时刻一个教师上了多节课
+                        SubjectGradeClassDTO subjectGradeClassDTO = new SubjectGradeClassDTO();
+                        subjectGradeClassDTO.setSubjectId(subjectId);
+                        subjectGradeClassDTO.setGrade(grade);
+                        subjectGradeClassDTO.setClassNum(classNum);
+                        var teacherId = subjectGradeClassTeacherMap.get(subjectGradeClassDTO);
+                        if (teacherId != null) {
+                            var workDayTimeMap = oneTimeOneTeacherMoreClassMap.get(teacherId);
+                            List<Integer> timeList;
+                            if (workDayTimeMap == null) {
+                                timeList = new ArrayList<>();
+                                timeList.add(time);
+                                workDayTimeMap = new HashMap<>();
+                            } else {
+                                timeList = workDayTimeMap.get(workDay);
+                                if (CollectionUtils.isEmpty(timeList)) {
+                                    timeList = new ArrayList<>();
+                                }
+                                timeList.add(time);
+                            }
+                            workDayTimeMap.put(workDay, timeList);
+                            oneTimeOneTeacherMoreClassMap.put(teacherId, workDayTimeMap);
+                        }
+
+                        // 固定时间上固定的课程
+                        var allGradeSubjectMap = gradeSubjectDTOMap.get(grade);
+                        var subjectDTO = allGradeSubjectMap.get(subjectId);
+                        if (subjectId != null) {
+                            // 固定时间上固定的课程
+                            if (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(subjectDTO.getType())) {
+                                var workDayTimeList = fixedSubjectTimeMap.get(subjectId);
+                                if (CollectionUtils.isEmpty(workDayTimeList)) {
+                                    workDayTimeList = new ArrayList<>();
+                                }
+                                String workDayTime = workDayStandard.concat(timeStandard);
+                                workDayTimeList.add(workDayTime);
+                                fixedSubjectTimeMap.put(subjectId, workDayTimeList);
+                            }
+
+                            // 小课一天在一个班只上一节小课
+                            var subjectIdStandard = geneticService.getStandard(subjectId.toString(), GeneticDefaultValueDTO.SUBJECT_ID_STANDARD_LENGTH);
+                            if (subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getOtherSubjectType())
+                                    || subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType())) {
+                                String key = subjectIdStandard.concat(gradeStandard).concat(classNumStandard).concat(workDayStandard);
+                                var timeList = oneClassMoreOtherSubjectMap.get(key);
+                                if (CollectionUtils.isEmpty(timeList)) {
+                                    timeList = new ArrayList<>();
+                                }
+                                timeList.add(time);
+                                oneClassMoreOtherSubjectMap.put(key, timeList);
+                            }
+
+                            // 功能部室不能超过最大班级数
+                            if (subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType())) {
+                                var workDayTimeGradeClassNumMap = otherNeedAreaSubjectIdCountMap.get(subjectId);
+                                if (workDayTimeGradeClassNumMap == null) {
+                                    workDayTimeGradeClassNumMap = new HashMap<>();
+                                }
+                                var workTimeStandard = workDayStandard.concat(timeStandard);
+                                var gradeClassNumStandard = gradeStandard.concat(classNumStandard);
+                                var gradeClassNumList = workDayTimeGradeClassNumMap.get(workDayStandard);
+                                if (CollectionUtils.isEmpty(gradeClassNumList)) {
+                                    gradeClassNumList = new ArrayList<>();
+                                }
+                                gradeClassNumList.add(gradeClassNumStandard);
+                                workDayTimeGradeClassNumMap.put(workTimeStandard, gradeClassNumList);
+                                otherNeedAreaSubjectIdCountMap.put(subjectId, workDayTimeGradeClassNumMap);
+                            }
+
+                            // 学生不能上连堂课
+                            if (subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getMainSubjectType())) {
+                                var key = gradeClassWorkDay.concat(subjectIdStandard);
+                                var timeList = continueSubjectMap.get(key);
+                                if (CollectionUtils.isEmpty(timeList)) {
+                                    timeList = new ArrayList<>();
+                                }
+                                timeList.add(time);
+                                continueSubjectMap.put(key, timeList);
+                            }
+                        }
+
+                        // 第1，2节课是语文，数学课
+                        if (time < SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
+                            mainSubjectCountMap.put(gradeClassNumWorkDayTime, subjectId);
+                        }
+
+                    }
+                }
+            }
+        }
+        // 先计算硬约束冲突评分
+        // 1.任何时刻都要有人上课，null为冲突
+        int everyTimeHaveSubjectCount = 0;
+        for (String gradeClassNumWorkDayTime : everyTimeHaveClassMap.keySet()) {
+            var subjectId = everyTimeHaveClassMap.get(gradeClassNumWorkDayTime);
+            if (subjectId == null) {
+                everyTimeHaveSubjectCount = everyTimeHaveSubjectCount + ONLY_ONE_COUNT;
+            }
+        }
+
+        // 2.同一时间一个班级上了多节课
+        int oneTimeOneClassMoreSubjectCount = allSize - oneTimeOneClassMoreSubjectMap.size();
+
+        // 3.同一时间一个教师上了多个班级的课程
+        int oneTimeOneTeacherMoreClassCount = 0;
+        for (Integer teacherId : oneTimeOneTeacherMoreClassMap.keySet()) {
+            var workDayTimeListMap = oneTimeOneTeacherMoreClassMap.get(teacherId);
+            for (Integer workDay : workDayTimeListMap.keySet()) {
+                var timeList = workDayTimeListMap.get(workDay);
+                var distinctTimeList = timeList.stream().distinct().collect(Collectors.toList());
+                oneTimeOneTeacherMoreClassCount = oneTimeOneTeacherMoreClassCount + timeList.size() - distinctTimeList.size();
+            }
+        }
+
+        // 4.固定时间上固定的课程
+        int fixedSubjectIdCount = 0;
+        for (Integer subjectId : fixedSubjectTimeMap.keySet()) {
+            var workDayTimeList = fixedSubjectTimeMap.get(subjectId);
+            if (SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId().equals(subjectId)) {
+                var mondayStandard = geneticService.getStandard(SchoolTimeTableDefaultValueDTO.getMondayNum().toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                var lastTimeStandard = geneticService.getStandard(SchoolTimeTableDefaultValueDTO.getClassMeetingTime().toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                var matchTime = mondayStandard.concat(lastTimeStandard);
+                for (String workDayTime : workDayTimeList) {
+                    if (!workDayTime.equals(matchTime)) {
+                        fixedSubjectIdCount = fixedSubjectIdCount + ONLY_ONE_COUNT;
+                    }
+                }
+            }
+            if (SchoolTimeTableDefaultValueDTO.getWritingId().equals(subjectId)) {
+                var wedStandard = geneticService.getStandard(SchoolTimeTableDefaultValueDTO.getWednesdayNum().toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                var lastTimeStandard = geneticService.getStandard(SchoolTimeTableDefaultValueDTO.getWritingTime().toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                var matchTime = wedStandard.concat(lastTimeStandard);
+                for (String workDayTime : workDayTimeList) {
+                    if (!workDayTime.equals(matchTime)) {
+                        fixedSubjectIdCount = fixedSubjectIdCount + ONLY_ONE_COUNT;
+                    }
+                }
+            }
+            if (SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId().equals(subjectId)) {
+                var friStandard = geneticService.getStandard(SchoolTimeTableDefaultValueDTO.getFridayNum().toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                List<String> matchTimeList = new ArrayList<>();
+                for (Integer time : SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()) {
+                    var timeStandard = geneticService.getStandard(time.toString(), GeneticDefaultValueDTO.CLASS_TIME_STANDARD_LENGTH);
+                    var matchTime = friStandard.concat(timeStandard);
+                    matchTimeList.add(matchTime);
+                }
+
+                for (String workDayTime : workDayTimeList) {
+                    if (!matchTimeList.contains(workDayTime)) {
+                        fixedSubjectIdCount = fixedSubjectIdCount + ONLY_ONE_COUNT;
+                    }
+                }
+            }
+
+        }
+
+        // 5.小课一天只上一节小课
+        int oneClassMoreOtherSubject = 0;
+        for (String key : oneClassMoreOtherSubjectMap.keySet()) {
+            var timeList = oneClassMoreOtherSubjectMap.get(key);
+            oneClassMoreOtherSubject = oneClassMoreOtherSubject + timeList.size() - ONLY_ONE_COUNT;
+        }
+
+        // 6.功能部室不能超过最大班级数
+        int needAreaSubjectCount = 0;
+        for (Integer subjectId : otherNeedAreaSubjectIdCountMap.keySet()) {
+            var classroomMaxCapacityMap = checkFitnessScoreDTO.getClassroomMaxCapacity();
+            var maxCount = classroomMaxCapacityMap.get(subjectId);
+            var workDayTimeGradeClassMap = otherNeedAreaSubjectIdCountMap.get(subjectId);
+            for (String workDayTime : workDayTimeGradeClassMap.keySet()) {
+                var gradeClassNumList = workDayTimeGradeClassMap.get(workDayTime);
+                if (maxCount < gradeClassNumList.size()) {
+                    needAreaSubjectCount = needAreaSubjectCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        int hardScore = everyTimeHaveSubjectCount + oneTimeOneClassMoreSubjectCount
+                + oneTimeOneTeacherMoreClassCount + fixedSubjectIdCount
+                + oneClassMoreOtherSubject + needAreaSubjectCount;
+        hardScore = hardScore * BIG_SCORE;
+
+        // 再计算软约束评分
+        // 1.教师一天不能上超过4节课
+        int teacherOutMaxTimeCount = 0;
+        for (Integer teacherId : oneTimeOneTeacherMoreClassMap.keySet()) {
+            var workDayTimeListMap = oneTimeOneTeacherMoreClassMap.get(teacherId);
+            for (Integer workDay : workDayTimeListMap.keySet()) {
+                var timeList = workDayTimeListMap.get(workDay);
+                if (timeList.size() > SchoolTimeTableDefaultValueDTO.getTeacherContinueTimeMaxSize()) {
+                    teacherOutMaxTimeCount = teacherOutMaxTimeCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        // 2.第1，2节课必须是语文，数学课
+        int noMainSubjectCount = 0;
+        for (String gradeClassWorkDayTime : mainSubjectCountMap.keySet()) {
+            var subjectId = mainSubjectCountMap.get(gradeClassWorkDayTime);
+            if (subjectId == null) {
+                noMainSubjectCount = noMainSubjectCount + ONLY_ONE_COUNT;
+            }
+            if (subjectId != null) {
+                var mainSubjectFlag = SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(subjectId)
+                        || SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(subjectId);
+                if (!mainSubjectFlag) {
+                    noMainSubjectCount = noMainSubjectCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        // 3.学生不能上连堂课
+        int studentContinueSameClassCount = 0;
+        for (String gradeClassWorkDaySubject : continueSubjectMap.keySet()) {
+            var timeList = continueSubjectMap.get(gradeClassWorkDaySubject);
+            Collections.sort(timeList);
+            for (int i = 0; i < timeList.size() - 1; i++) {
+                for (int j = i + 1; j < timeList.size(); j++) {
+                    var continueFlag = timeList.get(i) + 1 == timeList.get(j) && !timeList.get(i).equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime());
+                    if (continueFlag) {
+                        studentContinueSameClassCount = studentContinueSameClassCount + ONLY_ONE_COUNT;
+                    }
+                }
+            }
+        }
+
+        int softScore = (teacherOutMaxTimeCount + noMainSubjectCount + studentContinueSameClassCount) * ADD_SCORE;
+
+        // 最后计算一共的得分
+        int score = hardScore + softScore;
+
+        FitnessScoreDTO fitnessScoreDTO = new FitnessScoreDTO();
+        fitnessScoreDTO.setHardScore(hardScore);
+        fitnessScoreDTO.setSoftScore(softScore);
+        fitnessScoreDTO.setScore(score);
+        fitnessScoreDTO.setEveryTimeHaveSubjectCount(everyTimeHaveSubjectCount);
+        fitnessScoreDTO.setOneTimeOneClassMoreSubjectCount(oneTimeOneClassMoreSubjectCount);
+        fitnessScoreDTO.setOneTimeOneTeacherMoreClassCount(oneTimeOneTeacherMoreClassCount);
+        fitnessScoreDTO.setFixedSubjectIdCount(fixedSubjectIdCount);
+        fitnessScoreDTO.setOneClassMoreOtherSubject(oneClassMoreOtherSubject);
+        fitnessScoreDTO.setNeedAreaSubjectCount(needAreaSubjectCount);
+        fitnessScoreDTO.setTeacherOutMaxTimeCount(teacherOutMaxTimeCount);
+        fitnessScoreDTO.setNoMainSubjectCount(noMainSubjectCount);
+        fitnessScoreDTO.setStudentContinueSameClassCount(studentContinueSameClassCount);
+
+        return fitnessScoreDTO;
+    }
 
     /**
      * 前行检查和回溯算法核心
      *
      * @param timeTablingUseFCDWBacktrackingDTO
+     * @param backtrackingTypeEnum
      * @return
      */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> forwardCheckDynamicWeightBacktracking(TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> forwardCheckDynamicWeightBacktracking(TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO, BacktrackingTypeEnum backtrackingTypeEnum) {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> cattyResult = new CattyResult<>();
         var orderSubjectIdMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdMap();
-
+        List<String> messageList = new ArrayList<>();
         for (int order = SchoolTimeTableDefaultValueDTO.getStartOrder(); order <= orderSubjectIdMap.keySet().size(); order++) {
 
             while (orderSubjectIdMap.get(order) == null) {
@@ -166,7 +527,7 @@ public class BacktrackingService {
                 var timeTableConstraintDTOList = timeTablingUseFCDWBacktrackingDTO.getTimeTableConstraintDTOList();
                 this.getOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap, timeTableConstraintDTOList);
 
-                var subjectIdCanUseMap = getSubjectIdCanUseMap(order,timeTablingUseFCDWBacktrackingDTO);
+                var subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
 
                 var backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                 // 检查是否有回溯课程
@@ -178,10 +539,15 @@ public class BacktrackingService {
                     this.clearConstraint(order, timeTablingUseFCDWBacktrackingDTO);
                 }
                 if (!backFlag) {
-                    subjectIdCanUseMap = getSubjectIdCanUseMap(order,timeTablingUseFCDWBacktrackingDTO);
-                    // 选择一个课程
-                    var chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
-
+                    subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
+                    Integer chooseSubjectId = null;
+                    if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_BA)) {
+                        // 选择一个课程
+                        chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                    }
+                    if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_DW_BA)) {
+                        chooseSubjectId = this.getMaxWeightSubjectId(order, timeTablingUseFCDWBacktrackingDTO);
+                    }
                     this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
                     // 检查是否满足排课需求
@@ -190,6 +556,21 @@ public class BacktrackingService {
                     if (completeFlag) {
                         // 更新所有状态
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
+                        var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                        var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                        String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
+                                + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
+                                + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
+                                + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
+                                + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
+                                + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
+                                + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
+                                + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
+                                + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
+                                + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
+                                + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
+                                + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
+                        messageList.add(message);
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -201,9 +582,16 @@ public class BacktrackingService {
                         // 判断这一层的回溯点是否都已经使用，如果没有使用完毕，不需要回溯，选择下一个课程
                         backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                         if (!backFlag) {
-                            subjectIdCanUseMap = getSubjectIdCanUseMap(order,timeTablingUseFCDWBacktrackingDTO);
+                            subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
                             // 回溯点不清零，记录该点的排课课程，下次不再选择这么课程
-                            chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                            chooseSubjectId = null;
+                            if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_BA)) {
+                                // 选择一个课程
+                                chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
+                            }
+                            if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_DW_BA)) {
+                                chooseSubjectId = this.getMaxWeightSubjectId(order, timeTablingUseFCDWBacktrackingDTO);
+                            }
 
                             this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
@@ -211,6 +599,21 @@ public class BacktrackingService {
                             completeFlag = this.checkAllComplete(checkCompleteDTO);
                             if (completeFlag) {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
+                                var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                                var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                                String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
+                                        + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
+                                        + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
+                                        + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
+                                        + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
+                                        + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
+                                        + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
+                                        + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
+                                        + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
+                                        + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
+                                        + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
+                                        + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
+                                 messageList.add(message);
                             }
                         }
                         // 如果课程使用完毕，则找上一层的回溯点
@@ -228,6 +631,8 @@ public class BacktrackingService {
             }
         }
 
+        long start = System.currentTimeMillis();
+        geneticService.markToTXT(String.valueOf(start), messageList);
         cattyResult.setData(timeTablingUseFCDWBacktrackingDTO.getTimeTableMap());
         cattyResult.setSuccess(true);
         return cattyResult;
@@ -351,7 +756,7 @@ public class BacktrackingService {
             var matchOrder = gradeClassNumWorkDayTimeOrderMap.get(key);
             for (Integer subject : subjectFrequencyMap.keySet()) {
                 Integer frequency = subjectFrequencyMap.get(subjectId);
-                if (subjectId.equals(subject) && frequency-1 == 0 && matchOrder > order) {
+                if (subjectId.equals(subject) && frequency - 1 == 0 && matchOrder > order) {
                     TimeTableConstraintDTO timeTableConstraintDTO = new TimeTableConstraintDTO();
                     timeTableConstraintDTO.setOrder(order);
                     timeTableConstraintDTO.setOrderConstraint(matchOrder);
@@ -446,7 +851,7 @@ public class BacktrackingService {
         var orderSubjectIdCanUseMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
 
         List<TimeTableConstraintDTO> newTimeTableConstraintDTOList = new ArrayList<>();
-        for (TimeTableConstraintDTO timeTableConstraintDTO:timeTableConstraintDTOList) {
+        for (TimeTableConstraintDTO timeTableConstraintDTO : timeTableConstraintDTOList) {
             if (timeTableConstraintDTO.getOrder() > order && timeTableConstraintDTO.getOrderConstraint() > order) {
                 var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(timeTableConstraintDTO.getOrderConstraint());
                 subjectIdCanUseMap.put(timeTableConstraintDTO.getSubjectIdConstraint(), true);
@@ -454,7 +859,7 @@ public class BacktrackingService {
                 timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
             }
             if ((timeTableConstraintDTO.getOrder().equals(order) && timeTableConstraintDTO.getOrderConstraint().equals(order))
-                    || timeTableConstraintDTO.getOrder() < order){
+                    || timeTableConstraintDTO.getOrder() < order) {
                 newTimeTableConstraintDTOList.add(timeTableConstraintDTO);
             }
         }
@@ -466,24 +871,23 @@ public class BacktrackingService {
 
 
     /**
-     *
      * @param timeTablingUseFCDWBacktrackingDTO
      * @return
      */
-    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer order,TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO){
-       var orderSubjectIdCanUseMap  = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
-       var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(order);
-       var orderGradeClassNumWorkDayTimeMap = timeTablingUseFCDWBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
-       var gradeClassNumWorkDayTimeDTO =  orderGradeClassNumWorkDayTimeMap.get(order);
-       var gradeClassNumSubjectFrequencyMap = timeTablingUseFCDWBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
-       var classNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getGrade());
-       var subjectFrequencyMap = classNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getClassNum());
-       for (Integer key:subjectIdCanUseMap.keySet()){
-           var frequency = subjectFrequencyMap.get(key);
-           if (frequency.equals(0)){
-               subjectIdCanUseMap.put(key,false);
-           }
-       }
+    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer order, TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+        var orderSubjectIdCanUseMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
+        var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(order);
+        var orderGradeClassNumWorkDayTimeMap = timeTablingUseFCDWBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
+        var gradeClassNumSubjectFrequencyMap = timeTablingUseFCDWBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
+        var classNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getGrade());
+        var subjectFrequencyMap = classNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getClassNum());
+        for (Integer key : subjectIdCanUseMap.keySet()) {
+            var frequency = subjectFrequencyMap.get(key);
+            if (frequency.equals(0)) {
+                subjectIdCanUseMap.put(key, false);
+            }
+        }
         return subjectIdCanUseMap;
     }
 
@@ -495,7 +899,7 @@ public class BacktrackingService {
      * @return
      */
     private HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap(HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap,
-                                                                                   List<TimeTableConstraintDTO> timeTableConstraintDTOList){
+                                                                                   List<TimeTableConstraintDTO> timeTableConstraintDTOList) {
         for (TimeTableConstraintDTO timeTableConstraintDTO : timeTableConstraintDTOList) {
             var subjectCanUseMap = orderSubjectIdCanUseMap.get(timeTableConstraintDTO.getOrderConstraint());
             subjectCanUseMap.put(timeTableConstraintDTO.getSubjectIdConstraint(), false);
@@ -1007,6 +1411,42 @@ public class BacktrackingService {
      * 获取最大权重的课程
      *
      * @param order
+     * @param timeTablingUseFCDWBacktrackingDTO
+     * @return
+     */
+    private Integer getMaxWeightSubjectId(Integer order, TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+        var orderGradeClassNumWorkDayTimeMap = timeTablingUseFCDWBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var gradeClassNumWorkDayTime = orderGradeClassNumWorkDayTimeMap.get(order);
+        var grade = gradeClassNumWorkDayTime.getGrade();
+        var classNum = gradeClassNumWorkDayTime.getClassNum();
+        var workDay = gradeClassNumWorkDayTime.getWorkDay();
+        var time = gradeClassNumWorkDayTime.getTime();
+
+        var gradeClassSubjectWeightMap = timeTablingUseFCDWBacktrackingDTO.getGradeClassSubjectWeightMap();
+
+        // 筛选出某个年级下某个班级要赋值的课程,并且初始化所有课程的权重
+        var subjectWeightDTOList = this.listSubjectWeightDTO(grade, classNum, gradeClassSubjectWeightMap);
+
+        // 组装computerSubjectWeightDTO
+        var computerSubjectWeightDTO = this.packComputerSubjectWeightDTO(grade, classNum, workDay, time, subjectWeightDTOList, timeTablingUseFCDWBacktrackingDTO);
+
+        // 计算权重
+        var maxOrder = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdMap().size();
+        subjectService.computerSubjectWeightDTO(order,maxOrder,computerSubjectWeightDTO);
+
+        // 返回最大权重的课程
+        var orderSubjectIdCanUseMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
+        var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(order);
+        return subjectWeightDTOList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
+                .filter(x -> subjectIdCanUseMap.get(x.getSubjectId()).equals(true))
+                .max(Comparator.comparing(SubjectWeightDTO::getWeight))
+                .map(SubjectWeightDTO::getSubjectId).get();
+    }
+
+    /**
+     * 获取最大权重的课程
+     *
+     * @param order
      * @param timeTablingUseBacktrackingDTO
      * @return
      */
@@ -1054,6 +1494,40 @@ public class BacktrackingService {
         subjectWeightList.stream().filter(x -> x.getFrequency() > SubjectWeightDefaultValueDTO.getZeroFrequency())
                 .forEach(x -> x.setWeight(x.getFrequency() * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType() - x.getType())));
         return subjectWeightList;
+    }
+
+    /**
+     * 组装ComputerSubjectWeightDTO
+     *
+     * @param grade
+     * @param classNum
+     * @param workDay
+     * @param time
+     * @param subjectWeightDTOList
+     * @param timeTablingUseFCDWBacktrackingDTO
+     * @return
+     */
+    private ComputerSubjectWeightDTO packComputerSubjectWeightDTO(Integer grade,
+                                                                  Integer classNum,
+                                                                  Integer workDay,
+                                                                  Integer time,
+                                                                  List<SubjectWeightDTO> subjectWeightDTOList,
+                                                                  TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+        ComputerSubjectWeightDTO computerSubjectWeightDTO = new ComputerSubjectWeightDTO();
+
+        computerSubjectWeightDTO.setGrade(grade);
+        computerSubjectWeightDTO.setClassNum(classNum);
+        computerSubjectWeightDTO.setWorkDay(workDay);
+        computerSubjectWeightDTO.setTime(time);
+        computerSubjectWeightDTO.setSubjectWeightDTOList(subjectWeightDTOList);
+        computerSubjectWeightDTO.setSubjectGradeClassTeacherCountMap(timeTablingUseFCDWBacktrackingDTO.getSubjectGradeClassTeacherCountMap());
+        computerSubjectWeightDTO.setOrderTeacherWorkDayTimeMap(timeTablingUseFCDWBacktrackingDTO.getOrderTeacherWorkDayTimeMap());
+        computerSubjectWeightDTO.setTeacherSubjectListMap(timeTablingUseFCDWBacktrackingDTO.getTeacherSubjectListMap());
+        computerSubjectWeightDTO.setGradeClassNumWorDaySubjectCountMap(timeTablingUseFCDWBacktrackingDTO.getGradeClassNumWorkDaySubjectCountMap());
+        computerSubjectWeightDTO.setTimeTableMap(timeTablingUseFCDWBacktrackingDTO.getTimeTableMap());
+        computerSubjectWeightDTO.setClassroomMaxCapacityMap(timeTablingUseFCDWBacktrackingDTO.getClassroomMaxCapacityMap());
+
+        return computerSubjectWeightDTO;
     }
 
     /**

@@ -7,8 +7,8 @@ import com.github.pagehelper.StringUtil;
  * Created by WANGXin on 2017/3/15.
  */
 public enum FitnessFunctionEnum {
-    HARD_SATISFIED(1,"直到满足所有硬约束条件"),
-    MORE_SATISFIED(2,"尽可能满足条件，有迭代停止");
+    HARD_SATISFIED(1,"硬约束条件"),
+    SOFT_SATISFIED(2,"软约束条件");
 
 
     private Integer num;

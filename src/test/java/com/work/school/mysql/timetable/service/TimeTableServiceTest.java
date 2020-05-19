@@ -3,6 +3,7 @@ package com.work.school.mysql.timetable.service;
 import com.work.school.common.utils.common.DateUtils;
 import com.work.school.mysql.common.dao.domain.TeacherDO;
 import com.work.school.mysql.common.service.TeacherService;
+import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,33 +40,77 @@ public class TimeTableServiceTest {
 
     @Test
     public void planTimeTableWithBacktrackingTest() {
-        long start = System.currentTimeMillis();
-        var cattyResult = timeTableService.planTimeTableWithBacktracking();
-        Assert.assertTrue(cattyResult.isSuccess());
-        long end = System.currentTimeMillis();
-        System.out.println(end-start);
-        Assert.assertTrue(cattyResult.isSuccess());
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            long start = System.currentTimeMillis();
+            var cattyResult = timeTableService.planTimeTableWithBacktracking();
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
-    public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingTest() {
-        var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking();
-        Assert.assertTrue(cattyResult.isSuccess());
+    public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingBATest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            long start = System.currentTimeMillis();
+            var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_BA);
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
+    }
+
+    @Test
+    public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingDWTest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            long start = System.currentTimeMillis();
+            var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_DW_BA);
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
     public void planTimeTableWithGeneticAlgorithmTest() {
-        var cattyResult = timeTableService.planTimeTableWithGenetic();
-        Assert.assertTrue(cattyResult.isSuccess());
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            long start = System.currentTimeMillis();
+            var cattyResult = timeTableService.planTimeTableWithGenetic();
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
     public void planTimeTableWithSimulateAnnealTest() {
-        long start = System.currentTimeMillis();
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            long start = System.currentTimeMillis();
         var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
-        long end = System.currentTimeMillis();
-        System.out.println(end-start);
-        Assert.assertTrue(cattyResult.isSuccess());
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
     }
 
 }

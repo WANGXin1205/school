@@ -1,334 +1,547 @@
-2020-05-16 13:41:31.578  INFO 3746 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3746 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:41:31.608  INFO 3746 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:41:33.791  INFO 3746 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c2338946] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:41:35.963  INFO 3746 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:41:37.770  INFO 3746 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:41:37.862  INFO 3746 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 11.929 seconds (JVM running for 13.384)
-2020-05-16 13:41:38.473  INFO 3746 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:41:38.479  WARN 3746 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:41:38.745  INFO 3746 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:43:24.107  WARN 3746 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m1s783ms).
-2020-05-16 13:43:24.154  INFO 3746 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:43:24.162  INFO 3746 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:43:24.173  INFO 3746 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:43:38.122  INFO 3755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3755 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:43:38.123  INFO 3755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:43:39.632  INFO 3755 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$be2aa640] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:43:41.095  INFO 3755 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:43:42.227  INFO 3755 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:43:42.323  INFO 3755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.626 seconds (JVM running for 10.691)
-2020-05-16 13:43:42.768  INFO 3755 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:43:42.772  WARN 3755 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:43:42.993  INFO 3755 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:43:45.570  INFO 3755 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:43:45.573  INFO 3755 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:43:45.580  INFO 3755 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:44:00.232  INFO 3758 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3758 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:44:00.233  INFO 3758 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:44:01.597  INFO 3758 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$837b627e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:44:03.046  INFO 3758 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:44:04.160  INFO 3758 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:44:04.244  INFO 3758 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.518 seconds (JVM running for 10.536)
-2020-05-16 13:44:04.632  INFO 3758 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:44:04.636  WARN 3758 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:44:04.823  INFO 3758 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:45:32.453  INFO 3758 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:45:32.456  INFO 3758 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:45:32.466  INFO 3758 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:45:39.913  INFO 3764 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3764 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:45:39.915  INFO 3764 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:45:41.406  INFO 3764 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e45edec7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:45:42.821  INFO 3764 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:45:43.877  INFO 3764 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:45:43.959  INFO 3764 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.575 seconds (JVM running for 11.099)
-2020-05-16 13:45:44.315  INFO 3764 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:45:44.320  WARN 3764 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:45:44.482  INFO 3764 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:46:39.551  WARN 3764 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s965ms).
-2020-05-16 13:46:39.604  INFO 3764 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:46:39.607  INFO 3764 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:46:39.622  INFO 3764 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:46:51.005  INFO 3770 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3770 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:46:51.006  INFO 3770 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:46:52.467  INFO 3770 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9f31f7db] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:46:54.028  INFO 3770 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:46:55.127  INFO 3770 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:46:55.225  INFO 3770 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.628 seconds (JVM running for 10.677)
-2020-05-16 13:46:55.695  INFO 3770 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:46:55.700  WARN 3770 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:46:55.942  INFO 3770 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:47:46.397  WARN 3770 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50s349ms).
-2020-05-16 13:47:46.416  INFO 3770 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:47:46.418  INFO 3770 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:47:46.426  INFO 3770 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:47:57.634  INFO 3775 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3775 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:47:57.635  INFO 3775 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:47:59.054  INFO 3775 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$91fdedc1] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:48:00.460  INFO 3775 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:48:01.471  INFO 3775 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:48:01.555  INFO 3775 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.385 seconds (JVM running for 10.374)
-2020-05-16 13:48:01.955  INFO 3775 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:48:01.960  WARN 3775 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:48:02.169  INFO 3775 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:48:29.173  INFO 3775 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:48:29.176  INFO 3775 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:48:29.189  INFO 3775 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:50:16.451  INFO 3780 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3780 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:50:16.452  INFO 3780 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:50:17.851  INFO 3780 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$3a83f7ea] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:50:19.608  INFO 3780 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:50:20.919  INFO 3780 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:50:21.019  INFO 3780 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.965 seconds (JVM running for 11.002)
-2020-05-16 13:50:21.502  INFO 3780 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:50:21.506  WARN 3780 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:50:21.708  INFO 3780 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:51:20.846  WARN 3780 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=59s31ms).
-2020-05-16 13:54:08.358  WARN 3780 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m47s511ms).
-2020-05-16 13:54:08.401  INFO 3780 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:54:08.410  INFO 3780 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 13:54:08.423  INFO 3780 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 13:54:15.876  INFO 3785 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 3785 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 13:54:15.876  INFO 3785 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 13:54:17.195  INFO 3785 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c2338946] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 13:54:18.579  INFO 3785 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 13:54:19.623  INFO 3785 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 13:54:19.707  INFO 3785 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.268 seconds (JVM running for 10.794)
-2020-05-16 13:54:20.102  INFO 3785 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 13:54:20.106  WARN 3785 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 13:54:20.312  INFO 3785 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 13:55:17.061  WARN 3785 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s638ms).
-2020-05-16 13:56:53.942  WARN 3785 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m2s465ms).
-2020-05-16 18:33:37.511  WARN 3785 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4h36m42s200ms).
-2020-05-16 18:41:10.810  WARN 3785 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m34s668ms).
-2020-05-16 18:41:10.861  INFO 3785 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:41:10.868  INFO 3785 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 18:41:10.877  INFO 3785 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 18:46:48.057  INFO 4092 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4092 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 18:46:48.057  INFO 4092 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 18:46:49.450  INFO 4092 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$68e56265] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 18:46:50.793  INFO 4092 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:46:51.783  INFO 4092 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 18:46:51.861  INFO 4092 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.533 seconds (JVM running for 10.878)
-2020-05-16 18:46:52.305  INFO 4092 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 18:46:52.309  WARN 4092 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 18:46:52.482  INFO 4092 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 18:48:18.744  INFO 4092 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:48:18.751  INFO 4092 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 18:48:18.763  INFO 4092 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 18:49:04.146  INFO 4099 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4099 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 18:49:04.147  INFO 4099 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 18:49:05.463  INFO 4099 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$1ba3f5e6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 18:49:06.804  INFO 4099 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:49:07.817  INFO 4099 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 18:49:07.898  INFO 4099 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.229 seconds (JVM running for 10.363)
-2020-05-16 18:49:08.317  INFO 4099 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 18:49:08.320  WARN 4099 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 18:49:08.532  INFO 4099 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 18:51:29.990  WARN 4099 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m14s314ms).
-2020-05-16 18:51:39.409  INFO 4099 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:51:39.416  INFO 4099 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 18:51:39.428  INFO 4099 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 18:53:06.067  INFO 4106 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4106 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 18:53:06.067  INFO 4106 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 18:53:07.366  INFO 4106 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b96216f2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 18:53:08.663  INFO 4106 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:53:09.640  INFO 4106 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 18:53:09.722  INFO 4106 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.238 seconds (JVM running for 10.605)
-2020-05-16 18:53:10.104  INFO 4106 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 18:53:10.108  WARN 4106 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 18:53:10.295  INFO 4106 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 18:53:10.619  INFO 4106 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:53:10.624  INFO 4106 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 18:53:10.641  INFO 4106 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 18:53:31.281  INFO 4109 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4109 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 18:53:31.281  INFO 4109 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 18:53:32.661  INFO 4109 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9d26929] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 18:53:33.923  INFO 4109 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:53:34.913  INFO 4109 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 18:53:34.989  INFO 4109 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.216 seconds (JVM running for 10.29)
-2020-05-16 18:53:35.361  INFO 4109 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 18:53:35.365  WARN 4109 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 18:53:35.554  INFO 4109 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 18:54:55.879  WARN 4109 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m20s221ms).
-2020-05-16 18:54:55.923  INFO 4109 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 18:54:55.927  INFO 4109 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 18:54:55.937  INFO 4109 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 19:14:40.184  INFO 4139 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4139 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 19:14:40.186  INFO 4139 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 19:14:41.488  INFO 4139 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$297a7653] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 19:14:42.833  INFO 4139 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:14:43.829  INFO 4139 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 19:14:43.920  INFO 4139 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.12 seconds (JVM running for 10.126)
-2020-05-16 19:14:44.302  INFO 4139 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 19:14:44.306  WARN 4139 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 19:14:44.492  INFO 4139 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 19:17:07.999  WARN 4139 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m2s580ms).
-2020-05-16 19:22:55.622  WARN 4139 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m50s121ms).
-2020-05-16 19:22:55.747  INFO 4139 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:22:55.750  INFO 4139 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 19:22:55.761  INFO 4139 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 19:23:06.929  INFO 4154 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4154 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 19:23:06.930  INFO 4154 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 19:23:08.295  INFO 4154 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4a290f10] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 19:23:09.583  INFO 4154 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:23:10.568  INFO 4154 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 19:23:10.667  INFO 4154 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.205 seconds (JVM running for 10.343)
-2020-05-16 19:23:11.107  INFO 4154 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 19:23:11.111  WARN 4154 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 19:23:11.319  INFO 4154 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 19:25:30.009  WARN 4154 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m18s585ms).
-2020-05-16 19:25:30.126  INFO 4154 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:25:30.128  INFO 4154 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 19:25:30.136  INFO 4154 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 19:25:42.222  INFO 4160 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4160 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 19:25:42.223  INFO 4160 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 19:25:43.381  INFO 4160 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d3d80b92] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 19:25:44.666  INFO 4160 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:25:45.679  INFO 4160 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 19:25:45.757  INFO 4160 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 8.974 seconds (JVM running for 10.223)
-2020-05-16 19:25:46.197  INFO 4160 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 19:25:46.202  WARN 4160 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 19:25:46.404  INFO 4160 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 19:26:52.070  WARN 4160 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m4s432ms).
-2020-05-16 19:27:13.478  INFO 4160 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:27:13.486  INFO 4160 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 19:27:13.494  INFO 4160 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 19:44:12.907  INFO 4178 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4178 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 19:44:12.908  INFO 4178 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 19:44:14.029  INFO 4178 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$72e0c1f9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 19:44:15.167  INFO 4178 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:44:16.216  INFO 4178 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 19:44:16.286  INFO 4178 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 8.854 seconds (JVM running for 10.09)
-2020-05-16 19:44:16.667  INFO 4178 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 19:44:16.671  WARN 4178 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 19:44:16.903  INFO 4178 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 19:45:21.710  WARN 4178 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m4s703ms).
-2020-05-16 19:45:21.720  INFO 4178 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:45:21.722  INFO 4178 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 19:45:21.730  INFO 4178 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 19:45:33.580  INFO 4183 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4183 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 19:45:33.581  INFO 4183 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 19:45:34.975  INFO 4183 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$3cfdcf9d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 19:45:36.297  INFO 4183 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 19:45:37.310  INFO 4183 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 19:45:37.393  INFO 4183 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.215 seconds (JVM running for 10.256)
-2020-05-16 19:45:37.800  INFO 4183 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 19:45:37.804  WARN 4183 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 19:45:38.002  INFO 4183 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 20:22:22.456  WARN 4183 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=36m44s349ms).
-2020-05-16 20:22:22.474  INFO 4183 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:22:22.477  INFO 4183 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 20:22:22.481  INFO 4183 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 20:25:14.701  INFO 4418 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4418 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 20:25:14.702  INFO 4418 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 20:25:15.779  INFO 4418 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$5ff39a59] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 20:25:16.835  INFO 4418 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:25:17.789  INFO 4418 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 20:25:17.865  INFO 4418 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 8.641 seconds (JVM running for 9.781)
-2020-05-16 20:25:18.248  INFO 4418 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 20:25:18.252  WARN 4418 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 20:25:18.429  INFO 4418 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 20:47:33.162  WARN 4418 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=22m14s628ms).
-2020-05-16 20:47:33.171  INFO 4418 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:47:33.174  INFO 4418 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 20:47:33.181  INFO 4418 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 20:58:56.408  INFO 4491 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4491 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 20:58:56.408  INFO 4491 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 20:58:57.578  INFO 4491 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b250789b] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 20:58:58.941  INFO 4491 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:58:59.980  INFO 4491 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 20:59:00.057  INFO 4491 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.208 seconds (JVM running for 10.739)
-2020-05-16 20:59:00.438  INFO 4491 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 20:59:00.442  WARN 4491 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 20:59:00.622  INFO 4491 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 20:59:00.982  INFO 4491 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:59:00.987  INFO 4491 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 20:59:01.000  INFO 4491 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 20:59:25.495  INFO 4496 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4496 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 20:59:25.496  INFO 4496 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 20:59:26.835  INFO 4496 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b8a47c63] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 20:59:28.151  INFO 4496 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 20:59:29.168  INFO 4496 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 20:59:29.239  INFO 4496 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.189 seconds (JVM running for 10.461)
-2020-05-16 20:59:29.654  INFO 4496 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 20:59:29.659  WARN 4496 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 20:59:29.839  INFO 4496 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:02:48.971  WARN 4496 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m19s27ms).
-2020-05-16 21:02:49.015  INFO 4496 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:02:49.019  INFO 4496 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:02:49.030  INFO 4496 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:02:56.583  INFO 4508 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4508 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:02:56.584  INFO 4508 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:02:57.879  INFO 4508 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d8a2c074] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:02:59.242  INFO 4508 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:03:00.221  INFO 4508 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:03:00.305  INFO 4508 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.193 seconds (JVM running for 10.75)
-2020-05-16 21:03:00.693  INFO 4508 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:03:00.698  WARN 4508 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:03:00.882  INFO 4508 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:04:44.769  WARN 4508 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m42s573ms).
-2020-05-16 21:05:22.118  INFO 4508 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:05:22.126  INFO 4508 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:05:22.149  INFO 4508 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:05:31.350  INFO 4513 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4513 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:05:31.352  INFO 4513 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:05:32.735  INFO 4513 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c80a0e3d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:05:34.007  INFO 4513 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:05:35.007  INFO 4513 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:05:35.083  INFO 4513 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.373 seconds (JVM running for 11.132)
-2020-05-16 21:05:35.469  INFO 4513 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:05:35.473  WARN 4513 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:05:35.671  INFO 4513 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:09:04.094  WARN 4513 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m28s318ms).
-2020-05-16 21:09:04.140  INFO 4513 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:09:04.155  INFO 4513 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:09:04.237  INFO 4513 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:09:15.568  INFO 4531 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4531 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:09:15.569  INFO 4531 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:09:16.805  INFO 4531 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2dd8104a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:09:18.172  INFO 4531 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:09:19.160  INFO 4531 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:09:19.242  INFO 4531 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.069 seconds (JVM running for 10.146)
-2020-05-16 21:09:19.736  INFO 4531 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:09:19.740  WARN 4531 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:09:19.964  INFO 4531 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:10:31.160  INFO 4531 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:10:31.163  INFO 4531 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:10:31.173  INFO 4531 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:12:33.299  INFO 4549 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4549 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:12:33.300  INFO 4549 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:12:34.608  INFO 4549 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7993531d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:12:35.989  INFO 4549 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:12:37.009  INFO 4549 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:12:37.099  INFO 4549 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.222 seconds (JVM running for 10.255)
-2020-05-16 21:12:37.500  INFO 4549 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:12:37.504  WARN 4549 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:12:37.695  INFO 4549 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:16:55.642  WARN 4549 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m17s844ms).
-2020-05-16 21:16:55.689  INFO 4549 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:16:55.693  INFO 4549 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:16:55.708  INFO 4549 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:18:48.776  INFO 4563 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4563 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:18:48.777  INFO 4563 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:18:50.435  INFO 4563 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c16b4743] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:18:52.262  INFO 4563 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:18:53.353  INFO 4563 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:18:53.435  INFO 4563 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.192 seconds (JVM running for 11.308)
-2020-05-16 21:18:53.816  INFO 4563 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:18:53.820  WARN 4563 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:18:54.055  INFO 4563 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:18:57.194  INFO 4563 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:18:57.200  INFO 4563 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:18:57.213  INFO 4563 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-05-16 21:21:50.990  INFO 4570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 4570 (started by wangxin in /Users/wangxin/code/java/school)
-2020-05-16 21:21:50.991  INFO 4570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
-2020-05-16 21:21:52.325  INFO 4570 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d3d80b92] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-16 21:21:53.632  INFO 4570 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:21:54.627  INFO 4570 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2020-05-16 21:21:54.707  INFO 4570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.204 seconds (JVM running for 10.25)
-2020-05-16 21:21:55.074  INFO 4570 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-05-16 21:21:55.079  WARN 4570 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2020-05-16 21:21:55.229  INFO 4570 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-05-16 21:22:26.339  INFO 4570 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-16 21:22:26.342  INFO 4570 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-05-16 21:22:26.350  INFO 4570 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:12:17.415  INFO 16199 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16199 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:12:17.489  INFO 16199 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:12:19.777  INFO 16199 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$54a39923] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:12:21.397  INFO 16199 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:12:22.543  INFO 16199 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:12:22.629  INFO 16199 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.861 seconds (JVM running for 11.965)
+2020-05-20 00:12:23.078  INFO 16199 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:12:23.082  WARN 16199 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:12:23.283  INFO 16199 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:12:34.835  INFO 16199 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:12:34.841  INFO 16199 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:12:34.851  INFO 16199 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:15:01.250  INFO 16224 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16224 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:15:01.251  INFO 16224 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:15:02.814  INFO 16224 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$dc53dd1c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:15:04.188  INFO 16224 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:15:05.175  INFO 16224 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:15:05.248  INFO 16224 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.381 seconds (JVM running for 10.436)
+2020-05-20 00:15:05.641  INFO 16224 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:15:05.646  WARN 16224 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:15:05.843  INFO 16224 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:15:13.458  INFO 16224 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:15:13.462  INFO 16224 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:15:13.471  INFO 16224 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:23:05.227  INFO 16277 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16277 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:23:05.227  INFO 16277 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:23:06.624  INFO 16277 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$98b3dc42] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:23:08.011  INFO 16277 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:23:09.013  INFO 16277 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:23:09.099  INFO 16277 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.358 seconds (JVM running for 10.505)
+2020-05-20 00:23:09.532  INFO 16277 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:23:09.536  WARN 16277 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:23:09.740  INFO 16277 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:24:03.771  INFO 16277 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:24:03.774  INFO 16277 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:24:03.788  INFO 16277 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:25:24.590  INFO 16292 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16292 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:25:24.591  INFO 16292 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:25:26.359  INFO 16292 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$eba0767] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:25:27.824  INFO 16292 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:25:29.021  INFO 16292 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:25:29.139  INFO 16292 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.292 seconds (JVM running for 11.386)
+2020-05-20 00:25:29.662  INFO 16292 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:25:29.667  WARN 16292 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:25:29.904  INFO 16292 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:25:50.615  INFO 16292 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:25:50.618  INFO 16292 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:25:50.629  INFO 16292 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:28:09.461  INFO 16304 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16304 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:28:09.462  INFO 16304 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:28:10.869  INFO 16304 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$82562e30] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:28:12.279  INFO 16304 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:28:13.334  INFO 16304 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:28:13.467  INFO 16304 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.731 seconds (JVM running for 11.236)
+2020-05-20 00:28:13.944  INFO 16304 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:28:13.948  WARN 16304 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:28:14.172  INFO 16304 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:28:14.324  INFO 16304 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:28:14.328  INFO 16304 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:28:14.346  INFO 16304 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:28:38.452  INFO 16308 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16308 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:28:38.452  INFO 16308 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:28:39.951  INFO 16308 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$679b0c1d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:28:41.416  INFO 16308 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:28:42.514  INFO 16308 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:28:42.598  INFO 16308 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.554 seconds (JVM running for 10.584)
+2020-05-20 00:28:42.999  INFO 16308 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:28:43.004  WARN 16308 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:28:43.198  INFO 16308 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:28:50.694  INFO 16308 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:28:50.697  INFO 16308 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:28:50.712  INFO 16308 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:39:58.526  INFO 16376 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16376 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:39:58.526  INFO 16376 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:39:59.728  INFO 16376 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$744dab99] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:40:01.143  INFO 16376 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:40:02.146  INFO 16376 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:40:02.231  INFO 16376 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.148 seconds (JVM running for 10.301)
+2020-05-20 00:40:02.657  INFO 16376 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:40:02.661  WARN 16376 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:40:02.830  INFO 16376 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:40:09.618  INFO 16376 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:40:09.622  INFO 16376 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:40:09.639  INFO 16376 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:43:44.130  INFO 16391 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16391 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:43:44.131  INFO 16391 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:43:45.476  INFO 16391 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$547d5082] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:43:46.898  INFO 16391 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:43:48.011  INFO 16391 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:43:48.100  INFO 16391 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.561 seconds (JVM running for 10.675)
+2020-05-20 00:43:48.568  INFO 16391 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:43:48.576  WARN 16391 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:43:48.780  INFO 16391 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:44:44.391  INFO 16391 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:44:44.397  INFO 16391 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:44:44.415  INFO 16391 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:51:29.325  INFO 16420 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16420 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:51:29.326  INFO 16420 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:51:30.556  INFO 16420 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$10be45d9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:51:31.847  INFO 16420 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:51:32.891  INFO 16420 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:51:32.977  INFO 16420 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.049 seconds (JVM running for 10.108)
+2020-05-20 00:51:33.481  INFO 16420 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:51:33.486  WARN 16420 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:51:33.692  INFO 16420 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:51:40.039  INFO 16420 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:51:40.043  INFO 16420 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:51:40.056  INFO 16420 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 00:59:16.198  INFO 16432 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16432 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 00:59:16.199  INFO 16432 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 00:59:17.432  INFO 16432 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a627563d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 00:59:18.856  INFO 16432 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:59:19.851  INFO 16432 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 00:59:19.936  INFO 16432 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.121 seconds (JVM running for 10.194)
+2020-05-20 00:59:20.350  INFO 16432 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 00:59:20.356  WARN 16432 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 00:59:20.571  INFO 16432 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 00:59:20.718  INFO 16432 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 00:59:20.723  INFO 16432 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 00:59:20.735  INFO 16432 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:02:07.986  INFO 16441 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16441 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:02:07.987  INFO 16441 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:02:09.163  INFO 16441 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b96216f2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:02:10.578  INFO 16441 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:02:11.552  INFO 16441 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:02:11.635  INFO 16441 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.126 seconds (JVM running for 10.262)
+2020-05-20 01:02:12.022  INFO 16441 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:02:12.026  WARN 16441 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:02:12.193  INFO 16441 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:07:02.166  WARN 16441 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m49s868ms).
+2020-05-20 01:07:02.256  INFO 16441 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:07:02.261  INFO 16441 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:07:02.277  INFO 16441 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:07:12.516  INFO 16451 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16451 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:07:12.516  INFO 16451 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:07:13.930  INFO 16451 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$f49faffa] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:07:15.314  INFO 16451 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:07:16.333  INFO 16451 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:07:16.424  INFO 16451 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.418 seconds (JVM running for 10.482)
+2020-05-20 01:07:16.820  INFO 16451 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:07:16.828  WARN 16451 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:07:17.049  INFO 16451 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:08:36.464  INFO 16451 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:08:36.473  INFO 16451 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:08:36.484  INFO 16451 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:09:13.021  INFO 16456 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16456 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:09:13.022  INFO 16456 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:09:14.440  INFO 16456 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7fcca4de] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:09:15.864  INFO 16456 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:09:16.885  INFO 16456 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:09:16.965  INFO 16456 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.539 seconds (JVM running for 10.971)
+2020-05-20 01:09:17.410  INFO 16456 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:09:17.414  WARN 16456 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:09:17.654  INFO 16456 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:09:26.224  INFO 16456 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:09:26.228  INFO 16456 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:09:26.240  INFO 16456 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:17:41.156  INFO 16495 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16495 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:17:41.157  INFO 16495 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:17:42.534  INFO 16495 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$94d4f57c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:17:43.879  INFO 16495 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:17:45.038  INFO 16495 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:17:45.166  INFO 16495 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.526 seconds (JVM running for 10.662)
+2020-05-20 01:17:45.620  INFO 16495 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:17:45.624  WARN 16495 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:17:45.833  INFO 16495 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:17:59.822  INFO 16495 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:17:59.825  INFO 16495 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:17:59.837  INFO 16495 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:19:37.947  INFO 16501 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16501 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:19:37.948  INFO 16501 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:19:40.504  INFO 16501 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e82c10eb] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:19:43.470  INFO 16501 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:19:44.819  INFO 16501 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:19:44.984  INFO 16501 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 12.631 seconds (JVM running for 13.666)
+2020-05-20 01:19:45.548  INFO 16501 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:19:45.553  WARN 16501 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:19:45.809  INFO 16501 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:20:41.082  INFO 16501 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:20:41.089  INFO 16501 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:20:41.103  INFO 16501 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:28:51.227  INFO 16521 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16521 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:28:51.228  INFO 16521 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:28:52.845  INFO 16521 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7fcca4de] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:28:54.241  INFO 16521 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:28:55.444  INFO 16521 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:28:55.590  INFO 16521 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.88 seconds (JVM running for 11.11)
+2020-05-20 01:28:56.222  INFO 16521 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:28:56.233  WARN 16521 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:28:56.472  INFO 16521 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:29:08.705  INFO 16521 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:29:08.709  INFO 16521 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:29:08.717  INFO 16521 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:29:18.733  INFO 16526 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16526 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:29:18.733  INFO 16526 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:29:20.139  INFO 16526 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9aa4a101] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:29:21.523  INFO 16526 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:29:22.573  INFO 16526 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:29:22.660  INFO 16526 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.476 seconds (JVM running for 10.658)
+2020-05-20 01:29:23.077  INFO 16526 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:29:23.081  WARN 16526 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:29:23.275  INFO 16526 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:30:15.068  WARN 16526 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=51s688ms).
+2020-05-20 01:30:15.123  INFO 16526 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:30:15.128  INFO 16526 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:30:15.142  INFO 16526 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:30:44.471  INFO 16536 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16536 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:30:44.472  INFO 16536 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:30:45.796  INFO 16536 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$8c9aeb78] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:30:47.195  INFO 16536 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:30:48.337  INFO 16536 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:30:48.433  INFO 16536 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.414 seconds (JVM running for 10.558)
+2020-05-20 01:30:48.823  INFO 16536 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:30:48.827  WARN 16536 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:30:49.024  INFO 16536 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:31:07.990  INFO 16536 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:31:07.996  INFO 16536 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:31:08.009  INFO 16536 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:37:38.740  INFO 16570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16570 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:37:38.741  INFO 16570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:37:40.018  INFO 16570 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$496e158c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:37:41.439  INFO 16570 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:37:42.432  INFO 16570 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:37:42.512  INFO 16570 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.503 seconds (JVM running for 10.609)
+2020-05-20 01:37:42.900  INFO 16570 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:37:42.904  WARN 16570 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:37:43.115  INFO 16570 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:39:39.340  WARN 16570 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m14s492ms).
+2020-05-20 01:42:32.932  WARN 16570 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m53s591ms).
+2020-05-20 01:42:32.996  INFO 16570 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:42:33.003  INFO 16570 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:42:33.018  INFO 16570 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:44:04.584  INFO 16595 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16595 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:44:04.585  INFO 16595 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:44:06.069  INFO 16595 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$445410da] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:44:07.509  INFO 16595 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:44:08.683  INFO 16595 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:44:08.774  INFO 16595 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.646 seconds (JVM running for 10.895)
+2020-05-20 01:44:09.249  INFO 16595 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:44:09.254  WARN 16595 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:44:09.497  INFO 16595 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:45:36.169  WARN 16595 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m26s568ms).
+2020-05-20 01:45:42.279  INFO 16595 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:45:42.284  INFO 16595 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:45:42.296  INFO 16595 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:45:50.932  INFO 16599 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16599 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:45:50.933  INFO 16599 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:45:52.389  INFO 16599 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$74d8aeb8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:45:53.682  INFO 16599 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:45:54.782  INFO 16599 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:45:54.872  INFO 16599 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.337 seconds (JVM running for 10.385)
+2020-05-20 01:45:55.333  INFO 16599 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:45:55.337  WARN 16599 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:45:55.546  INFO 16599 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:46:26.365  INFO 16599 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:46:26.372  INFO 16599 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:46:26.384  INFO 16599 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:46:36.425  INFO 16608 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16608 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:46:36.426  INFO 16608 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:46:37.807  INFO 16608 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e82c10eb] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:46:39.237  INFO 16608 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:46:40.314  INFO 16608 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:46:40.397  INFO 16608 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.411 seconds (JVM running for 10.676)
+2020-05-20 01:46:40.833  INFO 16608 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:46:40.837  WARN 16608 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:46:41.019  INFO 16608 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:48:44.133  WARN 16608 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m31s368ms).
+2020-05-20 01:48:44.189  INFO 16608 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:48:44.193  INFO 16608 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:48:44.203  INFO 16608 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:48:54.865  INFO 16614 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16614 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:48:54.866  INFO 16614 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:48:56.599  INFO 16614 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$47319400] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:48:58.293  INFO 16614 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:48:59.401  INFO 16614 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:48:59.491  INFO 16614 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.205 seconds (JVM running for 11.64)
+2020-05-20 01:48:59.968  INFO 16614 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:48:59.972  WARN 16614 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:49:00.166  INFO 16614 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:51:13.284  WARN 16614 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m13s16ms).
+2020-05-20 01:51:13.337  INFO 16614 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:51:13.341  INFO 16614 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:51:13.355  INFO 16614 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:51:22.267  INFO 16618 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16618 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:51:22.268  INFO 16618 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:51:23.735  INFO 16618 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$81c368e2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:51:25.146  INFO 16618 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:51:26.230  INFO 16618 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:51:26.314  INFO 16618 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.563 seconds (JVM running for 10.831)
+2020-05-20 01:51:26.710  INFO 16618 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:51:26.713  WARN 16618 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:51:26.875  INFO 16618 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:51:59.250  INFO 16618 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:51:59.258  INFO 16618 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:51:59.271  INFO 16618 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:54:41.346  INFO 16628 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16628 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:54:41.347  INFO 16628 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:54:42.710  INFO 16628 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$837b627e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:54:44.143  INFO 16628 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:54:45.170  INFO 16628 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:54:45.250  INFO 16628 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.373 seconds (JVM running for 10.635)
+2020-05-20 01:54:45.640  INFO 16628 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:54:45.644  WARN 16628 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:54:45.814  INFO 16628 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:54:59.995  INFO 16628 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:55:00.002  INFO 16628 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:55:00.019  INFO 16628 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:55:09.269  INFO 16632 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16632 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:55:09.270  INFO 16632 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:55:10.520  INFO 16632 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d1460e9a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:55:12.027  INFO 16632 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:55:13.058  INFO 16632 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:55:13.135  INFO 16632 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.335 seconds (JVM running for 10.419)
+2020-05-20 01:55:13.563  INFO 16632 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:55:13.567  WARN 16632 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:55:13.741  INFO 16632 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:55:59.983  WARN 16632 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=46s139ms).
+2020-05-20 01:56:00.073  INFO 16632 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:56:00.077  INFO 16632 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:56:00.087  INFO 16632 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:56:09.056  INFO 16639 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16639 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:56:09.058  INFO 16639 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:56:10.534  INFO 16639 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$856a7738] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:56:12.476  INFO 16639 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:56:13.990  INFO 16639 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:56:14.078  INFO 16639 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.373 seconds (JVM running for 11.446)
+2020-05-20 01:56:14.444  INFO 16639 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:56:14.450  WARN 16639 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:56:14.725  INFO 16639 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 01:57:58.933  WARN 16639 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s103ms).
+2020-05-20 01:57:58.991  INFO 16639 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:57:58.994  INFO 16639 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 01:57:59.011  INFO 16639 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 01:58:09.226  INFO 16648 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16648 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 01:58:09.227  INFO 16648 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 01:58:10.663  INFO 16648 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2d2a0be5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 01:58:12.080  INFO 16648 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 01:58:13.154  INFO 16648 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 01:58:13.252  INFO 16648 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.448 seconds (JVM running for 10.611)
+2020-05-20 01:58:13.658  INFO 16648 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 01:58:13.663  WARN 16648 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 01:58:13.880  INFO 16648 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:00:32.556  WARN 16648 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m18s572ms).
+2020-05-20 02:00:32.614  INFO 16648 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:00:32.617  INFO 16648 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:00:32.628  INFO 16648 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:00:42.495  INFO 16654 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16654 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:00:42.496  INFO 16654 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:00:43.948  INFO 16654 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a8955564] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:00:45.334  INFO 16654 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:00:46.366  INFO 16654 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:00:46.454  INFO 16654 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.353 seconds (JVM running for 10.361)
+2020-05-20 02:00:46.907  INFO 16654 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:00:46.912  WARN 16654 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:00:47.115  INFO 16654 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:02:26.844  WARN 16654 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m39s625ms).
+2020-05-20 02:02:26.902  INFO 16654 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:02:26.907  INFO 16654 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:02:26.917  INFO 16654 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:02:34.362  INFO 16661 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16661 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:02:34.363  INFO 16661 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:02:35.835  INFO 16661 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$10be45d9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:02:37.253  INFO 16661 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:02:38.297  INFO 16661 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:02:38.386  INFO 16661 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.516 seconds (JVM running for 10.897)
+2020-05-20 02:02:38.873  INFO 16661 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:02:38.877  WARN 16661 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:02:39.105  INFO 16661 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:03:43.285  WARN 16661 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m4s76ms).
+2020-05-20 02:03:43.339  INFO 16661 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:03:43.343  INFO 16661 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:03:43.355  INFO 16661 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:03:54.014  INFO 16668 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16668 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:03:54.015  INFO 16668 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:03:56.328  INFO 16668 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$432c91ea] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:03:58.650  INFO 16668 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:03:59.927  INFO 16668 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:04:00.044  INFO 16668 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 11.489 seconds (JVM running for 12.483)
+2020-05-20 02:04:00.587  INFO 16668 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:04:00.600  WARN 16668 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:04:00.813  INFO 16668 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:05:24.878  WARN 16668 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m23s962ms).
+2020-05-20 02:05:24.935  INFO 16668 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:05:24.942  INFO 16668 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:05:24.948  INFO 16668 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:06:28.261  INFO 16677 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16677 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:06:28.262  INFO 16677 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:06:29.884  INFO 16677 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$75f890d4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:06:31.413  INFO 16677 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:06:32.457  INFO 16677 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:06:32.537  INFO 16677 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.905 seconds (JVM running for 11.24)
+2020-05-20 02:06:32.897  INFO 16677 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:06:32.902  WARN 16677 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:06:33.132  INFO 16677 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:07:33.472  WARN 16677 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m236ms).
+2020-05-20 02:07:33.523  INFO 16677 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:07:33.527  INFO 16677 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:07:33.539  INFO 16677 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:11:19.802  INFO 16687 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16687 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:11:19.802  INFO 16687 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:11:21.270  INFO 16687 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7fcca4de] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:11:22.739  INFO 16687 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:11:24.284  INFO 16687 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:11:24.359  INFO 16687 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 10.052 seconds (JVM running for 11.14)
+2020-05-20 02:11:24.720  INFO 16687 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:11:24.724  WARN 16687 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:11:25.027  INFO 16687 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:11:59.519  INFO 16687 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:11:59.525  INFO 16687 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:11:59.543  INFO 16687 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:12:10.206  INFO 16696 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16696 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:12:10.207  INFO 16696 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:12:11.537  INFO 16696 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$eb35b4c8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:12:12.890  INFO 16696 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:12:13.951  INFO 16696 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:12:14.031  INFO 16696 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.56 seconds (JVM running for 10.674)
+2020-05-20 02:12:14.395  INFO 16696 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:12:14.400  WARN 16696 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:12:14.597  INFO 16696 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:13:31.793  WARN 16696 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m17s92ms).
+2020-05-20 02:14:02.828  INFO 16696 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:14:02.833  INFO 16696 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:14:02.849  INFO 16696 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:14:12.868  INFO 16701 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16701 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:14:12.869  INFO 16701 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:14:14.554  INFO 16701 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$bcec86ec] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:14:16.107  INFO 16701 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:14:17.242  INFO 16701 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:14:17.316  INFO 16701 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.862 seconds (JVM running for 10.833)
+2020-05-20 02:14:17.786  INFO 16701 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:14:17.790  WARN 16701 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:14:18.000  INFO 16701 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:15:09.509  INFO 16701 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:15:09.514  INFO 16701 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:15:09.532  INFO 16701 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:17:51.493  INFO 16719 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16719 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:17:51.494  INFO 16719 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:17:52.840  INFO 16719 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2b1612d3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:17:54.305  INFO 16719 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:17:55.306  INFO 16719 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:17:55.393  INFO 16719 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.457 seconds (JVM running for 10.66)
+2020-05-20 02:17:55.818  INFO 16719 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:17:55.823  WARN 16719 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:17:56.048  INFO 16719 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:19:40.870  WARN 16719 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s717ms).
+2020-05-20 02:19:40.920  INFO 16719 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:19:40.923  INFO 16719 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:19:40.936  INFO 16719 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:20:24.736  INFO 16725 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16725 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:20:24.737  INFO 16725 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:20:26.018  INFO 16725 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$837b627e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:20:27.610  INFO 16725 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:20:28.781  INFO 16725 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:20:28.865  INFO 16725 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.531 seconds (JVM running for 10.542)
+2020-05-20 02:20:29.259  INFO 16725 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:20:29.263  WARN 16725 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:20:29.449  INFO 16725 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:22:16.526  WARN 16725 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m46s972ms).
+2020-05-20 02:22:16.578  INFO 16725 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:22:16.580  INFO 16725 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:22:16.591  INFO 16725 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:25:35.349  INFO 16755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16755 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:25:35.350  INFO 16755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:25:36.735  INFO 16755 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$78c6edcb] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:25:38.119  INFO 16755 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:25:39.153  INFO 16755 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:25:39.229  INFO 16755 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.595 seconds (JVM running for 10.876)
+2020-05-20 02:25:39.611  INFO 16755 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:25:39.616  WARN 16755 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:25:39.822  INFO 16755 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:26:46.403  INFO 16755 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:26:46.408  INFO 16755 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:26:46.419  INFO 16755 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:27:52.212  INFO 16768 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16768 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:27:52.214  INFO 16768 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:27:54.356  INFO 16768 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7fcca4de] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:27:56.631  INFO 16768 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:27:58.155  INFO 16768 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:27:58.281  INFO 16768 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 11.675 seconds (JVM running for 12.978)
+2020-05-20 02:27:58.863  INFO 16768 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:27:58.871  WARN 16768 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:27:59.177  INFO 16768 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:30:15.292  WARN 16768 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=45s527ms).
+2020-05-20 02:30:15.337  INFO 16768 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:30:15.340  INFO 16768 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:30:15.352  INFO 16768 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:31:07.632  INFO 16778 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16778 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:31:07.633  INFO 16778 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:31:09.005  INFO 16778 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d13cab32] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:31:10.383  INFO 16778 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:31:11.394  INFO 16778 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:31:11.476  INFO 16778 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.332 seconds (JVM running for 10.437)
+2020-05-20 02:31:11.895  INFO 16778 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:31:11.899  WARN 16778 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:31:12.222  INFO 16778 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:32:45.077  WARN 16778 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=48s889ms).
+2020-05-20 02:33:41.680  INFO 16778 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:33:41.683  INFO 16778 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:33:41.693  INFO 16778 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 02:34:09.349  INFO 16788 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16788 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 02:34:09.350  INFO 16788 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 02:34:11.442  INFO 16788 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b250789b] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 02:34:13.638  INFO 16788 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:34:15.090  INFO 16788 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 02:34:15.206  INFO 16788 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 11.569 seconds (JVM running for 13.223)
+2020-05-20 02:34:15.746  INFO 16788 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 02:34:15.755  WARN 16788 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 02:34:16.055  INFO 16788 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 02:35:52.339  INFO 16788 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 02:35:52.345  INFO 16788 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 02:35:52.358  INFO 16788 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 03:30:28.537  INFO 16919 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 16919 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 03:30:28.538  INFO 16919 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 03:30:29.698  INFO 16919 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$93b12b25] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 03:30:30.982  INFO 16919 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 03:30:31.810  INFO 16919 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 03:30:31.871  INFO 16919 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 8.819 seconds (JVM running for 9.904)
+2020-05-20 03:30:32.248  INFO 16919 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 03:30:32.253  WARN 16919 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 03:30:32.458  INFO 16919 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 03:37:36.563  INFO 16919 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 03:37:36.567  INFO 16919 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 03:37:36.576  INFO 16919 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 03:43:09.251  INFO 17074 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 17074 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 03:43:09.253  INFO 17074 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 03:43:10.433  INFO 17074 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$6b35474f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 03:43:11.690  INFO 17074 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 03:43:12.567  INFO 17074 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 03:43:12.631  INFO 17074 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 8.742 seconds (JVM running for 9.617)
+2020-05-20 03:43:13.020  INFO 17074 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 03:43:13.025  WARN 17074 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 03:43:13.200  INFO 17074 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 03:50:41.723  INFO 17074 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 03:50:41.727  INFO 17074 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 03:50:41.736  INFO 17074 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-05-20 03:59:19.024  INFO 17133 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Starting TimeTableServiceTest on wangxindeMacBook-Pro.local with PID 17133 (started by wangxin in /Users/wangxin/code/java/school)
+2020-05-20 03:59:19.025  INFO 17133 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : The following profiles are active: dev
+2020-05-20 03:59:20.541  INFO 17133 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2481b95a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-20 03:59:21.960  INFO 17133 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-20 03:59:23.008  INFO 17133 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-05-20 03:59:23.087  INFO 17133 --- [main] c.w.s.m.t.service.TimeTableServiceTest   : Started TimeTableServiceTest in 9.58 seconds (JVM running for 10.856)
+2020-05-20 03:59:23.533  INFO 17133 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-05-20 03:59:23.538  WARN 17133 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2020-05-20 03:59:23.759  INFO 17133 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-05-20 04:07:34.517  INFO 17133 --- [Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-20 04:07:34.522  INFO 17133 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-05-20 04:07:34.529  INFO 17133 --- [Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

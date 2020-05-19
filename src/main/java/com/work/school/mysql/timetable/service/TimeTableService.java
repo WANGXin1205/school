@@ -4,6 +4,7 @@ import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
+import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -68,14 +69,14 @@ public class TimeTableService {
      *
      * @return
      */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableWithForwardCheckDynamicWeightBacktracking() {
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum backtrackingTypeEnum) {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
 
         // 准备默认学校配置
         TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = this.getTimeTablingUseBacktrackingDTO();
         TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO = this.getTimeTablingUseFCDWBacktrackingDTO(timeTablingUseBacktrackingDTO);
 
-        var forwardCheckDynamicWeightBacktrackingResult = backtrackingService.forwardCheckDynamicWeightBacktracking(timeTablingUseFCDWBacktrackingDTO);
+        var forwardCheckDynamicWeightBacktrackingResult = backtrackingService.forwardCheckDynamicWeightBacktracking(timeTablingUseFCDWBacktrackingDTO, backtrackingTypeEnum);
         if (!forwardCheckDynamicWeightBacktrackingResult.isSuccess()) {
             cattyResult.setMessage(forwardCheckDynamicWeightBacktrackingResult.getMessage());
             return cattyResult;
