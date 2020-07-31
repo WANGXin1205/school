@@ -84,6 +84,7 @@ public class TimeTableServiceTest {
             long start = System.currentTimeMillis();
             try {
                 var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_DW_BA);
+                Assert.assertTrue(cattyResult.isSuccess());
             } catch (Exception ignored) {
                 System.out.println("失败次序为:" + i);
             }

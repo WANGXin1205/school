@@ -34,7 +34,7 @@ public class BacktrackingService {
     /**
      * 接受概率
      */
-    private static final BigDecimal ACCEPT_PRO = new BigDecimal("0.1");
+    private static final BigDecimal ACCEPT_PRO = new BigDecimal("0");
 
     @Resource
     private SubjectService subjectService;
@@ -573,7 +573,7 @@ public class BacktrackingService {
                 var timeTableConstraintDTOList = timeTablingUseFCDWBacktrackingDTO.getTimeTableConstraintDTOList();
                 this.getOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap, timeTableConstraintDTOList);
 
-                var subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
+                var subjectIdCanUseMap = getSubjectIdCanUseMap(order, orderSubjectIdCanUseMap,timeTablingUseFCDWBacktrackingDTO);
 
                 var backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                 // 检查是否有回溯课程
@@ -585,7 +585,7 @@ public class BacktrackingService {
                     this.clearConstraint(order, timeTablingUseFCDWBacktrackingDTO);
                 }
                 if (!backFlag) {
-                    subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
+                    subjectIdCanUseMap = getSubjectIdCanUseMap(order, orderSubjectIdCanUseMap,timeTablingUseFCDWBacktrackingDTO);
                     Integer chooseSubjectId = null;
                     if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_BA)) {
                         // 选择一个课程
@@ -624,7 +624,7 @@ public class BacktrackingService {
                         // 判断这一层的回溯点是否都已经使用，如果没有使用完毕，不需要回溯，选择下一个课程
                         backFlag = subjectIdCanUseMap.values().stream().allMatch(x -> x.equals(false));
                         if (!backFlag) {
-                            subjectIdCanUseMap = getSubjectIdCanUseMap(order, timeTablingUseFCDWBacktrackingDTO);
+                            subjectIdCanUseMap = getSubjectIdCanUseMap(order, orderSubjectIdCanUseMap,timeTablingUseFCDWBacktrackingDTO);
                             // 回溯点不清零，记录该点的排课课程，下次不再选择这么课程
                             chooseSubjectId = null;
                             if (backtrackingTypeEnum.equals(BacktrackingTypeEnum.FC_BA)) {
@@ -920,8 +920,8 @@ public class BacktrackingService {
                 orderSubjectIdCanUseMap.put(timeTableConstraintDTO.getOrderConstraint(), subjectIdCanUseMap);
                 timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
             }
-            if ((timeTableConstraintDTO.getOrder().equals(order) && timeTableConstraintDTO.getOrderConstraint().equals(order))
-                    || timeTableConstraintDTO.getOrder() < order) {
+            if ((timeTableConstraintDTO.getOrder().equals(order) || timeTableConstraintDTO.getOrder() < order)
+                    && timeTableConstraintDTO.getOrderConstraint().equals(order)){
                 newTimeTableConstraintDTOList.add(timeTableConstraintDTO);
             }
         }
@@ -931,25 +931,28 @@ public class BacktrackingService {
         return timeTablingUseFCDWBacktrackingDTO;
     }
 
-
     /**
+     *
+     * @param order
+     * @param orderSubjectIdCanUseMap
      * @param timeTablingUseFCDWBacktrackingDTO
      * @return
      */
-    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer order, TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
-        var orderSubjectIdCanUseMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
+    private HashMap<Integer, Boolean> getSubjectIdCanUseMap(Integer order, HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap,TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO) {
+
         var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(order);
         var orderGradeClassNumWorkDayTimeMap = timeTablingUseFCDWBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap();
         var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
         var gradeClassNumSubjectFrequencyMap = timeTablingUseFCDWBacktrackingDTO.getGradeClassNumSubjectFrequencyMap();
         var classNumSubjectFrequencyMap = gradeClassNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getGrade());
         var subjectFrequencyMap = classNumSubjectFrequencyMap.get(gradeClassNumWorkDayTimeDTO.getClassNum());
-        for (Integer key : subjectIdCanUseMap.keySet()) {
+        for (Integer key : subjectFrequencyMap.keySet()) {
             var frequency = subjectFrequencyMap.get(key);
-            if (frequency.equals(0)) {
+            if (frequency < 0) {
                 subjectIdCanUseMap.put(key, false);
             }
         }
+
         return subjectIdCanUseMap;
     }
 
