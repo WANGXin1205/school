@@ -32,7 +32,7 @@ public class SubjectService {
     private SubjectDetailsMapper subjectDetailsMapper;
 
     private static final double MAX_EXCITATION = 1;
-    private static final double SUP_EXCITATION = 0.05;
+    private static final double SUP_EXCITATION = 0.2;
 
     /**
      * 查询所有科目
@@ -145,6 +145,27 @@ public class SubjectService {
                 var firstClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningFirTime());
                 var secClassSubjectId = timeSubjectIdMap.get(SchoolTimeTableDefaultValueDTO.getMorningSecTime());
                 this.makeChineseOrMathMaxWeight(subjectWeightDTOList, firstClassSubjectId, secClassSubjectId);
+            }
+
+            var random = (SUP_EXCITATION + (MAX_EXCITATION - SUP_EXCITATION)  * (maxOrder - order) / maxOrder) * SubjectWeightDefaultValueDTO.getExtendWeight();
+            // 如果下午，围棋权重增加
+            if (time > SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
+                for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                    if (subjectWeightDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectGoId())) {
+                        int weight = (int) (random  * subjectWeightDTO.getFrequency());
+                        subjectWeightDTO.setWeight(weight + subjectWeightDTO.getWeight());
+                    }
+                }
+            }
+
+            // 如果上午最后一节，下午最后三节课，体育课权重增加
+            if (time >= SchoolTimeTableDefaultValueDTO.getAfternoonSecTime() || time.equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime())) {
+                for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                    if (subjectWeightDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectSportId())) {
+                        int weight = (int) (random * subjectWeightDTO.getFrequency());
+                        subjectWeightDTO.setWeight(weight + subjectWeightDTO.getWeight());
+                    }
+                }
             }
 
             var subjectGradeClassTeacherCountMap = computerSubjectWeightDTO.getSubjectGradeClassTeacherCountMap();
@@ -429,7 +450,7 @@ public class SubjectService {
                     || SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(x.getType());
             if (otherSubjectFlag) {
                 var weight = x.getFrequency() * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType() - x.getType()) * SubjectWeightDefaultValueDTO.getExtendWeight();
-                weight = (int) ((SUP_EXCITATION + (MAX_EXCITATION - SUP_EXCITATION) * Math.random() * (maxOrder - order) / maxOrder) * weight + x.getWeight());
+                weight = (int) (Math.random() * weight + x.getWeight());
                 x.setWeight(weight);
             }
         }
@@ -472,7 +493,7 @@ public class SubjectService {
                 subjectGradeClassDTO.setClassNum(classNum);
                 subjectGradeClassDTO.setSubjectId(x.getSubjectId());
                 Integer count = subjectGradeClassTeacherCountMap.get(subjectGradeClassDTO);
-                Integer weight = x.getWeight() + (int) ((SUP_EXCITATION + (MAX_EXCITATION - SUP_EXCITATION) * Math.random() * (maxOrder - order) / maxOrder) * count * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
+                Integer weight = x.getWeight() + (int) (Math.random()  * count * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
                 x.setWeight(weight);
             }
         }
@@ -493,12 +514,14 @@ public class SubjectService {
                                                HashMap<SubjectGradeClassDTO, Integer> subjectGradeClassTeacherCountMap) {
         for (SubjectWeightDTO x : subjectWeightDTOList) {
             if (!SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(x.getType())) {
+
                 SubjectGradeClassDTO subjectGradeClassDTO = new SubjectGradeClassDTO();
                 subjectGradeClassDTO.setGrade(grade);
                 subjectGradeClassDTO.setClassNum(classNum);
                 subjectGradeClassDTO.setSubjectId(x.getSubjectId());
-                Integer count = subjectGradeClassTeacherCountMap.get(subjectGradeClassDTO);
-                x.setWeight(x.getWeight() + count * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
+                var teachingCount = subjectGradeClassTeacherCountMap.get(subjectGradeClassDTO);
+                Integer weight = x.getWeight() + (int) (Math.random() * x.getFrequency() * teachingCount * SubjectWeightDefaultValueDTO.getExtendWeight());
+                x.setWeight(weight);
             }
         }
     }
@@ -512,7 +535,7 @@ public class SubjectService {
      */
     public void makeSubjectNumWeight(Integer order, Integer maxOrder, List<SubjectWeightDTO> subjectWeightDTOList) {
         for (SubjectWeightDTO x : subjectWeightDTOList) {
-            var weight = x.getWeight() + (int) (SUP_EXCITATION + (MAX_EXCITATION - SUP_EXCITATION) * Math.random() * (maxOrder - order) / maxOrder) * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight();
+            var weight = x.getWeight() + (int) (Math.random()  * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
             x.setWeight(weight);
         }
     }
@@ -525,7 +548,8 @@ public class SubjectService {
      */
     public void makeSubjectNumWeight(List<SubjectWeightDTO> subjectWeightDTOList) {
         for (SubjectWeightDTO x : subjectWeightDTOList) {
-            x.setWeight(x.getWeight() + x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
+            var weight = x.getWeight() + (int) (Math.random() * x.getFrequency() * SubjectWeightDefaultValueDTO.getExtendWeight());
+            x.setWeight(weight);
         }
     }
 
@@ -542,7 +566,7 @@ public class SubjectService {
             if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(x.getType())) {
                 var maxCount = maxClassroomMap.get(x.getSubjectId());
                 Integer weight = x.getWeight() + (int) ((SchoolTimeTableDefaultValueDTO.getClassroomMaxCount() - maxCount) * SubjectWeightDefaultValueDTO.getExtendWeight()
-                        * ((SUP_EXCITATION + (MAX_EXCITATION - SUP_EXCITATION) * Math.random() * (maxOrder - order) / maxOrder)));
+                        * Math.random());
                 x.setWeight(weight);
             }
         }
@@ -557,8 +581,10 @@ public class SubjectService {
     private void makeOtherNeedClassroomSubjectWeight(List<SubjectWeightDTO> subjectWeightDTOList, HashMap<Integer, Integer> maxClassroomMap) {
         for (SubjectWeightDTO x : subjectWeightDTOList) {
             if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(x.getType())) {
-                var maxCount = maxClassroomMap.get(x.getSubjectId());
-                x.setWeight(x.getWeight() + (SchoolTimeTableDefaultValueDTO.getClassroomMaxCount() - maxCount) * SubjectWeightDefaultValueDTO.getExtendWeight());
+                var roomCount = maxClassroomMap.get(x.getSubjectId());
+                Integer weight = x.getWeight() + (int) ((SchoolTimeTableDefaultValueDTO.getClassroomMaxCount()) * SubjectWeightDefaultValueDTO.getExtendWeight()
+                        * (Math.random() * roomCount));
+                x.setWeight(weight);
             }
         }
     }

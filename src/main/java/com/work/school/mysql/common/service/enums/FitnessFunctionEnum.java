@@ -4,7 +4,9 @@ package com.work.school.mysql.common.service.enums;
 import com.github.pagehelper.StringUtil;
 
 /**
- * Created by WANGXin on 2017/3/15.
+ * @Author : Growlithe
+ * @Date : 2019/3/7 7:18 PM
+ * @Description
  */
 public enum FitnessFunctionEnum {
     HARD_SATISFIED(1,"硬约束条件"),

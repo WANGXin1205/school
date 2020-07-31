@@ -23,6 +23,9 @@ public class FitnessScoreDTO {
     private Integer teacherOutMaxTimeCount;
     private Integer noMainSubjectCount;
     private Integer studentContinueSameClassCount;
+    private Integer goTimeNoAfternoonCount;
+    private Integer sportNoFinalClassCount;
+    private Integer noBestTimeBestSubjectCount;
 
     public Integer getHardScore() {
         return hardScore;
@@ -120,6 +123,30 @@ public class FitnessScoreDTO {
         this.studentContinueSameClassCount = studentContinueSameClassCount;
     }
 
+    public Integer getGoTimeNoAfternoonCount() {
+        return goTimeNoAfternoonCount;
+    }
+
+    public void setGoTimeNoAfternoonCount(Integer goTimeNoAfternoonCount) {
+        this.goTimeNoAfternoonCount = goTimeNoAfternoonCount;
+    }
+
+    public Integer getSportNoFinalClassCount() {
+        return sportNoFinalClassCount;
+    }
+
+    public void setSportNoFinalClassCount(Integer sportNoFinalClassCount) {
+        this.sportNoFinalClassCount = sportNoFinalClassCount;
+    }
+
+    public Integer getNoBestTimeBestSubjectCount() {
+        return noBestTimeBestSubjectCount;
+    }
+
+    public void setNoBestTimeBestSubjectCount(Integer noBestTimeBestSubjectCount) {
+        this.noBestTimeBestSubjectCount = noBestTimeBestSubjectCount;
+    }
+
     @Override
     public String toString() {
         return "FitnessScoreDTO{" +
@@ -135,6 +162,9 @@ public class FitnessScoreDTO {
                 ", teacherOutMaxTimeCount=" + teacherOutMaxTimeCount +
                 ", noMainSubjectCount=" + noMainSubjectCount +
                 ", studentContinueSameClassCount=" + studentContinueSameClassCount +
+                ", goTimeNoAfternoonCount=" + goTimeNoAfternoonCount +
+                ", sportNoFinalClassCount=" + sportNoFinalClassCount +
+                ", bestTimeBestSubjectCount=" + noBestTimeBestSubjectCount +
                 '}';
     }
 }

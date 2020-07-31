@@ -5,12 +5,9 @@ import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.ClassroomMaxCapacityService;
 import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
-import com.work.school.mysql.timetable.service.dto.CopyGeneDTO;
 import com.work.school.mysql.timetable.service.dto.FitnessScoreDTO;
 import com.work.school.mysql.timetable.service.dto.PopulationDTO;
 import org.apache.commons.collections4.CollectionUtils;
-import org.assertj.core.util.Lists;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -391,9 +388,8 @@ public class GeneticService {
         var bestScore = bestPopulation.getScore();
         var bestFitnessScore = new FitnessScoreDTO();
         bestFitnessScore.setScore(bestScore);
-        List<String> messageList = new ArrayList<>();
+//        List<String> messageList = new ArrayList<>();
         for (int evolutionTime = ZERO; evolutionTime < EVOLUTION_TIMES; evolutionTime++) {
-
             // 交叉和变异
             int evolutionTimes = CROSSOVER_TIMES + MUTATE_POPULATION;
             for (int i = ZERO; i < evolutionTimes; i++) {
@@ -428,24 +424,27 @@ public class GeneticService {
                 }
 
             }
-//            String message = "第" + (evolutionTime + 1) + "次运行，最优基因的得分为:" + bestFitnessScore.getScore()
-//                    + ",硬约束得分为:" + bestFitnessScore.getHardScore()
-//                    + ",其中每个班每节课都有课上约束冲突数为:" + bestFitnessScore.getEveryTimeHaveSubjectCount()
-//                    + ",一个班同一时间上了多节课冲突数为:" + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
-//                    + ",一个教师同一时间上了多节课冲突数为:" + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
-//                    + ",固定课程冲突数为:" + bestFitnessScore.getFixedSubjectIdCount()
-//                    + ",每天每班同一类型小课只能上一节冲突数为:" + bestFitnessScore.getOneClassMoreOtherSubject()
-//                    + ",功能部室达到最大数冲突数为:" + bestFitnessScore.getNeedAreaSubjectCount()
-//                    + ",软约束得分为:" + bestFitnessScore.getSoftScore()
-//                    + ",教师每天上课达到最大数量冲突数为:" + bestFitnessScore.getTeacherOutMaxTimeCount()
-//                    + ",最好的时间段上合适的课程冲突数为:" + bestFitnessScore.getNoMainSubjectCount()
-//                    + ",连堂课冲突数为:" + bestFitnessScore.getStudentContinueSameClassCount();
+//            String message = bestFitnessScore.getScore()
+//                    + " " + bestFitnessScore.getHardScore()
+//                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
+//                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
+//                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
+//                    + " " + bestFitnessScore.getFixedSubjectIdCount()
+//                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
+//                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
+//                    + " " + bestFitnessScore.getSoftScore()
+//                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
+//                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
+//                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
+//                    + " " + bestFitnessScore.getNoMainSubjectCount()
+//                    + " " + bestFitnessScore.getSportNoFinalClassCount()
+//                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
 //            messageList.add(message);
         }
 
 //        long start = System.currentTimeMillis();
 //        this.markToTXT(String.valueOf(start), messageList);
-//        System.out.println("最好的基因得分为:" + bestPopulation.getScore());
+
         return bestPopulation.getGeneMap();
     }
 
@@ -1257,7 +1256,7 @@ public class GeneticService {
     }
 
     /**
-     * 满足硬约束条件和软约束条件
+     * 满足软约束条件
      *
      * @param fitnessScoreDTO
      * @param geneList
@@ -1268,6 +1267,8 @@ public class GeneticService {
         HashMap<String, Integer> teacherWorkDayCountMap = new HashMap<>();
         HashMap<Integer, Integer> subjectTypeCountMap = new HashMap<>();
         HashMap<String, List<Integer>> gradeClassNumWorkDaySubjectTimeListMap = new HashMap<>();
+        HashMap<String, List<Integer>> goTimesHashMap = new HashMap<>();
+        HashMap<String, List<Integer>> sportTimesHashMap = new HashMap<>();
         for (String gene : geneList) {
             var fixedFlag = this.cutGeneIndex(GeneticDefaultValueDTO.FIXED_INDEX, gene);
             if (GeneticDefaultValueDTO.UN_FIXED.equals(fixedFlag)) {
@@ -1292,10 +1293,32 @@ public class GeneticService {
                     subjectTypeCountMap.merge(subjectType, STEP, Integer::sum);
                 }
 
-                // 获取年级班级日期课程 List<时间>
+                // 围棋课尽量在下午，因为围棋老师是外聘教师，最好来学校的次数少
+                String subjectIdStr = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_ID_INDEX, gene);
                 var gradeClassNumStr = this.cutGeneIndex(GeneticDefaultValueDTO.GRADE_CLASS_INDEX, gene);
-                var subjectIdStr = this.cutGeneIndex(GeneticDefaultValueDTO.SUBJECT_ID_INDEX, gene);
                 var gradeClassNumWorkDaySubject = gradeClassNumStr.concat(workDay.toString()).concat(subjectIdStr);
+
+                Integer subjectId = Integer.valueOf(subjectIdStr);
+                if (SchoolTimeTableDefaultValueDTO.getSubjectGoId().equals(subjectId)) {
+                    var goTimeList = goTimesHashMap.get(gradeClassNumWorkDaySubject);
+                    if (CollectionUtils.isEmpty(goTimeList)) {
+                        goTimeList = new ArrayList<>();
+                    }
+                    goTimeList.add(time);
+                    goTimesHashMap.put(gradeClassNumWorkDaySubject, goTimeList);
+                }
+
+                // 体育课尽量在上午最后一节(第3节)，或者下午最后三节(第5,6,7节)
+                if (SchoolTimeTableDefaultValueDTO.getSubjectSportId().equals(subjectId)) {
+                    var sportTimeList = sportTimesHashMap.get(gradeClassNumWorkDaySubject);
+                    if (CollectionUtils.isEmpty(sportTimeList)) {
+                        sportTimeList = new ArrayList<>();
+                    }
+                    sportTimeList.add(time);
+                    sportTimesHashMap.put(gradeClassNumWorkDaySubject, sportTimeList);
+                }
+
+                // 获取年级班级日期课程 List<时间>
                 var timeList = gradeClassNumWorkDaySubjectTimeListMap.get(gradeClassNumWorkDaySubject);
                 if (CollectionUtils.isEmpty(timeList)) {
                     timeList = new ArrayList<>();
@@ -1323,6 +1346,17 @@ public class GeneticService {
             }
         }
 
+        // 体育课最好在下午
+        int sportNoFinalCount = ZERO;
+        for (String key : sportTimesHashMap.keySet()) {
+            var times = sportTimesHashMap.get(key);
+            for (Integer time : times) {
+                if (time < SchoolTimeTableDefaultValueDTO.getAfternoonSecTime() && !time.equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime())) {
+                    sportNoFinalCount = sportNoFinalCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
         // 学生上了连堂课
         var studentContinueSameClassCount = ZERO;
         for (String gradeClassNumWorkDaySubject : gradeClassNumWorkDaySubjectTimeListMap.keySet()) {
@@ -1340,6 +1374,18 @@ public class GeneticService {
             }
         }
 
+        // 围棋课要在下午
+        int goTimeNoAfternoonCount = ZERO;
+        for (String key : goTimesHashMap.keySet()) {
+            var times = goTimesHashMap.get(key);
+            for (Integer time : times) {
+                if (time < SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
+                    goTimeNoAfternoonCount = goTimeNoAfternoonCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        var noBestClassBestSubjectCount = noMainSubjectCount + sportNoFinalCount;
 
         // 不满足软约束条件的次数
         var softCount = teacherOutMaxTimeCount + noMainSubjectCount + studentContinueSameClassCount;
@@ -1347,6 +1393,9 @@ public class GeneticService {
         fitnessScoreDTO.setTeacherOutMaxTimeCount(teacherOutMaxTimeCount);
         fitnessScoreDTO.setNoMainSubjectCount(noMainSubjectCount);
         fitnessScoreDTO.setStudentContinueSameClassCount(studentContinueSameClassCount);
+        fitnessScoreDTO.setGoTimeNoAfternoonCount(goTimeNoAfternoonCount);
+        fitnessScoreDTO.setSportNoFinalClassCount(sportNoFinalCount);
+        fitnessScoreDTO.setNoBestTimeBestSubjectCount(noBestClassBestSubjectCount);
 
         return fitnessScoreDTO;
     }
@@ -1379,7 +1428,7 @@ public class GeneticService {
             fitnessScoreDTO = this.computerHardFitnessFunction(fitnessScoreDTO, geneList);
         }
         if (FitnessFunctionEnum.SOFT_SATISFIED == fitnessFunctionEnum) {
-            fitnessScoreDTO = this.computerSoftFitnessFunction(fitnessScoreDTO, geneList);
+            this.computerSoftFitnessFunction(fitnessScoreDTO, geneList);
         }
 
         return fitnessScoreDTO;

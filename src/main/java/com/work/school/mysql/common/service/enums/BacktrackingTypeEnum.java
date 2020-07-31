@@ -2,11 +2,13 @@ package com.work.school.mysql.common.service.enums;
 
 
 /**
- * Created by WANGXin on 2017/3/15.
+ * @Author : Growlithe
+ * @Date : 2019/3/7 7:18 PM
+ * @Description
  */
 public enum BacktrackingTypeEnum {
     BA(1,"回溯算法"),
-    DY_BA(2,"动态权重-回溯算法"),
+    DW_BA(2,"动态权重-回溯算法"),
     FC_BA(3,"前行检测-回溯算法"),
     FC_DW_BA(4,"前行检测动态权重-回溯算法");
 

@@ -57,7 +57,11 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      */
     private static final Integer MORNING_LAST_TIME = 3;
     /**
-     * 下午第5节课
+     * 第4节课
+     */
+    private static final Integer AFTERNOON_FIR_TIME = 4;
+    /**
+     * 第5节课
      */
      private static final Integer AFTERNOON_SEC_TIME = 5;
     /**
@@ -95,7 +99,11 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
     /**
      * 体育
      */
-    private static final Integer SUBJECT_PE_ID = 8;
+    private static final Integer SUBJECT_SPORT_ID = 8;
+    /**
+     * 围棋
+     */
+    private static final Integer SUBJECT_GO_ID = 11;
     /**
      * 班队会课 编号
      */
@@ -205,6 +213,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return MORNING_LAST_TIME;
     }
 
+    public static Integer getAfternoonSecTime() {
+        return AFTERNOON_SEC_TIME;
+    }
+
     public static Integer getPastTime() {
         return PAST_TIME;
     }
@@ -235,6 +247,14 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer getSubjectMathsId() {
         return SUBJECT_MATHS_ID;
+    }
+
+    public static Integer getSubjectSportId() {
+        return SUBJECT_SPORT_ID;
+    }
+
+    public static Integer getSubjectGoId() {
+        return SUBJECT_GO_ID;
     }
 
     public static Integer getSubjectClassMeetingId() {
@@ -317,12 +337,7 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
         return START_COUNT;
     }
 
-    public static Integer getAfternoonSecTime() {
-        return AFTERNOON_SEC_TIME;
+    public static Integer getAfternoonFirTime() {
+        return AFTERNOON_FIR_TIME;
     }
-
-    public static Integer getSubjectPeId() {
-        return SUBJECT_PE_ID;
-    }
-
 }

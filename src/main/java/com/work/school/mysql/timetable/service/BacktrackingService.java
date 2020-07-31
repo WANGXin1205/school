@@ -8,17 +8,14 @@ import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import com.work.school.mysql.timetable.service.dto.*;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.AnnotationUtils;
-import org.apache.logging.log4j.core.util.SetUtils;
-import org.checkerframework.checker.units.qual.Current;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +31,10 @@ public class BacktrackingService {
     private static final int ONLY_ONE_COUNT = 1;
     private static final int ADD_SCORE = 1;
     private static final int BIG_SCORE = 10;
+    /**
+     * 接受概率
+     */
+    private static final BigDecimal ACCEPT_PRO = new BigDecimal("0.1");
 
     @Resource
     private SubjectService subjectService;
@@ -89,33 +90,29 @@ public class BacktrackingService {
                     if (BacktrackingTypeEnum.BA.equals(backtrackingTypeEnum)) {
                         chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
                     }
-                    if (BacktrackingTypeEnum.DY_BA.equals(backtrackingTypeEnum)) {
+                    if (BacktrackingTypeEnum.DW_BA.equals(backtrackingTypeEnum)) {
                         chooseSubjectId = this.getMaxWeightSubjectId(order, timeTablingUseBacktrackingDTO);
                     }
 
                     // 更新课程使用状态
                     subjectIdCanUseMap.put(chooseSubjectId, false);
 
+                    var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                    var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                    String message = this.packMessage(fitnessScoreDTO);
+                    messageList.add(message);
+
                     // 检查是否满足排课需求
                     var checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, chooseSubjectId, timeTablingUseBacktrackingDTO);
                     boolean completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                     if (completeFlag) {
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-                        var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
-                        var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-                        String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
-                                + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
-                                + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
-                                + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
-                                + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
-                                + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
-                                + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
-                                + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
-                                + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
-                                + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
-                                + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
-                                + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
-                        messageList.add(message);
+                        if (order == orderGradeClassNumWorkDayTimeMap.keySet().size()) {
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
+                        }
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -127,26 +124,23 @@ public class BacktrackingService {
                             chooseSubjectId = this.getFirstCanUseSubjectIdInSubjectIdCanUseMap(subjectIdCanUseMap);
                             // 更新课程使用状态
                             subjectIdCanUseMap.put(chooseSubjectId, false);
+
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
+
                             // 检查是否满足排课需求
                             checkCompleteUseBacktrackingDTO = this.packCheckCompleteUseBacktrackingDTO(grade, classNum, workDay, time, chooseSubjectId, timeTablingUseBacktrackingDTO);
                             completeFlag = this.checkComplete(checkCompleteUseBacktrackingDTO);
                             if (completeFlag) {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseBacktrackingDTO);
-                                var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
-                                var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-                                String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
-                                        + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
-                                        + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
-                                        + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
-                                        + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
-                                        + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
-                                        + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
-                                        + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
-                                        + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
-                                        + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
-                                        + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
-                                        + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
-                                messageList.add(message);
+                                if (order == orderGradeClassNumWorkDayTimeMap.keySet().size()) {
+                                    checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseBacktrackingDTO);
+                                    fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                                    message = this.packMessage(fitnessScoreDTO);
+                                    messageList.add(message);
+                                }
                             }
                         }
 
@@ -170,8 +164,9 @@ public class BacktrackingService {
             }
         }
 
-//        long start = System.currentTimeMillis();
-//        geneticService.markToTXT(String.valueOf(start), messageList);
+        long start = System.currentTimeMillis();
+        geneticService.markToTXT(String.valueOf(start), messageList);
+
         cattyResult.setData(timeTablingUseBacktrackingDTO.getTimeTableMap());
         cattyResult.setSuccess(true);
         return cattyResult;
@@ -238,6 +233,8 @@ public class BacktrackingService {
         HashMap<Integer, HashMap<String, List<String>>> otherNeedAreaSubjectIdCountMap = new HashMap<>();
         HashMap<String, Integer> mainSubjectCountMap = new HashMap<>();
         HashMap<String, List<Integer>> continueSubjectMap = new HashMap<>();
+        HashMap<String, List<Integer>> goTimesHashMap = new HashMap<>();
+        HashMap<String, List<Integer>> sportTimesHashMap = new HashMap<>();
         for (Integer grade : timeTableMap.keySet()) {
             var gradeStandard = geneticService.getStandard(grade.toString(), GeneticDefaultValueDTO.GRADE_STANDARD_LENGTH);
             var classNumWorkDayTimeSubjectMap = timeTableMap.get(grade);
@@ -287,6 +284,8 @@ public class BacktrackingService {
                         var allGradeSubjectMap = gradeSubjectDTOMap.get(grade);
                         var subjectDTO = allGradeSubjectMap.get(subjectId);
                         if (subjectId != null) {
+                            var subjectIdStandard = geneticService.getStandard(subjectId.toString(), GeneticDefaultValueDTO.SUBJECT_ID_STANDARD_LENGTH);
+
                             // 固定时间上固定的课程
                             if (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(subjectDTO.getType())) {
                                 var workDayTimeList = fixedSubjectTimeMap.get(subjectId);
@@ -299,7 +298,6 @@ public class BacktrackingService {
                             }
 
                             // 小课一天在一个班只上一节小课
-                            var subjectIdStandard = geneticService.getStandard(subjectId.toString(), GeneticDefaultValueDTO.SUBJECT_ID_STANDARD_LENGTH);
                             if (subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getOtherSubjectType())
                                     || subjectDTO.getType().equals(SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType())) {
                                 String key = subjectIdStandard.concat(gradeStandard).concat(classNumStandard).concat(workDayStandard);
@@ -338,11 +336,33 @@ public class BacktrackingService {
                                 timeList.add(time);
                                 continueSubjectMap.put(key, timeList);
                             }
-                        }
 
-                        // 第1，2节课是语文，数学课
-                        if (time < SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
-                            mainSubjectCountMap.put(gradeClassNumWorkDayTime, subjectId);
+                            // 第1，2节课是语文，数学课
+                            if (time < SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
+                                mainSubjectCountMap.put(gradeClassNumWorkDayTime, subjectId);
+                            }
+
+                            // 围棋课不在下午
+                            String gradeClassWorkDaySubject = gradeClassWorkDay.concat(subjectIdStandard);
+                            if (SchoolTimeTableDefaultValueDTO.getSubjectGoId().equals(subjectId)) {
+                                var goTimeList = goTimesHashMap.get(gradeClassWorkDaySubject);
+                                if (CollectionUtils.isEmpty(goTimeList)) {
+                                    goTimeList = new ArrayList<>();
+                                }
+                                goTimeList.add(time);
+                                goTimesHashMap.put(gradeClassWorkDaySubject, goTimeList);
+                            }
+
+                            // 第3、5、6，7节不是体育课
+                            // 体育课尽量在上午最后一节(第3节)，或者下午最后两节(第6,7节)
+                            if (SchoolTimeTableDefaultValueDTO.getSubjectSportId().equals(subjectId)) {
+                                var sportTimeList = sportTimesHashMap.get(gradeClassWorkDaySubject);
+                                if (CollectionUtils.isEmpty(sportTimeList)) {
+                                    sportTimeList = new ArrayList<>();
+                                }
+                                sportTimeList.add(time);
+                                sportTimesHashMap.put(gradeClassWorkDaySubject, sportTimeList);
+                            }
                         }
 
                     }
@@ -470,7 +490,29 @@ public class BacktrackingService {
             }
         }
 
-        // 3.学生不能上连堂课
+        // 3.体育课最好在第3、5、6，7节
+        int sportNoFinalCount = 0;
+        for (String key : sportTimesHashMap.keySet()) {
+            var times = sportTimesHashMap.get(key);
+            for (Integer time : times) {
+                if (time < SchoolTimeTableDefaultValueDTO.getAfternoonSecTime() && !time.equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime())) {
+                    sportNoFinalCount = sportNoFinalCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        // 4.围棋课最好在下午
+        int goTimeNoAfternoonCount = 0;
+        for (String key : goTimesHashMap.keySet()) {
+            var times = goTimesHashMap.get(key);
+            for (Integer time : times) {
+                if (time < SchoolTimeTableDefaultValueDTO.getMorningLastTime()) {
+                    goTimeNoAfternoonCount = goTimeNoAfternoonCount + ONLY_ONE_COUNT;
+                }
+            }
+        }
+
+        // 5.学生不能上连堂课
         int studentContinueSameClassCount = 0;
         for (String gradeClassWorkDaySubject : continueSubjectMap.keySet()) {
             var timeList = continueSubjectMap.get(gradeClassWorkDaySubject);
@@ -485,7 +527,8 @@ public class BacktrackingService {
             }
         }
 
-        int softScore = (teacherOutMaxTimeCount + noMainSubjectCount + studentContinueSameClassCount) * ADD_SCORE;
+        int noBestTimeBestClassCount = noMainSubjectCount + sportNoFinalCount;
+        int softScore = (teacherOutMaxTimeCount + noBestTimeBestClassCount + goTimeNoAfternoonCount + studentContinueSameClassCount) * ADD_SCORE;
 
         // 最后计算一共的得分
         int score = hardScore + softScore;
@@ -501,8 +544,11 @@ public class BacktrackingService {
         fitnessScoreDTO.setOneClassMoreOtherSubject(oneClassMoreOtherSubject);
         fitnessScoreDTO.setNeedAreaSubjectCount(needAreaSubjectCount);
         fitnessScoreDTO.setTeacherOutMaxTimeCount(teacherOutMaxTimeCount);
-        fitnessScoreDTO.setNoMainSubjectCount(noMainSubjectCount);
+        fitnessScoreDTO.setNoBestTimeBestSubjectCount(noBestTimeBestClassCount);
         fitnessScoreDTO.setStudentContinueSameClassCount(studentContinueSameClassCount);
+        fitnessScoreDTO.setNoMainSubjectCount(noMainSubjectCount);
+        fitnessScoreDTO.setSportNoFinalClassCount(sportNoFinalCount);
+        fitnessScoreDTO.setGoTimeNoAfternoonCount(goTimeNoAfternoonCount);
 
         return fitnessScoreDTO;
     }
@@ -550,27 +596,23 @@ public class BacktrackingService {
                     }
                     this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
+                    var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                    var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                    String message = this.packMessage(fitnessScoreDTO);
+                    messageList.add(message);
+
                     // 检查是否满足排课需求
                     var checkCompleteDTO = this.packCheckCompleteDTO(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
                     boolean completeFlag = this.checkAllComplete(checkCompleteDTO);
                     if (completeFlag) {
                         // 更新所有状态
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
-                        var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-                        var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-                        String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
-                                + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
-                                + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
-                                + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
-                                + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
-                                + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
-                                + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
-                                + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
-                                + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
-                                + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
-                                + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
-                                + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
-                        messageList.add(message);
+                        if (order == orderSubjectIdMap.keySet().size()) {
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
+                        }
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -595,25 +637,21 @@ public class BacktrackingService {
 
                             this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
+
                             checkCompleteDTO = this.packCheckCompleteDTO(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
                             completeFlag = this.checkAllComplete(checkCompleteDTO);
                             if (completeFlag) {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
-                                var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-                                var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-                                String message = "第" + order + "次运行，适应度函数评分为:" + fitnessScoreDTO.getScore()
-                                        + ",硬约束得分为:" + fitnessScoreDTO.getHardScore()
-                                        + ",其中每个班每节课都有课上约束冲突数为:" + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
-                                        + ",一个班同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
-                                        + ",一个教师同一时间上了多节课冲突数为:" + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
-                                        + ",固定课程冲突数为:" + fitnessScoreDTO.getFixedSubjectIdCount()
-                                        + ",每天每班同一类型小课只能上一节冲突数为:" + fitnessScoreDTO.getOneClassMoreOtherSubject()
-                                        + ",功能部室达到最大数冲突数为:" + fitnessScoreDTO.getNeedAreaSubjectCount()
-                                        + ",软约束得分为:" + fitnessScoreDTO.getSoftScore()
-                                        + ",教师每天上课达到最大数量冲突数为:" + fitnessScoreDTO.getTeacherOutMaxTimeCount()
-                                        + ",最好的时间段上合适的课程冲突数为:" + fitnessScoreDTO.getNoMainSubjectCount()
-                                        + ",连堂课冲突数为:" + fitnessScoreDTO.getStudentContinueSameClassCount();
-                                 messageList.add(message);
+                                if (order == orderSubjectIdMap.keySet().size()) {
+                                    checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                                    fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                                    message = this.packMessage(fitnessScoreDTO);
+                                    messageList.add(message);
+                                }
                             }
                         }
                         // 如果课程使用完毕，则找上一层的回溯点
@@ -636,6 +674,30 @@ public class BacktrackingService {
         cattyResult.setData(timeTablingUseFCDWBacktrackingDTO.getTimeTableMap());
         cattyResult.setSuccess(true);
         return cattyResult;
+    }
+
+    /**
+     * 组装信息
+     *
+     * @param fitnessScoreDTO
+     * @return
+     */
+    private String packMessage(FitnessScoreDTO fitnessScoreDTO) {
+        return fitnessScoreDTO.getScore()
+                + " " + fitnessScoreDTO.getHardScore()
+                + " " + fitnessScoreDTO.getEveryTimeHaveSubjectCount()
+                + " " + fitnessScoreDTO.getOneTimeOneClassMoreSubjectCount()
+                + " " + fitnessScoreDTO.getOneTimeOneTeacherMoreClassCount()
+                + " " + fitnessScoreDTO.getFixedSubjectIdCount()
+                + " " + fitnessScoreDTO.getOneClassMoreOtherSubject()
+                + " " + fitnessScoreDTO.getNeedAreaSubjectCount()
+                + " " + fitnessScoreDTO.getSoftScore()
+                + " " + fitnessScoreDTO.getTeacherOutMaxTimeCount()
+                + " " + fitnessScoreDTO.getNoBestTimeBestSubjectCount()
+                + " " + fitnessScoreDTO.getStudentContinueSameClassCount()
+                + " " + fitnessScoreDTO.getNoMainSubjectCount()
+                + " " + fitnessScoreDTO.getSportNoFinalClassCount()
+                + " " + fitnessScoreDTO.getGoTimeNoAfternoonCount();
     }
 
     /**
@@ -1432,7 +1494,7 @@ public class BacktrackingService {
 
         // 计算权重
         var maxOrder = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdMap().size();
-        subjectService.computerSubjectWeightDTO(order,maxOrder,computerSubjectWeightDTO);
+        subjectService.computerSubjectWeightDTO(order, maxOrder, computerSubjectWeightDTO);
 
         // 返回最大权重的课程
         var orderSubjectIdCanUseMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdCanUseMap();
@@ -1734,12 +1796,6 @@ public class BacktrackingService {
      * @return
      */
     private Boolean checkAllComplete(CheckCompleteDTO checkCompleteDTO) {
-        // 早上第一节必须是主课
-        var firstClassIsMainFlag = this.checkFirstClassIsMainIsOk(checkCompleteDTO);
-        if (!firstClassIsMainFlag) {
-            return false;
-        }
-
         // 保证每天有主课上
         var everyDayHaveMainFlag = this.checkEveryDayHaveMainIsOk(checkCompleteDTO);
         if (!everyDayHaveMainFlag) {
@@ -1752,21 +1808,9 @@ public class BacktrackingService {
             return false;
         }
 
-        // 学生不能上连堂课(上限为2)
-        var studentContinueClassFlag = this.checkStudentContinueClassIsOk(checkCompleteDTO);
-        if (!studentContinueClassFlag) {
-            return false;
-        }
-
         // 每门主课不能一天不能超过2节课(上限为2）
         var mainSubjectMaxFlag = this.checkMainSubjectMaxIsOk(checkCompleteDTO);
         if (!mainSubjectMaxFlag) {
-            return false;
-        }
-
-        // 教师不能上连堂课(上限为3) 并且一个教师一天最多上4节课，如果超过4节课，不在排课
-        var checkTeacherMaxAndContinueClassIsOkFlag = this.checkTeacherMaxAndContinueClassIsOk(checkCompleteDTO);
-        if (!checkTeacherMaxAndContinueClassIsOkFlag) {
             return false;
         }
 
@@ -1782,8 +1826,56 @@ public class BacktrackingService {
             return false;
         }
 
+        // 按照一定的概率接受软约束条件
+        BigDecimal random = BigDecimal.valueOf(Math.random());
+        if (random.compareTo(ACCEPT_PRO) > 0) {
+            // 早上第一节必须是主课
+            var firstClassIsMainFlag = this.checkFirstClassIsMainIsOk(checkCompleteDTO);
+            if (!firstClassIsMainFlag) {
+                return false;
+            }
+
+            // 学生不能上连堂课(上限为2)
+            var studentContinueClassFlag = this.checkStudentContinueClassIsOk(checkCompleteDTO);
+            if (!studentContinueClassFlag) {
+                return false;
+            }
+
+            // 教师不能上连堂课(上限为3) 并且一个教师一天最多上4节课，如果超过4节课，不在排课
+            var checkTeacherMaxAndContinueClassIsOkFlag = this.checkTeacherMaxAndContinueClassIsOk(checkCompleteDTO);
+            if (!checkTeacherMaxAndContinueClassIsOkFlag) {
+                return false;
+            }
+
+            // 查看体育课是否在第4节课
+            var sportIsOkFlag = this.checkSportIsOk(checkCompleteDTO);
+            if (!sportIsOkFlag) {
+                return false;
+            }
+        }
+
         // 查看是否无解
         return this.checkSolvable(checkCompleteDTO);
+    }
+
+    /**
+     * 检查体育课是否合适
+     *
+     * @param checkCompleteDTO
+     * @return
+     */
+    private Boolean checkSportIsOk(CheckCompleteDTO checkCompleteDTO) {
+        var order = checkCompleteDTO.getOrder();
+        var orderGradeClassNumWorkDayTimeMap = checkCompleteDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
+        var time = gradeClassNumWorkDayTimeDTO.getTime();
+        var subjectDTO = checkCompleteDTO.getSubjectDTO();
+        if (time.equals(SchoolTimeTableDefaultValueDTO.getAfternoonFirTime())
+                && subjectDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectSportId())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -1812,11 +1904,6 @@ public class BacktrackingService {
      * @return
      */
     private Boolean checkComplete(CheckCompleteUseBacktrackingDTO checkCompleteUseBacktrackingDTO) {
-        // 早上第一节必须主课
-        var firstClassIsMainFlag = this.checkFirstClassIsMainIsOk(checkCompleteUseBacktrackingDTO.getSubjectDTO(), checkCompleteUseBacktrackingDTO.getTime());
-        if (!firstClassIsMainFlag) {
-            return false;
-        }
         // 保证每天有主课上
         var everyDayHaveMainFlag = this.checkEveryDayHaveMainIsOk(checkCompleteUseBacktrackingDTO);
         if (!everyDayHaveMainFlag) {
@@ -1829,21 +1916,9 @@ public class BacktrackingService {
             return false;
         }
 
-        // 学生不能上连堂课(上限为2)
-        var studentContinueClassFlag = this.checkStudentContinueClassIsOk(checkCompleteUseBacktrackingDTO);
-        if (!studentContinueClassFlag) {
-            return false;
-        }
-
         // 每门主课不能一天不能超过2节课(上限为2）
         var mainSubjectMaxFlag = this.checkMainSubjectMaxIsOk(checkCompleteUseBacktrackingDTO);
         if (!mainSubjectMaxFlag) {
-            return false;
-        }
-
-        // 教师不能上连堂课(上限为3) 并且一个教师一天最多上4节课，如果超过4节课，不在排课
-        var checkTeacherMaxAndContinueClassIsOkFlag = this.checkTeacherMaxAndContinueClassIsOk(checkCompleteUseBacktrackingDTO);
-        if (!checkTeacherMaxAndContinueClassIsOkFlag) {
             return false;
         }
 
@@ -1852,6 +1927,34 @@ public class BacktrackingService {
         if (!classRoomIsOkFlag) {
             return false;
         }
+
+        BigDecimal random = BigDecimal.valueOf(Math.random());
+        if (random.compareTo(ACCEPT_PRO) > 0) {
+            // 早上第一节必须主课
+            var classIsMainFlag = this.checkClassIsMainIsOk(checkCompleteUseBacktrackingDTO.getSubjectDTO(), checkCompleteUseBacktrackingDTO.getTime());
+            if (!classIsMainFlag) {
+                return false;
+            }
+
+            // 学生不能上连堂课(上限为2)
+            var studentContinueClassFlag = this.checkStudentContinueClassIsOk(checkCompleteUseBacktrackingDTO);
+            if (!studentContinueClassFlag) {
+                return false;
+            }
+
+            // 教师不能上连堂课(上限为4) 并且一个教师一天最多上4节课，如果超过4节课，不在排课
+            var checkTeacherMaxAndContinueClassIsOkFlag = this.checkTeacherMaxAndContinueClassIsOk(checkCompleteUseBacktrackingDTO);
+            if (!checkTeacherMaxAndContinueClassIsOkFlag) {
+                return false;
+            }
+
+            // 判断体育课是否在第四节
+            var checkSportIsOkFlag = this.checkSportIsOk(checkCompleteUseBacktrackingDTO);
+            if (!checkSportIsOkFlag) {
+                return false;
+            }
+        }
+
         // 判断教师是否空闲
         return this.checkTeacherIsOk(checkCompleteUseBacktrackingDTO);
     }
@@ -2254,12 +2357,14 @@ public class BacktrackingService {
         var order = checkCompleteDTO.getOrder();
         var orderGradeClassNumWorkDayTimeMap = checkCompleteDTO.getOrderGradeClassNumWorkDayTimeMap();
         var gradeClassNumWorkDayTime = orderGradeClassNumWorkDayTimeMap.get(order);
-        if (!SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(gradeClassNumWorkDayTime.getTime())) {
+        if (!(SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(gradeClassNumWorkDayTime.getTime())
+                || SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(gradeClassNumWorkDayTime.getTime()))) {
             return true;
         }
         var subjectDTO = checkCompleteDTO.getSubjectDTO();
         return SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectDTO.getType());
     }
+
 
     /**
      * 检查第一节课为主课
@@ -2268,8 +2373,8 @@ public class BacktrackingService {
      * @param time
      * @return
      */
-    private Boolean checkFirstClassIsMainIsOk(SubjectDTO subjectDTO, Integer time) {
-        if (!SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time)) {
+    private Boolean checkClassIsMainIsOk(SubjectDTO subjectDTO, Integer time) {
+        if (!(SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time) || SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time))) {
             return true;
         }
         return SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectDTO.getType());
@@ -2362,6 +2467,23 @@ public class BacktrackingService {
         return count <= maxCount;
     }
 
+    /**
+     * 检查体育课是否合适
+     *
+     * @param checkCompleteUseBacktrackingDTO
+     * @return
+     */
+    private Boolean checkSportIsOk(CheckCompleteUseBacktrackingDTO checkCompleteUseBacktrackingDTO) {
+
+        var subjectDTO = checkCompleteUseBacktrackingDTO.getSubjectDTO();
+        var time = checkCompleteUseBacktrackingDTO.getTime();
+        if (time.equals(SchoolTimeTableDefaultValueDTO.getAfternoonFirTime())
+                && subjectDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectSportId())) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * 检查教师是否空闲

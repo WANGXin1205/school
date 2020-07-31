@@ -4,7 +4,6 @@ import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.dto.*;
 import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
-import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -131,7 +130,7 @@ public class TimeTableService {
         TimeTablingUseBacktrackingDTO timeTablingUseBacktrackingDTO = this.getTimeTablingUseBacktrackingDTO();
 
         // 排课核心算法
-        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.backtracking(timeTablingUseBacktrackingDTO, BacktrackingTypeEnum.DY_BA);
+        var algorithmInPlanTimeTableWithBacktrackingResult = backtrackingService.backtracking(timeTablingUseBacktrackingDTO, BacktrackingTypeEnum.DW_BA);
         if (!algorithmInPlanTimeTableWithBacktrackingResult.isSuccess()) {
             LOGGER.warn(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());
             cattyResult.setMessage(algorithmInPlanTimeTableWithBacktrackingResult.getMessage());

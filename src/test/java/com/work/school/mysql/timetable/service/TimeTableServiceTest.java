@@ -34,14 +34,23 @@ public class TimeTableServiceTest {
 
     @Test
     public void planTimeTableWithDynamicWeightsAndBacktrackingTest() {
-        var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
-        Assert.assertTrue(cattyResult.isSuccess());
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 101; i++) {
+            long start = System.currentTimeMillis();
+            var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+//        Assert.assertTrue(cattyResult.isSuccess());
     }
 
     @Test
     public void planTimeTableWithBacktrackingTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
             var cattyResult = timeTableService.planTimeTableWithBacktracking();
             long end = System.currentTimeMillis();
@@ -56,7 +65,7 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingBATest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
             var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_BA);
             long end = System.currentTimeMillis();
@@ -71,9 +80,13 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithForwardCheckAndDynamicWeightBacktrackingDWTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
-            var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_DW_BA);
+            try {
+                var cattyResult = timeTableService.planTimeTableWithForwardCheckDynamicWeightBacktracking(BacktrackingTypeEnum.FC_DW_BA);
+            } catch (Exception ignored) {
+                System.out.println("失败次序为:" + i);
+            }
             long end = System.currentTimeMillis();
             times.add(end - start);
         }
@@ -86,7 +99,7 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithGeneticAlgorithmTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
             var cattyResult = timeTableService.planTimeTableWithGenetic();
             long end = System.currentTimeMillis();
@@ -101,9 +114,9 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithSimulateAnnealTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
-        var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
+            var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
             long end = System.currentTimeMillis();
             times.add(end - start);
         }

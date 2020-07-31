@@ -1,12 +1,8 @@
 package com.work.school.mysql.timetable.service;
 
 import com.work.school.common.CattyResult;
-import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import com.work.school.mysql.timetable.service.dto.FitnessScoreDTO;
-import org.apache.commons.collections4.CollectionUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +14,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author : Growlithe
@@ -113,8 +108,8 @@ public class SimulateAnnealService {
                 } else {
                     double sqrt = (oldFitnessScore.getScore() - newFitnessScore.getScore()) / temperature.doubleValue();
                     var probability = Math.pow(Math.E, sqrt);
-                    var accept_probability = Math.random();
-                    if (probability > accept_probability && probability < MAX_PRO) {
+                    var acceptProbability = Math.random();
+                    if (probability > acceptProbability && probability < MAX_PRO) {
                         BeanUtils.copyProperties(newFitnessScore, oldFitnessScore);
                         oldList = new ArrayList<>(newList);
                     }
@@ -138,20 +133,22 @@ public class SimulateAnnealService {
                 return gradeClassNoGeneMap;
             }
 
-            String message = "当前温度为" + temperature.setScale(SAVE_NUM, RoundingMode.DOWN) + "最优基因得分为:" + bestFitnessScore.getScore()
-                    + ",硬约束得分为:" + bestFitnessScore.getHardScore()
-                    + ",其中每个班每节课都有课上约束冲突数为:" + bestFitnessScore.getEveryTimeHaveSubjectCount()
-                    + ",一个班同一时间上了多节课冲突数为:" + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
-                    + ",一个教师同一时间上了多节课冲突数为:" + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
-                    + ",固定课程冲突数为:" + bestFitnessScore.getFixedSubjectIdCount()
-                    + ",每天每班同一类型小课只能上一节冲突数为:" + bestFitnessScore.getOneClassMoreOtherSubject()
-                    + ",功能部室达到最大数冲突数为:" + bestFitnessScore.getNeedAreaSubjectCount()
-                    + ",软约束得分为:" + bestFitnessScore.getSoftScore()
-                    + ",教师每天上课达到最大数量冲突数为:" + bestFitnessScore.getTeacherOutMaxTimeCount()
-                    + ",最好的时间段上合适的课程冲突数为:" + bestFitnessScore.getNoMainSubjectCount()
-                    + ",连堂课冲突数为:" + bestFitnessScore.getStudentContinueSameClassCount();
+            String message = " " + bestFitnessScore.getScore()
+                    + " " + bestFitnessScore.getHardScore()
+                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
+                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
+                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
+                    + " " + bestFitnessScore.getFixedSubjectIdCount()
+                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
+                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
+                    + " " + bestFitnessScore.getSoftScore()
+                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
+                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
+                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
+                    + " " + bestFitnessScore.getNoMainSubjectCount()
+                    + " " + bestFitnessScore.getSportNoFinalClassCount()
+                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
             messageList.add(message);
-
         }
 
         return gradeClassNoGeneMap;
