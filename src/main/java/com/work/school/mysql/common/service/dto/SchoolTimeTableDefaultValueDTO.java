@@ -97,6 +97,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      */
     private static final Integer SUBJECT_MATHS_ID = 2;
     /**
+     * 美术课程
+     */
+    private static final Integer SUBJECT_ART_ID = 7;
+    /**
      * 体育
      */
     private static final Integer SUBJECT_SPORT_ID = 8;
@@ -319,6 +323,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer getTeacherTimeMinOverSize() {
         return TEACHER_TIME_MIN_OVER_SIZE;
+    }
+
+    public static Integer getSubjectArtId() {
+        return SUBJECT_ART_ID;
     }
 
     public static Integer getInitClassroomUsedCount() {

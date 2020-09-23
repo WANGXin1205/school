@@ -22,4 +22,8 @@ public interface SubjectDetailsMapper {
      */
     List<SubjectDTO> listAllSubjectDTO();
 
+    /**
+     * 根据年级查询科目明细
+     */
+    List<SubjectDTO> listSubjectDTOByGrade(Integer grade);
 }

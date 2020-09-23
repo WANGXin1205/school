@@ -9,14 +9,14 @@ public enum MobileRedBannerEnum {
     /**
      * 班级枚举
      */
-    BEST(1, "文明之星"),
-    TEAM(2, "路队之星"),
-    SPORT(3, "体育之星"),
-    HEALTH(4, "卫生之星");
+    BEST(1, "榜样"),
+    SING(2, "百灵"),
+    SPORT(3, "健将"),
+    BOOK(4, "书虫");
 
 
-    private Integer code;
-    private String desc;
+    private final Integer code;
+    private final String desc;
 
     public Integer getCode() {
         return code;

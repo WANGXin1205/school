@@ -42,4 +42,12 @@
         and a.id = b.subject_id
     </select>
 
+    <select id="listSubjectDTOByGrade" resultMap="SubjectDTOResultMap" parameterType="java.lang.Integer">
+        select b.subject_id, a.name, b.grade, a.type, b.frequency
+        from subject a,subject_details b
+        where a.status = 1 and b.status = 1
+        and a.id = b.subject_id
+        and grade = #{grade}
+    </select>
+
 </mapper>

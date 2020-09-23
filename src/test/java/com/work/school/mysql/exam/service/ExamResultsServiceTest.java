@@ -28,7 +28,7 @@ public class ExamResultsServiceTest {
 
     @Test
     public void computerExamTarget() throws Exception{
-        var fileLocal = new File("/Users/wangxin/Downloads/副本成绩册一年级3班 - 期中.xlsx");
+        var fileLocal = new File("/Users/wangxin/Downloads/一年级2班.xlsx");
         var fis = new FileInputStream(fileLocal);
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         var multipartFile = new MockMultipartFile(fileLocal.getName(), fileLocal.getName(), contentType, fis);

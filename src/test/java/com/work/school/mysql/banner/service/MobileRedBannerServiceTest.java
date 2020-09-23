@@ -1,7 +1,7 @@
 package com.work.school.mysql.banner.service;
 
 import com.work.school.common.CattyResult;
-import com.work.school.mysql.banner.service.dto.ClassBannerCountDTO;
+import com.work.school.mysql.banner.service.dto.MobileRedBannerDTO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @Author : Growlithe
@@ -27,35 +29,27 @@ public class MobileRedBannerServiceTest {
     private MobileRedBannerService mobileRedBannerService;
 
     @Test
-    public void saveBatchTest() throws Exception {
+    public void listAllClassMobileRedBannerTest() throws Exception{
         var fileLocal = new File("/Users/wangxin/Downloads/流动红旗.xlsx");
         var fis = new FileInputStream(fileLocal);
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         var multipartFile = new MockMultipartFile(fileLocal.getName(), fileLocal.getName(), contentType, fis);
-        var candyResult = mobileRedBannerService.saveBatch(multipartFile);
-        Assert.assertTrue(candyResult.isSuccess());
-    }
-
-    @Test
-    public void listAllClassBannerCountTest(){
-        String schoolTermDesc = "2018-2019学年第一学期";
-        var gradeDesc = "一年级";
-        CattyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(schoolTermDesc,gradeDesc);
+        CattyResult<List<MobileRedBannerDTO>> candyResult = mobileRedBannerService.listAllClassMobileRedBanner(multipartFile);
         var classBannerCountDTOList = candyResult.getData();
-        classBannerCountDTOList.forEach(x->System.out.println(x.getBannerDesc()));
+        classBannerCountDTOList.forEach(x->System.out.println(x.toString()));
         Assert.assertTrue(candyResult.isSuccess());
     }
 
     @Test
-    public void listAllClassBannerCountTest1() throws Exception{
+    public void computerClassScoreTest() throws Exception{
         var fileLocal = new File("/Users/wangxin/Downloads/流动红旗.xlsx");
         var fis = new FileInputStream(fileLocal);
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         var multipartFile = new MockMultipartFile(fileLocal.getName(), fileLocal.getName(), contentType, fis);
-        CattyResult<List<ClassBannerCountDTO>> candyResult = mobileRedBannerService.listAllClassBannerCount(multipartFile);
+        CattyResult<List<MobileRedBannerDTO>> candyResult = mobileRedBannerService.listAllClassMobileRedBanner(multipartFile);
         var classBannerCountDTOList = candyResult.getData();
-        classBannerCountDTOList.forEach(x->System.out.println(x.getBannerDesc()));
-        Assert.assertTrue(candyResult.isSuccess());
-    }
 
+        CattyResult<TreeMap<String,Integer>> cattyResult = mobileRedBannerService.computerClassScore(classBannerCountDTOList);
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
 }

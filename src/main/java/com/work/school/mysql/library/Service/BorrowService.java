@@ -7,8 +7,6 @@ import com.work.school.common.excepetion.TransactionException;
 import com.work.school.common.utils.common.DateUtils;
 import com.work.school.common.utils.common.POIUtils;
 import com.work.school.common.utils.common.StringUtils;
-import com.work.school.mysql.banner.dao.domain.MobileRedBannerDO;
-import com.work.school.mysql.banner.enums.MobileRedBannerEnum;
 import com.work.school.mysql.common.dao.domain.TeacherDO;
 import com.work.school.mysql.common.service.TeacherService;
 import com.work.school.mysql.library.dao.domain.BorrowDO;

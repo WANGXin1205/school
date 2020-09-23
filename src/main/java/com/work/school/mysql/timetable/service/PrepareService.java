@@ -131,8 +131,11 @@ public class PrepareService {
 
         var allSubjects = subjectService.listAllSubject();
         var allSubjectNameMap = subjectService.getAllSubjectNameMap(allSubjects);
-        var allSubjectDTO = subjectService.listAllSubjectDTO();
-        var gradeSubjectMap = subjectService.getGradeSubjectMap(allSubjectDTO);
+        HashMap<Integer, List<SubjectDTO>> gradeSubjectMap = new HashMap<>();
+        for(Integer grade:gradeClassCountMap.keySet()){
+            var gradeSubjectDTO = subjectService.listSubjectDTOByGrade(grade);
+            gradeSubjectMap.put(grade,gradeSubjectDTO);
+        }
 
         var allSubjectTeacherGradeClassDTO = teacherSubjectService.listAllSubjectTeacherGradeClassDTO();
         var subjectGradeClassTeacherMap = teacherSubjectService.getSubjectGradeClassTeacherMap(allSubjectTeacherGradeClassDTO);

@@ -53,6 +53,14 @@ public class SubjectService {
     }
 
     /**
+     * 根据年级查询所有课程
+     * @param grade
+     * @return
+     */
+    public List<SubjectDTO> listSubjectDTOByGrade(Integer grade){
+        return subjectDetailsMapper.listSubjectDTOByGrade(grade);
+    }
+    /**
      * 所有科目对应名称map
      *
      * @return
@@ -158,10 +166,10 @@ public class SubjectService {
                 }
             }
 
-            // 如果上午最后一节，下午最后三节课，体育课权重增加
-            if (time >= SchoolTimeTableDefaultValueDTO.getAfternoonSecTime() || time.equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime())) {
+            // 如果上午最后一节，下午最后三节课，美术权重增加
+            if (time.equals(SchoolTimeTableDefaultValueDTO.getAfternoonFirTime()) || time.equals(SchoolTimeTableDefaultValueDTO.getMorningLastTime())) {
                 for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
-                    if (subjectWeightDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectSportId())) {
+                    if (subjectWeightDTO.getSubjectId().equals(SchoolTimeTableDefaultValueDTO.getSubjectArtId())) {
                         int weight = (int) (random * subjectWeightDTO.getFrequency());
                         subjectWeightDTO.setWeight(weight + subjectWeightDTO.getWeight());
                     }

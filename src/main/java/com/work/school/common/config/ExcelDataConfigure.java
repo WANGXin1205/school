@@ -17,25 +17,21 @@ public class ExcelDataConfigure {
      */
     public static Integer DEFAULT_BEGIN_ROW_INDEX = 0;
 
-    /**
-     * 转换为Excel行数所需要的值
-     */
-    public static Integer DEFAULT_ADD_ROW = 2;
-
 
     /**
-     * 流动红旗汇总表配置
+     * 周数
      */
-    public static String[] RED_BANNER_DATA_NAME = {"周", "文明之星", "路队之星", "体育之星", "卫生之星"};
+    public static int WEEKDAYS_TIME = 20;
 
     /**
      * 流动红旗excel默认值
      */
-    public static Integer RED_BANNER_WEEK_INDEX = 0;
-    public static Integer RED_BANNER_BEST_INDEX = 1;
-    public static Integer RED_BANNER_TEAM_INDEX = 2;
-    public static Integer RED_BANNER_SPORT_INDEX = 3;
-    public static Integer RED_BANNER_HEALTH_INDEX = 4;
+    public static Integer RED_BANNER_CLASS_INDEX = 0;
+    /**
+     * 流动红旗分数
+     */
+    public static Integer BEST_SCORE = 2;
+    public static Integer OTHER_SCORE = 1;
 
 
     /**
