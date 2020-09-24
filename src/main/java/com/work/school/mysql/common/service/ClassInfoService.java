@@ -37,6 +37,15 @@ public class ClassInfoService {
     }
 
     /**
+     * 查询年级下的班级
+     * @param grade
+     * @return
+     */
+    public List<ClassInfoDO> listClassByGrade(Integer grade) {
+        return classInfoMapper.listClassByGrade(grade);
+    }
+
+    /**
      * 获取所有年级下属班级数目
      *
      * @param allClass

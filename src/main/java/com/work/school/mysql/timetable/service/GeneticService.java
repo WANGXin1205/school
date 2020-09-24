@@ -388,7 +388,7 @@ public class GeneticService {
         var bestScore = bestPopulation.getScore();
         var bestFitnessScore = new FitnessScoreDTO();
         bestFitnessScore.setScore(bestScore);
-//        List<String> messageList = new ArrayList<>();
+        List<String> messageList = new ArrayList<>();
         for (int evolutionTime = ZERO; evolutionTime < EVOLUTION_TIMES; evolutionTime++) {
             // 交叉和变异
             int evolutionTimes = CROSSOVER_TIMES + MUTATE_POPULATION;
@@ -424,26 +424,26 @@ public class GeneticService {
                 }
 
             }
-//            String message = bestFitnessScore.getScore()
-//                    + " " + bestFitnessScore.getHardScore()
-//                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
-//                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
-//                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
-//                    + " " + bestFitnessScore.getFixedSubjectIdCount()
-//                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
-//                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
-//                    + " " + bestFitnessScore.getSoftScore()
-//                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
-//                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
-//                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
-//                    + " " + bestFitnessScore.getNoMainSubjectCount()
-//                    + " " + bestFitnessScore.getSportNoFinalClassCount()
-//                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
-//            messageList.add(message);
+            String message = bestFitnessScore.getScore()
+                    + " " + bestFitnessScore.getHardScore()
+                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
+                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
+                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
+                    + " " + bestFitnessScore.getFixedSubjectIdCount()
+                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
+                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
+                    + " " + bestFitnessScore.getSoftScore()
+                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
+                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
+                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
+                    + " " + bestFitnessScore.getNoMainSubjectCount()
+                    + " " + bestFitnessScore.getSportNoFinalClassCount()
+                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
+            messageList.add(message);
         }
 
-//        long start = System.currentTimeMillis();
-//        this.markToTXT(String.valueOf(start), messageList);
+        long start = System.currentTimeMillis();
+        this.markToTXT(String.valueOf(start), messageList);
 
         return bestPopulation.getGeneMap();
     }

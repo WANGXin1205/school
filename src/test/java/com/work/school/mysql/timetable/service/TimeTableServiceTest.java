@@ -33,11 +33,11 @@ public class TimeTableServiceTest {
     private TimeTableService timeTableService;
 
     @Test
-    public void planTimeTableWithDynamicWeightsAndBacktrackingTest() {
+    public void planTimeTableWithBacktrackingTest() {
         List<Long> times = new ArrayList<>();
         for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
-            var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
+            var cattyResult = timeTableService.planTimeTableWithBacktracking();
             long end = System.currentTimeMillis();
             times.add(end - start);
         }
@@ -48,11 +48,11 @@ public class TimeTableServiceTest {
     }
 
     @Test
-    public void planTimeTableWithBacktrackingTest() {
+    public void planTimeTableWithDynamicWeightsAndBacktrackingTest() {
         List<Long> times = new ArrayList<>();
         for (int i = 0; i < 101; i++) {
             long start = System.currentTimeMillis();
-            var cattyResult = timeTableService.planTimeTableWithBacktracking();
+            var cattyResult = timeTableService.planTimeTableUseDynamicWeightsAndBacktracking();
             long end = System.currentTimeMillis();
             times.add(end - start);
         }

@@ -24,4 +24,11 @@
         from class_info where status = 1 and graduate = 0
     </select>
 
+    <select id="listClassByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from class_info where status = 1 and graduate = 0
+        and grade = #{grade}
+    </select>
+
 </mapper>

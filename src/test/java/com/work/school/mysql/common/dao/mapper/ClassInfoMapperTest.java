@@ -28,4 +28,11 @@ public class ClassInfoMapperTest {
         Assert.assertNotNull(allClass);
     }
 
+    @Test
+    public void listAllClassByGradeTest() {
+        Integer grade = 1;
+        var allClass = classInfoMapper.listClassByGrade(grade);
+        Assert.assertNotNull(allClass);
+    }
+
 }

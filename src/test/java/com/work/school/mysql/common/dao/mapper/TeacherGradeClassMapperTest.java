@@ -28,4 +28,11 @@ public class TeacherGradeClassMapperTest {
         var teacherGradeClassDOList = teacherGradeClassMapper.listAllTeacherGradeClass();
         Assert.assertNotNull(teacherGradeClassDOList);
     }
+
+    @Test
+    public void listTeacherGradeClassByGradeTest() {
+        Integer grade = 1;
+        var teacherGradeClassDOList = teacherGradeClassMapper.listTeacherGradeClassByGrade(grade);
+        Assert.assertNotNull(teacherGradeClassDOList);
+    }
 }

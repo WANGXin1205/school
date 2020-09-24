@@ -34,7 +34,7 @@ public class BacktrackingService {
     /**
      * 接受概率
      */
-    private static final BigDecimal ACCEPT_PRO = new BigDecimal("1");
+    private static final BigDecimal ACCEPT_PRO = new BigDecimal("0");
 
     @Resource
     private SubjectService subjectService;
@@ -563,7 +563,7 @@ public class BacktrackingService {
     public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> forwardCheckDynamicWeightBacktracking(TimeTablingUseFCDWBacktrackingDTO timeTablingUseFCDWBacktrackingDTO, BacktrackingTypeEnum backtrackingTypeEnum) {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>>> cattyResult = new CattyResult<>();
         var orderSubjectIdMap = timeTablingUseFCDWBacktrackingDTO.getOrderSubjectIdMap();
-//        List<String> messageList = new ArrayList<>();
+        List<String> messageList = new ArrayList<>();
         for (int order = SchoolTimeTableDefaultValueDTO.getStartOrder(); order <= orderSubjectIdMap.keySet().size(); order++) {
             while (orderSubjectIdMap.get(order) == null) {
 
@@ -596,10 +596,10 @@ public class BacktrackingService {
                     subjectIdCanUseMap.put(chooseSubjectId,false);
                     orderSubjectIdCanUseMap.put(order,subjectIdCanUseMap);
                     timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
-//                    var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-//                    var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-//                    String message = this.packMessage(fitnessScoreDTO);
-//                    messageList.add(message);
+                    var checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                    var fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                    String message = this.packMessage(fitnessScoreDTO);
+                    messageList.add(message);
 
                     // 检查是否满足排课需求
                     var checkCompleteDTO = this.packCheckCompleteDTO(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
@@ -609,12 +609,12 @@ public class BacktrackingService {
                         this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
                         this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
-//                        if (order == orderSubjectIdMap.keySet().size()) {
-//                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-//                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-//                            message = this.packMessage(fitnessScoreDTO);
-////                            messageList.add(message);
-//                        }
+                        if (order == orderSubjectIdMap.keySet().size()) {
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
+                        }
                     }
                     // 如果不满足排课需求，就需要回溯
                     while (!completeFlag) {
@@ -640,10 +640,10 @@ public class BacktrackingService {
                             orderSubjectIdCanUseMap.put(order,subjectIdCanUseMap);
                             timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
 
-//                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-//                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-//                            message = this.packMessage(fitnessScoreDTO);
-//                            messageList.add(message);
+                            checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                            fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                            message = this.packMessage(fitnessScoreDTO);
+                            messageList.add(message);
 
                             checkCompleteDTO = this.packCheckCompleteDTO(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
                             completeFlag = this.checkAllComplete(checkCompleteDTO);
@@ -651,12 +651,12 @@ public class BacktrackingService {
                                 this.updateAllStatus(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
                                 this.listConstraint(order, chooseSubjectId, timeTablingUseFCDWBacktrackingDTO);
 
-//                                if (order == orderSubjectIdMap.keySet().size()) {
-//                                    checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
-//                                    fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
-//                                    message = this.packMessage(fitnessScoreDTO);
-////                                    messageList.add(message);
-//                                }
+                                if (order == orderSubjectIdMap.keySet().size()) {
+                                    checkFitnessScoreDTO = this.packFitnessScore(timeTablingUseFCDWBacktrackingDTO);
+                                    fitnessScoreDTO = this.computerFitnessScore(checkFitnessScoreDTO);
+                                    message = this.packMessage(fitnessScoreDTO);
+//                                    messageList.add(message);
+                                }
                             }
                         }
                         if (backFlag){
@@ -674,7 +674,7 @@ public class BacktrackingService {
         }
 
         long start = System.currentTimeMillis();
-//        geneticService.markToTXT(String.valueOf(start), messageList);
+        geneticService.markToTXT(String.valueOf(start), messageList);
         cattyResult.setData(timeTablingUseFCDWBacktrackingDTO.getTimeTableMap());
         cattyResult.setSuccess(true);
         return cattyResult;
@@ -860,7 +860,7 @@ public class BacktrackingService {
                 constraintDTO.setTime(time);
 
                 var orderConstraint = gradeClassNumWorkDayTimeOrderMap.get(constraintDTO);
-                if (orderConstraint > order) {
+                if (orderConstraint != null && orderConstraint > order) {
                     TimeTableConstraintDTO timeTableConstraintDTO = new TimeTableConstraintDTO();
                     timeTableConstraintDTO.setOrder(order);
                     timeTableConstraintDTO.setOrderConstraint(orderConstraint);

@@ -13,4 +13,11 @@ public interface ClassInfoMapper {
      */
     List<ClassInfoDO> listAllClass();
 
+    /**
+     * 查询所有班级信息
+     *
+     * @param grade
+     * @return
+     */
+    List<ClassInfoDO> listClassByGrade(Integer grade);
 }

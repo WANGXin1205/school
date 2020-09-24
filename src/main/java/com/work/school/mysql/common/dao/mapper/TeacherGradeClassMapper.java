@@ -15,4 +15,11 @@ public interface TeacherGradeClassMapper {
      */
     List<TeacherGradeClassDO> listAllTeacherGradeClass();
 
+    /**
+     * 查询年级下所有教师和年级班级的信息
+     *
+     * @param grade
+     * @return
+     */
+    List<TeacherGradeClassDO> listTeacherGradeClassByGrade(Integer grade);
 }

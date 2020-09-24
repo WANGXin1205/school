@@ -23,4 +23,10 @@
         from teacher_grade_class where status = 1
     </select>
 
+    <select id="listTeacherGradeClassByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from teacher_grade_class where status = 1 and grade = #{grade}
+    </select>
+
 </mapper>
