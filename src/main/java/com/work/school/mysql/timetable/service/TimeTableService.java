@@ -56,12 +56,32 @@ public class TimeTableService {
         BeanUtils.copyProperties(timeTablingUseBacktrackingDTO, timeTablingUseFCDWBacktrackingDTO);
         backtrackingService.getDefaultConstraint(timeTablingUseFCDWBacktrackingDTO);
         HashMap<Integer, Integer> orderSubjectIdMap = new HashMap<>();
-        for (Integer order:timeTablingUseBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap().keySet()){
-            orderSubjectIdMap.put(order,null);
+        for (Integer order : timeTablingUseBacktrackingDTO.getOrderGradeClassNumWorkDayTimeMap().keySet()) {
+            orderSubjectIdMap.put(order, null);
         }
         timeTablingUseFCDWBacktrackingDTO.setOrderSubjectIdMap(orderSubjectIdMap);
         return timeTablingUseFCDWBacktrackingDTO;
     }
+
+    /**
+     * 回溯算法排课
+     *
+     * @return
+     */
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> backtracking(Integer grade,BacktrackingTypeEnum backtrackingTypeEnum) {
+        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
+        PrepareDTO prepareDTO = prepareService.prepareTimeTabling(grade,backtrackingTypeEnum);
+
+        var backtrackingResult = backtrackingService.backtracking(prepareDTO);
+        if (!backtrackingResult.isSuccess()){
+            cattyResult.setMessage(backtrackingResult.getMessage());
+            return cattyResult;
+        }
+
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
 
     /**
      * 排课算法 前行检测和动态回溯回溯算法

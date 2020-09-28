@@ -20,4 +20,12 @@ public interface TeacherSubjectMapper {
      * @return
      */
     List<SubjectTeacherGradeClassDTO> listAllSubjectTeacherGradeClass();
+
+    /**
+     * 批量保存
+     *
+     * @param teacherSubjectDOList
+     * @return
+     */
+    int saveBatch(List<TeacherSubjectDO> teacherSubjectDOList);
 }

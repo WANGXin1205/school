@@ -37,4 +37,14 @@
         where a.teacher_id = b.teacher_id
         and a.status = 1 and b.status = 1
     </select>
+
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into teacher_subject(teacher_id,subject_id, status, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.teacherId}, #{item.subjectId}, 1, #{item.createBy}, now())
+        </foreach>
+
+    </insert>
+
 </mapper>

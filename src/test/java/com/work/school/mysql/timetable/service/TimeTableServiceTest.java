@@ -32,6 +32,16 @@ public class TimeTableServiceTest {
     @Resource
     private TimeTableService timeTableService;
 
+
+    @Test
+    public void backtrackingTest(){
+        Integer grade = 3;
+        var cattyResult = timeTableService.backtracking(grade,BacktrackingTypeEnum.BA);
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
+
+
+
     @Test
     public void planTimeTableWithBacktrackingTest() {
         List<Long> times = new ArrayList<>();

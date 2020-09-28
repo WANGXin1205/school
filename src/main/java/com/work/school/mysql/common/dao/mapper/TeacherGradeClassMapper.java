@@ -22,4 +22,12 @@ public interface TeacherGradeClassMapper {
      * @return
      */
     List<TeacherGradeClassDO> listTeacherGradeClassByGrade(Integer grade);
+
+    /**
+     * 批量保存
+     *
+     * @param teacherGradeClassDOList
+     * @return
+     */
+    int saveBatch(List<TeacherGradeClassDO> teacherGradeClassDOList);
 }

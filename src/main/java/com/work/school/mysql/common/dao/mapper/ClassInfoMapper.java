@@ -2,6 +2,7 @@ package com.work.school.mysql.common.dao.mapper;
 
 
 import com.work.school.mysql.common.dao.domain.ClassInfoDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public interface ClassInfoMapper {
      * @param grade
      * @return
      */
-    List<ClassInfoDO> listClassByGrade(Integer grade);
+    List<ClassInfoDO> listClassByGrade(@Param("grade") Integer grade);
 }

@@ -1,12 +1,9 @@
 package com.work.school.mysql.timetable.service.dto;
 
-import com.work.school.mysql.common.service.dto.GradeClassNumWorkDayTimeDTO;
-
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Objects;
 
-public class TimeTableConstraintDTO implements Serializable {
+public class SubjectConstraintDTO implements Serializable {
     /**
      * 序列
      */
@@ -48,7 +45,7 @@ public class TimeTableConstraintDTO implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TimeTableConstraintDTO that = (TimeTableConstraintDTO) o;
+        SubjectConstraintDTO that = (SubjectConstraintDTO) o;
         return Objects.equals(order, that.order) &&
                 Objects.equals(orderConstraint, that.orderConstraint) &&
                 Objects.equals(subjectIdConstraint, that.subjectIdConstraint);
@@ -61,7 +58,7 @@ public class TimeTableConstraintDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "TimeTableConstraintDTO{" +
+        return "SubjectConstraintDTO{" +
                 "order=" + order +
                 ", orderConstraint=" + orderConstraint +
                 ", subjectIdConstraint=" + subjectIdConstraint +

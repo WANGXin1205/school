@@ -3,7 +3,7 @@ package com.work.school.mysql.common.service.dto;
 import com.work.school.mysql.common.dao.domain.ClassInfoDO;
 import com.work.school.mysql.common.dao.domain.SubjectDO;
 import com.work.school.mysql.common.dao.domain.TeacherDO;
-import com.work.school.mysql.timetable.service.dto.TimeTableConstraintDTO;
+import com.work.school.mysql.timetable.service.dto.SubjectConstraintDTO;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -99,7 +99,7 @@ public class TimeTablingUseFCDWBacktrackingDTO implements Serializable {
     /**
      * 约束条件
      */
-    private List<TimeTableConstraintDTO> timeTableConstraintDTOList;
+    private List<SubjectConstraintDTO> subjectConstraintDTOList;
     /**
      * 课程表map
      */
@@ -269,12 +269,12 @@ public class TimeTablingUseFCDWBacktrackingDTO implements Serializable {
         this.gradeClassNumWorkDayTimeOrderMap = gradeClassNumWorkDayTimeOrderMap;
     }
 
-    public List<TimeTableConstraintDTO> getTimeTableConstraintDTOList() {
-        return timeTableConstraintDTOList;
+    public List<SubjectConstraintDTO> getSubjectConstraintDTOList() {
+        return subjectConstraintDTOList;
     }
 
-    public void setTimeTableConstraintDTOList(List<TimeTableConstraintDTO> timeTableConstraintDTOList) {
-        this.timeTableConstraintDTOList = timeTableConstraintDTOList;
+    public void setSubjectConstraintDTOList(List<SubjectConstraintDTO> subjectConstraintDTOList) {
+        this.subjectConstraintDTOList = subjectConstraintDTOList;
     }
 
     public HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> getTimeTableMap() {
@@ -316,7 +316,7 @@ public class TimeTablingUseFCDWBacktrackingDTO implements Serializable {
                 ", orderSubjectIdCanUseMap=" + orderSubjectIdCanUseMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
                 ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +
-                ", timeTableConstraintDTOList=" + timeTableConstraintDTOList +
+                ", timeTableConstraintDTOList=" + subjectConstraintDTOList +
                 ", timeTableMap=" + timeTableMap +
                 ", orderSubjectIdMap=" + orderSubjectIdMap +
                 '}';

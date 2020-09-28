@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.school.mysql.timetable.dao.mapper.SubjectClassTeacherMapper">
+    <resultMap id="BaseResultMap" type="com.work.school.mysql.timetable.dao.domain.SubjectClassTeacherDO">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
+        <result column="subject_type" jdbcType="INTEGER" property="subjectType"/>
+        <result column="frequency" jdbcType="INTEGER" property="frequency"/>
+        <result column="grade" jdbcType="INTEGER" property="grade"/>
+        <result column="class_num" jdbcType="INTEGER" property="classNum"/>
+        <result column="teacher_id" jdbcType="INTEGER" property="teacherId"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, subject_id, subject_type, frequency, grade, class_num,teacher_id, status,
+    create_by, create_time,update_by, update_time
+  </sql>
+
+    <insert id="saveBatchWithoutTeacher" parameterType="java.util.List">
+        insert into subject_class_teacher(subject_id, subject_type,frequency, grade, class_num,
+        teacher_id, status, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.subjectId}, #{item.subjectType},#{item.frequency}, #{item.grade}, #{item.classNum},
+            #{item.teacherId}, 1, #{item.createBy}, now())
+        </foreach>
+
+    </insert>
+
+    <select id="listSubjectClassTeacherByGrade" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from subject_class_teacher where status = 1
+        <if test="grade != null">
+        and grade = #{grade}
+        </if>
+    </select>
+
+</mapper>

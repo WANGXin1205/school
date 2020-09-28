@@ -29,4 +29,13 @@
         from teacher_grade_class where status = 1 and grade = #{grade}
     </select>
 
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into teacher_grade_class(teacher_id, grade, class_num, status, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.teacherId}, #{item.grade}, #{item.classNum}, 1, #{item.createBy}, now())
+        </foreach>
+
+    </insert>
+
 </mapper>

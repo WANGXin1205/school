@@ -28,7 +28,9 @@
         select
         <include refid="Base_Column_List"/>
         from class_info where status = 1 and graduate = 0
-        and grade = #{grade}
+        <if test="grade != null">
+            and grade = #{grade}
+        </if>
     </select>
 
 </mapper>

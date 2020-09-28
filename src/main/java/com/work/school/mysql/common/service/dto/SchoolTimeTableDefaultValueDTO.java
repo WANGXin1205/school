@@ -63,7 +63,7 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
     /**
      * 第5节课
      */
-     private static final Integer AFTERNOON_SEC_TIME = 5;
+    private static final Integer AFTERNOON_SEC_TIME = 5;
     /**
      * 上一节课
      */
@@ -148,13 +148,14 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
      * 学生的连堂课时间段
      */
     private static final Integer[][] STUDENT_CONTINUE_TIME = {{1, 2}, {4, 5}, {5, 6}};
+    private static final Integer[][] STUDENT_CONTINUE_TIMES = {{1, 2}, {2, 3}, {4, 5}, {5, 6}, {6, 7}};
     private static final Integer STUDENT_CONTINUE_TIME_FIRST_INDEX = 0;
     private static final Integer STUDENT_CONTINUE_TIME_LAST_INDEX = 1;
 
     /**
      * 教师的连堂课时间段
      */
-    private static final Integer[][] TEACHER_CONTINUE_TIME = {{4, 5, 6}};
+    private static final Integer[][] TEACHER_CONTINUE_TIME = {{1, 2, 3}, {4, 5, 6}, {5, 6, 7}};
     private static final Integer TEACHER_CONTINUE_TIME_LAST_INDEX = 2;
     private static final Integer TEACHER_CONTINUE_TIME_MAX_SIZE = 3;
     private static final Integer TEACHER_TIME_MIN_OVER_SIZE = 4;
@@ -299,6 +300,10 @@ public final class SchoolTimeTableDefaultValueDTO implements Serializable {
 
     public static Integer[][] getStudentContinueTime() {
         return STUDENT_CONTINUE_TIME;
+    }
+
+    public static Integer[][] getStudentContinueTimes() {
+        return STUDENT_CONTINUE_TIMES;
     }
 
     public static Integer getStudentContinueTimeFirstIndex() {

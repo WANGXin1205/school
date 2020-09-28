@@ -13,9 +13,13 @@ public final class SubjectDefaultValueDTO implements Serializable {
      */
     private static final Integer ZERO_FREQUENCY = 0;
     /**
-     * 一次
+     * 1次
      */
     private static final Integer ONE_COUNT = 1;
+    /**
+     * 2次
+     */
+    private static final Integer TWO_COUNT = 2;
     /**
      * 3次
      */
@@ -27,6 +31,10 @@ public final class SubjectDefaultValueDTO implements Serializable {
 
     public static Integer getOneCount() {
         return ONE_COUNT;
+    }
+
+    public static Integer getTwoCount() {
+        return TWO_COUNT;
     }
 
     public static Integer getThreeCount() {
