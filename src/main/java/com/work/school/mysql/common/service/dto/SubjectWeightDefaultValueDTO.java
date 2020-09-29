@@ -25,7 +25,7 @@ public final class SubjectWeightDefaultValueDTO implements Serializable {
      */
     private static final Integer ZERO_FREQUENCY = 0;
     /**
-     * 递减步长1
+     * 步长1
      */
     private static final Integer ONE_STEP = 1;
     /**

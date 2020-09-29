@@ -34,12 +34,18 @@ public class TimeTableServiceTest {
 
 
     @Test
-    public void backtrackingTest(){
-        Integer grade = 3;
+    public void backtrackingBATest(){
+        Integer grade = null;
         var cattyResult = timeTableService.backtracking(grade,BacktrackingTypeEnum.BA);
         Assert.assertTrue(cattyResult.isSuccess());
     }
 
+    @Test
+    public void backtrackingDWTest(){
+        Integer grade = null;
+        var cattyResult = timeTableService.backtracking(grade,BacktrackingTypeEnum.DW_BA);
+        Assert.assertTrue(cattyResult.isSuccess());
+    }
 
 
     @Test

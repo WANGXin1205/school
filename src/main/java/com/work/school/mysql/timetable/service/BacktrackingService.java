@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author : Growlithe
@@ -33,6 +35,9 @@ public class BacktrackingService {
     private static final int ONLY_ONE_COUNT = 1;
     private static final int ADD_SCORE = 1;
     private static final int BIG_SCORE = 10;
+
+    private static final double MAX = 1;
+    private static final double SUP = 0.2;
     /**
      * 接受概率
      */
@@ -79,11 +84,12 @@ public class BacktrackingService {
                 }
                 Integer subjectId = null;
                 if (BacktrackingTypeEnum.BA.equals(prepareDTO.getBacktrackingTypeEnum())) {
+                    // 朴素回溯算法
                     subjectId = this.chooseFirstSubject(subjectCanUseMap);
                 }
                 if (BacktrackingTypeEnum.DW_BA.equals(prepareDTO.getBacktrackingTypeEnum())) {
-                    // todo 动态权重
-                    subjectId = null;
+                    // 动态权重
+                    subjectId = this.chooseMaxWeightSubject(order, prepareDTO);
                 }
 
                 // 标记
@@ -121,6 +127,233 @@ public class BacktrackingService {
         cattyResult.setData(timeTableMap);
         cattyResult.setSuccess(true);
         return cattyResult;
+    }
+
+    /**
+     * 选择权重最大的课程
+     *
+     * @param order
+     * @param prepareDTO
+     * @return
+     */
+    private Integer chooseMaxWeightSubject(Integer order, PrepareDTO prepareDTO) {
+
+        var orderSubjectIdCanUseMap = prepareDTO.getOrderSubjectIdCanUseMap();
+        var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(order);
+
+        // 获取排课时间
+        var orderGradeClassNumWorkDayTimeMap = prepareDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
+        var grade = gradeClassNumWorkDayTimeDTO.getGrade();
+        var classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
+        var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
+        var time = gradeClassNumWorkDayTimeDTO.getTime();
+
+        // 获取可选择的课程
+        var allSubjectMap = prepareDTO.getAllSubjectMap();
+        var subjectClassTeacherDOList = prepareDTO.getSubjectClassTeacherDOList();
+        var subjectFrequencyMap = subjectClassTeacherDOList.stream()
+                .filter(x -> x.getGrade().equals(grade) && x.getClassNum().equals(classNum))
+                .collect(Collectors.toMap(SubjectClassTeacherDO::getSubjectId, SubjectClassTeacherDO::getFrequency));
+        List<SubjectWeightDTO> subjectWeightDTOList = new ArrayList<>();
+        for (Integer subjectId : subjectIdCanUseMap.keySet()) {
+            boolean matchFlag = subjectIdCanUseMap.get(subjectId);
+            if (matchFlag) {
+                var subjectDO = allSubjectMap.get(subjectId);
+                int frequency = subjectFrequencyMap.get(subjectId);
+                int initWeight = frequency * (SchoolTimeTableDefaultValueDTO.getSpecialSubjectType() - subjectDO.getType());
+
+                SubjectWeightDTO subjectWeightDTO = new SubjectWeightDTO();
+                subjectWeightDTO.setSubjectId(subjectId);
+                subjectWeightDTO.setType(subjectDO.getType());
+                subjectWeightDTO.setFrequency(frequency);
+                subjectWeightDTO.setWeight(initWeight);
+                subjectWeightDTOList.add(subjectWeightDTO);
+            }
+        }
+
+        // 特殊课程的选择
+        boolean classMeetingFlag = SchoolTimeTableDefaultValueDTO.getMondayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getClassMeetingTime().equals(time);
+        boolean writingFlag = SchoolTimeTableDefaultValueDTO.getWednesdayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getWritingTime().equals(time);
+        boolean schoolBasedFlag = SchoolTimeTableDefaultValueDTO.getFridayNum().equals(workDay) && Arrays.asList(SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()).contains(time);
+        boolean specialFlag = classMeetingFlag || writingFlag || schoolBasedFlag;
+        for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+            if (classMeetingFlag && SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId().equals(subjectWeightDTO.getSubjectId())) {
+                subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getMaxWeight());
+            }
+            if (writingFlag && SchoolTimeTableDefaultValueDTO.getWritingId().equals(subjectWeightDTO.getSubjectId())) {
+                subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getMaxWeight());
+            }
+            if (schoolBasedFlag && SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId().equals(subjectWeightDTO.getSubjectId())) {
+                subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getMaxWeight());
+            }
+            boolean specialIdFlag = SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId().equals(subjectWeightDTO.getSubjectId())
+                    || SchoolTimeTableDefaultValueDTO.getWritingId().equals(subjectWeightDTO.getSubjectId())
+                    || SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId().equals(subjectWeightDTO.getSubjectId());
+            if (!specialFlag && specialIdFlag) {
+                subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getMinWeight());
+            }
+        }
+
+        // 早上第1、2节课程必须是主课，且最好不同
+        var timeTableMap = prepareDTO.getTimeTableMap();
+        if (SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time)) {
+            for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                if (SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectWeightDTO.getType())) {
+                    int weight = subjectWeightDTO.getWeight() + SubjectWeightDefaultValueDTO.getExtendWeight();
+                    subjectWeightDTO.setWeight(weight);
+                }
+            }
+        }
+        if (SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time)) {
+            var pastOrder = order - 1;
+            var pastSubjectId = timeTableMap.get(pastOrder);
+            if (SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(pastSubjectId)) {
+                for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                    if (SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(subjectWeightDTO.getSubjectId())) {
+                        int weight = subjectWeightDTO.getWeight() + SubjectWeightDefaultValueDTO.getExtendWeight();
+                        subjectWeightDTO.setWeight(weight);
+                    }
+                }
+            }
+            if (SchoolTimeTableDefaultValueDTO.getSubjectMathsId().equals(pastSubjectId)) {
+                for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                    if (SchoolTimeTableDefaultValueDTO.getSubjectChineseId().equals(subjectWeightDTO.getSubjectId())) {
+                        int weight = subjectWeightDTO.getWeight() + SubjectWeightDefaultValueDTO.getExtendWeight();
+                        subjectWeightDTO.setWeight(weight);
+                    }
+                }
+            }
+        }
+        // 如果过了2节课，适当削弱主课权重，并增加小课权重
+        boolean morningFirstOrSecFlag = SchoolTimeTableDefaultValueDTO.getMorningFirTime().equals(time)
+                || SchoolTimeTableDefaultValueDTO.getMorningSecTime().equals(time);
+        if (!morningFirstOrSecFlag) {
+            for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                if (!SchoolTimeTableDefaultValueDTO.getMainSubjectType().equals(subjectWeightDTO.getType())) {
+                    var weight = subjectWeightDTO.getWeight() + SubjectWeightDefaultValueDTO.getExtendWeight();
+                    subjectWeightDTO.setWeight(weight);
+                }
+            }
+        }
+
+        // 需要教室的课程优先排课
+        var random = Math.random() * (SUP + (MAX - SUP) * (timeTableMap.size() - order) / timeTableMap.size());
+        var classroomMaxCapacityMap = prepareDTO.getClassroomMaxCapacityMap();
+        for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+            if (SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectWeightDTO.getType())) {
+                var maxCapacity = classroomMaxCapacityMap.get(subjectWeightDTO.getSubjectId());
+                int weight = subjectWeightDTO.getWeight() + (int) (random * SubjectWeightDefaultValueDTO.getExtendWeight()
+                        * (SchoolTimeTableDefaultValueDTO.getClassroomMaxCount() - maxCapacity));
+                subjectWeightDTO.setWeight(weight);
+            }
+        }
+
+        GradeClassNumWorkDayTimeDTO key = new GradeClassNumWorkDayTimeDTO();
+        key.setGrade(grade);
+        key.setClassNum(classNum);
+        key.setWorkDay(workDay);
+        var gradeClassNumWorkDayTimeOrderMap = prepareDTO.getGradeClassNumWorkDayTimeOrderMap();
+        List<Integer> matchOrderList = new ArrayList<>();
+        for (int i = 1; i <= SchoolTimeTableDefaultValueDTO.getClassTime(); i++) {
+            key.setTime(i);
+            Integer matchOrder = gradeClassNumWorkDayTimeOrderMap.get(key);
+            matchOrderList.add(matchOrder);
+        }
+        TreeMap<Integer, Integer> matchOrderSubjectMap = new TreeMap<>();
+        for (Integer matchOrder : matchOrderList) {
+            var matchSubjectId = timeTableMap.get(matchOrder);
+            if (matchSubjectId != null) {
+                matchOrderSubjectMap.put(matchOrder, matchSubjectId);
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(matchOrderSubjectMap.values())) {
+            // 如果当天排了小课
+            for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                boolean matchFlag = SchoolTimeTableDefaultValueDTO.getOtherSubjectType().equals(subjectWeightDTO.getType())
+                        || SchoolTimeTableDefaultValueDTO.getOtherNeedAreaSubjectType().equals(subjectWeightDTO.getType());
+                if (matchFlag && matchOrderSubjectMap.containsValue(subjectWeightDTO.getSubjectId())) {
+                    subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getZeroFrequency());
+                }
+            }
+
+            // 如果学生出现连堂课
+            for (Integer[] times : SchoolTimeTableDefaultValueDTO.getStudentContinueTimes()) {
+                Integer firstTime = times[0];
+                Integer secTime = times[1];
+                Integer firstSubjectId = matchOrderSubjectMap.get(firstTime);
+                if (firstSubjectId != null && time.equals(secTime)) {
+                    for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+                        if (!SchoolTimeTableDefaultValueDTO.getSpecialSubjectType().equals(subjectWeightDTO.getType())
+                                && firstSubjectId.equals(subjectWeightDTO.getSubjectId())) {
+                            subjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getMinWeight());
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        // 教师带的班级多的课程，优先排课 基本没啥用
+//        HashMap<Integer, HashMap<Integer, List<Integer>>> teacherGradeClassMap = new HashMap<>();
+//        for (SubjectClassTeacherDO subjectClassTeacherDO : subjectClassTeacherDOList) {
+//            if (subjectClassTeacherDO.getTeacherId() != null) {
+//                var gradeClassMap = teacherGradeClassMap.get(subjectClassTeacherDO.getTeacherId());
+//                if (gradeClassMap == null) {
+//                    gradeClassMap = new HashMap<>();
+//                }
+//                List<Integer> classList = gradeClassMap.get(subjectClassTeacherDO.getGrade());
+//                if (CollectionUtils.isEmpty(classList)) {
+//                    classList = new ArrayList<>();
+//                }
+//                if (!classList.contains(subjectClassTeacherDO.getClassNum())) {
+//                    classList.add(subjectClassTeacherDO.getClassNum());
+//                }
+//                gradeClassMap.put(subjectClassTeacherDO.getGrade(), classList);
+//                teacherGradeClassMap.put(subjectClassTeacherDO.getTeacherId(), gradeClassMap);
+//            }
+//        }
+//
+//        HashMap<Integer, Integer> teacherClassCountMap = new HashMap<>();
+//        int maxClassCount = 0;
+//        for (Integer teacherId : teacherGradeClassMap.keySet()) {
+//            var gradeClassCountMap = teacherGradeClassMap.get(teacherId);
+//            int count = 0;
+//            for (Integer x : gradeClassCountMap.keySet()) {
+//                var classList = gradeClassCountMap.get(x);
+//                count = count + classList.size();
+//            }
+//            if (count > maxClassCount) {
+//                maxClassCount = count;
+//            }
+//            teacherClassCountMap.put(teacherId, count);
+//        }
+//
+//        Map<Integer, Integer> subjectTeacherMap = subjectClassTeacherDOList.stream()
+//                .filter(x -> x.getGrade().equals(grade) && x.getClassNum().equals(classNum) && x.getTeacherId() != null)
+//                .collect(Collectors.toMap(SubjectClassTeacherDO::getSubjectId, SubjectClassTeacherDO::getTeacherId));
+//
+//        random = Math.random() * (SUP + (MAX - SUP) * (timeTableMap.size() - order) / timeTableMap.size());
+//        for (SubjectWeightDTO subjectWeightDTO:subjectWeightDTOList){
+//            var subjectId = subjectWeightDTO.getSubjectId();
+//            Integer teacherId = subjectTeacherMap.get(subjectId);
+//            if (teacherId != null){
+//                var classCount = teacherClassCountMap.get(teacherId);
+//                int weight = subjectWeightDTO.getWeight()+(int) (random * classCount/maxClassCount * 2);
+//                subjectWeightDTO.setWeight(weight);
+//            }
+//        }
+
+        var bestSubjectWeightDTO = new SubjectWeightDTO();
+        bestSubjectWeightDTO.setWeight(SubjectWeightDefaultValueDTO.getStopWeight());
+        for (SubjectWeightDTO subjectWeightDTO : subjectWeightDTOList) {
+            if (subjectWeightDTO.getWeight() > bestSubjectWeightDTO.getWeight()) {
+                bestSubjectWeightDTO = subjectWeightDTO;
+            }
+        }
+        return bestSubjectWeightDTO.getSubjectId();
     }
 
     /**
@@ -230,7 +463,7 @@ public class BacktrackingService {
                         timeList.add(time);
                     }
                     gradeClassWorkDayTimesMap.put(gradeClassWorkDayDTO, timeList);
-                    subjectGradeClassWorkDayTimesMap.put(subjectId,gradeClassWorkDayTimesMap);
+                    subjectGradeClassWorkDayTimesMap.put(subjectId, gradeClassWorkDayTimesMap);
                 }
             }
 
@@ -270,15 +503,15 @@ public class BacktrackingService {
 
         // 5.学生不能上连堂课
         int studentContinueSameClassCount = 0;
-        for (Integer subjectId:subjectGradeClassWorkDayTimesMap.keySet()){
+        for (Integer subjectId : subjectGradeClassWorkDayTimesMap.keySet()) {
             var gradeClassWorkDayTimesMap = subjectGradeClassWorkDayTimesMap.get(subjectId);
-            for (GradeClassWorkDayDTO gradeClassWorkDayDTO:gradeClassWorkDayTimesMap.keySet()){
+            for (GradeClassWorkDayDTO gradeClassWorkDayDTO : gradeClassWorkDayTimesMap.keySet()) {
                 var timeList = gradeClassWorkDayTimesMap.get(gradeClassWorkDayDTO);
 
-                for (Integer[] continueTime:SchoolTimeTableDefaultValueDTO.getStudentContinueTimes()){
+                for (Integer[] continueTime : SchoolTimeTableDefaultValueDTO.getStudentContinueTimes()) {
                     Integer firstTime = continueTime[0];
                     Integer secTime = continueTime[1];
-                    if (timeList.contains(firstTime) && timeList.contains(secTime)){
+                    if (timeList.contains(firstTime) && timeList.contains(secTime)) {
                         studentContinueSameClassCount = studentContinueSameClassCount + 1;
                     }
                 }

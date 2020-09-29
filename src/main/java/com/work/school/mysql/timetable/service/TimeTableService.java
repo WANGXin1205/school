@@ -78,10 +78,56 @@ public class TimeTableService {
             return cattyResult;
         }
 
+        TreeMap<Integer, Integer> data = backtrackingResult.getData();
+        var timetableMap = this.getTimetableMap(data,prepareDTO);
+
+        cattyResult.setData(timetableMap);
         cattyResult.setSuccess(true);
         return cattyResult;
     }
 
+    /**
+     * 转为可视课程表
+     *
+     * @param data
+     * @param prepareDTO
+     * @return
+     */
+    private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>> getTimetableMap(TreeMap<Integer, Integer> data, PrepareDTO prepareDTO){
+        HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>> timeTableMap = new HashMap<>();
+
+        var orderGradeClassNumWorkDayTimeMap = prepareDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var allSubjectMap = prepareDTO.getAllSubjectMap();
+        for (Integer order:data.keySet()){
+            var subjectId = data.get(order);
+            var subjectDO = allSubjectMap.get(subjectId);
+
+            var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(order);
+            var grade = gradeClassNumWorkDayTimeDTO.getGrade();
+            var classNum = gradeClassNumWorkDayTimeDTO.getClassNum();
+            var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
+            var time = gradeClassNumWorkDayTimeDTO.getTime();
+
+            var classNumWorkDayTimeSubjectMap = timeTableMap.get(grade);
+            if (classNumWorkDayTimeSubjectMap == null){
+                classNumWorkDayTimeSubjectMap = new HashMap<>();
+            }
+            var workDayTimeSubjectMap = classNumWorkDayTimeSubjectMap.get(classNum);
+            if (workDayTimeSubjectMap == null) {
+                workDayTimeSubjectMap = new HashMap<>();
+            }
+            var timeSubjectMap = workDayTimeSubjectMap.get(workDay);
+            if (timeSubjectMap == null){
+                timeSubjectMap = new HashMap<>();
+            }
+            timeSubjectMap.put(time,subjectDO.getName());
+            workDayTimeSubjectMap.put(workDay,timeSubjectMap);
+            classNumWorkDayTimeSubjectMap.put(classNum,workDayTimeSubjectMap);
+            timeTableMap.put(grade,classNumWorkDayTimeSubjectMap);
+        }
+
+        return timeTableMap;
+    }
 
     /**
      * 排课算法 前行检测和动态回溯回溯算法
