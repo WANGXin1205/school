@@ -1,17 +1,15 @@
-package com.work.school.mysql.common.service.enums;
+package com.work.school.mysql.timetable.service.enums;
 
-
-import com.github.pagehelper.StringUtil;
 
 /**
  * @Author : Growlithe
  * @Date : 2019/3/7 7:18 PM
  * @Description
  */
-public enum FitnessFunctionEnum {
-    HARD_SATISFIED(1,"硬约束条件"),
-    SOFT_SATISFIED(2,"软约束条件");
-
+public enum CheckBackTypeEnum {
+    GOOD(1,"良好"),
+    BAD_NOW(2,"不好当前节点"),
+    BAD_NEXT(3,"不好未来节点");
 
     private Integer num;
     private String desc;
@@ -28,7 +26,7 @@ public enum FitnessFunctionEnum {
         if (num == null) {
             return null;
         }
-        for (FitnessFunctionEnum e : FitnessFunctionEnum.values()) {
+        for (CheckBackTypeEnum e : CheckBackTypeEnum.values()) {
             if (e.getNum().equals(num)) {
                 return e.getDesc();
             }
@@ -40,7 +38,7 @@ public enum FitnessFunctionEnum {
         if (desc == null) {
             return null;
         }
-        for (FitnessFunctionEnum e : FitnessFunctionEnum.values()) {
+        for (CheckBackTypeEnum e : CheckBackTypeEnum.values()) {
             if (e.getDesc().equals(desc)) {
                 return e.getNum();
             }
@@ -48,7 +46,7 @@ public enum FitnessFunctionEnum {
         return null;
     }
 
-    FitnessFunctionEnum(Integer num, String desc) {
+    CheckBackTypeEnum(Integer num, String desc) {
         this.num = num;
         this.desc = desc;
     }

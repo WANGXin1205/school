@@ -1,6 +1,6 @@
 package com.work.school.mysql.timetable.service;
 
-import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
+import com.work.school.mysql.timetable.service.enums.BacktrackingTypeEnum;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +20,8 @@ public class PrepareServiceTest {
 
     @Test
     public void prepareTimeTablingTest() {
-        Integer grade = 1;
-        var prepareTimeTablingDTO = prepareService.prepareTimeTabling(grade,BacktrackingTypeEnum.BA);
+        Integer grade = null;
+        var prepareTimeTablingDTO = prepareService.prepareTimeTabling(grade, BacktrackingTypeEnum.FC_BA);
         Assert.assertNotNull(prepareTimeTablingDTO);
     }
 }

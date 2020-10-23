@@ -25,11 +25,11 @@ public class SimulateAnnealService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulateAnnealService.class);
 
+
+    private static final long STOP_TIME = 300000;
     /**
      * 初始种群
      */
-    private static final int MAX_TIMES = 2000;
-
     private static final int ZERO = 0;
     private static final int GENE_TIMES = 20;
     private static final int SELECT_NUM = 1;
@@ -49,6 +49,8 @@ public class SimulateAnnealService {
 
     @Resource
     private GeneticService geneticService;
+    @Resource
+    private BacktrackingService backtrackingService;
 
     /**
      * 模拟退火算法
@@ -86,6 +88,7 @@ public class SimulateAnnealService {
      */
     private HashMap<String, List<String>> simulateAnnealCore(HashMap<String, List<String>> gradeClassNoGeneMap) {
         BigDecimal temperature = INIT_TEMPERATURE;
+        long start = System.currentTimeMillis();
 
         List<String> messageList = new ArrayList<>();
         FitnessScoreDTO oldFitnessScore = new FitnessScoreDTO();
@@ -127,27 +130,18 @@ public class SimulateAnnealService {
                 temperature = temperature.add(BACK_TEMPERATURE);
             }
 
-            if (messageList.size() >= MAX_TIMES) {
-                long start = System.currentTimeMillis();
+            long end = System.currentTimeMillis();
+            long time = end - start;
+            if (time > STOP_TIME || bestFitnessScore.getHardScore().equals(0)) {
+
+                String message = backtrackingService.packMessage(bestFitnessScore);
+                messageList.add(message);
+
                 geneticService.markToTXT(String.valueOf(start), messageList);
                 return gradeClassNoGeneMap;
             }
 
-            String message = " " + bestFitnessScore.getScore()
-                    + " " + bestFitnessScore.getHardScore()
-                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
-                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
-                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
-                    + " " + bestFitnessScore.getFixedSubjectIdCount()
-                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
-                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
-                    + " " + bestFitnessScore.getSoftScore()
-                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
-                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
-                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
-                    + " " + bestFitnessScore.getNoMainSubjectCount()
-                    + " " + bestFitnessScore.getSportNoFinalClassCount()
-                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
+            String message = backtrackingService.packMessage(bestFitnessScore);
             messageList.add(message);
         }
 

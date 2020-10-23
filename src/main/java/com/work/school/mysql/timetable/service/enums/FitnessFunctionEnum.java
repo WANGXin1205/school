@@ -1,4 +1,4 @@
-package com.work.school.mysql.common.service.enums;
+package com.work.school.mysql.timetable.service.enums;
 
 
 /**
@@ -6,11 +6,10 @@ package com.work.school.mysql.common.service.enums;
  * @Date : 2019/3/7 7:18 PM
  * @Description
  */
-public enum BacktrackingTypeEnum {
-    BA(1,"回溯算法"),
-    DW_BA(2,"动态权重-回溯算法"),
-    FC_BA(3,"前行检测-回溯算法"),
-    FC_DW_BA(4,"前行检测动态权重-回溯算法");
+public enum FitnessFunctionEnum {
+    HARD_SATISFIED(1,"硬约束条件"),
+    SOFT_SATISFIED(2,"软约束条件");
+
 
     private Integer num;
     private String desc;
@@ -27,7 +26,7 @@ public enum BacktrackingTypeEnum {
         if (num == null) {
             return null;
         }
-        for (BacktrackingTypeEnum e : BacktrackingTypeEnum.values()) {
+        for (FitnessFunctionEnum e : FitnessFunctionEnum.values()) {
             if (e.getNum().equals(num)) {
                 return e.getDesc();
             }
@@ -39,7 +38,7 @@ public enum BacktrackingTypeEnum {
         if (desc == null) {
             return null;
         }
-        for (BacktrackingTypeEnum e : BacktrackingTypeEnum.values()) {
+        for (FitnessFunctionEnum e : FitnessFunctionEnum.values()) {
             if (e.getDesc().equals(desc)) {
                 return e.getNum();
             }
@@ -47,7 +46,7 @@ public enum BacktrackingTypeEnum {
         return null;
     }
 
-    BacktrackingTypeEnum(Integer num, String desc) {
+    FitnessFunctionEnum(Integer num, String desc) {
         this.num = num;
         this.desc = desc;
     }

@@ -3,7 +3,7 @@ package com.work.school.mysql.timetable.service;
 import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
+import com.work.school.mysql.timetable.service.enums.BacktrackingTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -64,11 +64,11 @@ public class TimeTableService {
     }
 
     /**
-     * 回溯算法排课
+     * 回溯算法排课 朴素 动态权重
      *
      * @return
      */
-    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> backtracking(Integer grade,BacktrackingTypeEnum backtrackingTypeEnum) {
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> backtracking(Integer grade, BacktrackingTypeEnum backtrackingTypeEnum) {
         CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
         PrepareDTO prepareDTO = prepareService.prepareTimeTabling(grade,backtrackingTypeEnum);
 
@@ -79,6 +79,29 @@ public class TimeTableService {
         }
 
         TreeMap<Integer, Integer> data = backtrackingResult.getData();
+        var timetableMap = this.getTimetableMap(data,prepareDTO);
+
+        cattyResult.setData(timetableMap);
+        cattyResult.setSuccess(true);
+        return cattyResult;
+    }
+
+    /**
+     * 回溯算法排课 前行检测 前行检测和动态权重
+     *
+     * @return
+     */
+    public CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> forwardBacktracking(Integer grade,BacktrackingTypeEnum backtrackingTypeEnum) {
+        CattyResult<HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>>> cattyResult = new CattyResult<>();
+        PrepareDTO prepareDTO = prepareService.prepareTimeTabling(grade,backtrackingTypeEnum);
+
+        var forwardBacktrackingResult = backtrackingService.forwardBacktracking(prepareDTO);
+        if (!forwardBacktrackingResult.isSuccess()){
+            cattyResult.setMessage(forwardBacktrackingResult.getMessage());
+            return cattyResult;
+        }
+
+        TreeMap<Integer, Integer> data = forwardBacktrackingResult.getData();
         var timetableMap = this.getTimetableMap(data,prepareDTO);
 
         cattyResult.setData(timetableMap);

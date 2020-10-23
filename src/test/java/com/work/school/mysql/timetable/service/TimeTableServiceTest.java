@@ -1,9 +1,6 @@
 package com.work.school.mysql.timetable.service;
 
-import com.work.school.common.utils.common.DateUtils;
-import com.work.school.mysql.common.dao.domain.TeacherDO;
-import com.work.school.mysql.common.service.TeacherService;
-import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
+import com.work.school.mysql.timetable.service.enums.BacktrackingTypeEnum;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,19 +31,77 @@ public class TimeTableServiceTest {
 
 
     @Test
-    public void backtrackingBATest(){
-        Integer grade = null;
-        var cattyResult = timeTableService.backtracking(grade,BacktrackingTypeEnum.BA);
-        Assert.assertTrue(cattyResult.isSuccess());
+    public void backtrackingBATest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            long start = System.currentTimeMillis();
+            try {
+                Integer grade = 2;
+                var cattyResult = timeTableService.backtracking(grade, BacktrackingTypeEnum.BA);
+            } catch (Exception e) {
+                continue;
+            }
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
     }
 
     @Test
-    public void backtrackingDWTest(){
-        Integer grade = null;
-        var cattyResult = timeTableService.backtracking(grade,BacktrackingTypeEnum.DW_BA);
-        Assert.assertTrue(cattyResult.isSuccess());
+    public void backtrackingDWTest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            long start = System.currentTimeMillis();
+            Integer grade = 2;
+            var cattyResult = timeTableService.backtracking(grade, BacktrackingTypeEnum.DW_BA);
+            Assert.assertTrue(cattyResult.isSuccess());
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
     }
 
+    @Test
+    public void forwardBacktrackingFCTest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            long start = System.currentTimeMillis();
+            Integer grade = 2;
+            try {
+                var cattyResult = timeTableService.forwardBacktracking(grade, BacktrackingTypeEnum.FC_BA);
+            } catch (Exception e) {
+                continue;
+            }
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+    }
+
+    @Test
+    public void forwardBacktrackingFCDWBATest() {
+        List<Long> times = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            long start = System.currentTimeMillis();
+            Integer grade = null;
+            try {
+                var cattyResult = timeTableService.forwardBacktracking(grade, BacktrackingTypeEnum.FC_DW_BA);
+            } catch (Exception e) {
+                continue;
+            }
+            long end = System.currentTimeMillis();
+            times.add(end - start);
+        }
+        for (Long x : times) {
+            System.out.println(x);
+        }
+    }
 
     @Test
     public void planTimeTableWithBacktrackingTest() {
@@ -116,7 +171,7 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithGeneticAlgorithmTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 101; i++) {
+        for (int i = 0; i < 21; i++) {
             long start = System.currentTimeMillis();
             var cattyResult = timeTableService.planTimeTableWithGenetic();
             long end = System.currentTimeMillis();
@@ -131,7 +186,7 @@ public class TimeTableServiceTest {
     @Test
     public void planTimeTableWithSimulateAnnealTest() {
         List<Long> times = new ArrayList<>();
-        for (int i = 0; i < 101; i++) {
+        for (int i = 0; i < 21; i++) {
             long start = System.currentTimeMillis();
             var cattyResult = timeTableService.planTimeTableWithSimulateAnneal();
             long end = System.currentTimeMillis();

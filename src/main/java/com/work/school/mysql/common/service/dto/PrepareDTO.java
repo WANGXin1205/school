@@ -1,10 +1,9 @@
 package com.work.school.mysql.common.service.dto;
 
 import com.work.school.mysql.common.dao.domain.SubjectDO;
-import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import com.work.school.mysql.timetable.dao.domain.SubjectClassTeacherDO;
 import com.work.school.mysql.timetable.service.dto.SubjectConstraintDTO;
-import com.work.school.mysql.timetable.service.dto.TeacherConstraintDTO;
+import com.work.school.mysql.timetable.service.enums.BacktrackingTypeEnum;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -35,14 +34,6 @@ public class PrepareDTO implements Serializable {
      */
     private HashMap<Integer,List<Integer>> teacherOrderListMap;
     /**
-     * 课程约束条件
-     */
-    private List<SubjectConstraintDTO> subjectConstraintDTOList;
-    /**
-     * 教师约束条件
-     */
-    private List<TeacherConstraintDTO> teacherConstraintDTOList;
-    /**
      * 节点可使用科目表
      */
     private HashMap<Integer,HashMap<Integer, Boolean>> orderSubjectIdCanUseMap;
@@ -62,6 +53,10 @@ public class PrepareDTO implements Serializable {
      * 排课方法
      */
     private BacktrackingTypeEnum backtrackingTypeEnum;
+    /**
+     * 课程约束条件
+     */
+    private List<SubjectConstraintDTO> subjectConstraintDTOList;
 
     public List<SubjectClassTeacherDO> getSubjectClassTeacherDOList() {
         return subjectClassTeacherDOList;
@@ -101,14 +96,6 @@ public class PrepareDTO implements Serializable {
 
     public void setSubjectConstraintDTOList(List<SubjectConstraintDTO> subjectConstraintDTOList) {
         this.subjectConstraintDTOList = subjectConstraintDTOList;
-    }
-
-    public List<TeacherConstraintDTO> getTeacherConstraintDTOList() {
-        return teacherConstraintDTOList;
-    }
-
-    public void setTeacherConstraintDTOList(List<TeacherConstraintDTO> teacherConstraintDTOList) {
-        this.teacherConstraintDTOList = teacherConstraintDTOList;
     }
 
     public HashMap<Integer, HashMap<Integer, Boolean>> getOrderSubjectIdCanUseMap() {
@@ -159,7 +146,6 @@ public class PrepareDTO implements Serializable {
                 ", classroomMaxCapacityMap=" + classroomMaxCapacityMap +
                 ", teacherOrderListMap=" + teacherOrderListMap +
                 ", subjectConstraintDTOList=" + subjectConstraintDTOList +
-                ", teacherConstraintDTOList=" + teacherConstraintDTOList +
                 ", orderSubjectIdCanUseMap=" + orderSubjectIdCanUseMap +
                 ", orderGradeClassNumWorkDayTimeMap=" + orderGradeClassNumWorkDayTimeMap +
                 ", gradeClassNumWorkDayTimeOrderMap=" + gradeClassNumWorkDayTimeOrderMap +

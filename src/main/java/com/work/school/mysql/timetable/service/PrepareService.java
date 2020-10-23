@@ -5,19 +5,16 @@ import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.dao.domain.SubjectDO;
 import com.work.school.mysql.common.service.*;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.common.service.enums.BacktrackingTypeEnum;
 import com.work.school.mysql.timetable.dao.domain.SubjectClassTeacherDO;
 import com.work.school.mysql.timetable.service.dto.OrderDTO;
 import com.work.school.mysql.timetable.service.dto.SubjectConstraintDTO;
-import com.work.school.mysql.timetable.service.dto.TeacherConstraintDTO;
+import com.work.school.mysql.timetable.service.enums.BacktrackingTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.LineNumberReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -129,14 +126,14 @@ public class PrepareService {
      * @param grade
      * @return
      */
-    public PrepareDTO prepareTimeTabling(Integer grade,BacktrackingTypeEnum backtrackingTypeEnum) {
+    public PrepareDTO prepareTimeTabling(Integer grade, BacktrackingTypeEnum backtrackingTypeEnum) {
 
         // 查询要排课的年级
         List<SubjectClassTeacherDO> subjectClassTeacherDOList = subjectClassTeacherService.listSubjectClassTeacherByGrade(grade);
 
         // 查询科目信息
         var allSubjects = subjectService.listAllSubject();
-        var subjectMap = allSubjects.stream().collect(Collectors.toMap(SubjectDO::getId,Function.identity()));
+        var subjectMap = allSubjects.stream().collect(Collectors.toMap(SubjectDO::getId, Function.identity()));
 
         var gradeClassInfo = classInfoService.listClassByGrade(grade);
         var gradeClassCountMap = classInfoService.getGradeClassCountMap(gradeClassInfo);
@@ -155,9 +152,9 @@ public class PrepareService {
         TreeMap<Integer, Integer> timeTableMap = this.packTimeTableMap(orderDTO);
 
         // 初始化教师上课时间表
-        List<Integer> teacherIdList = subjectClassTeacherDOList.stream().filter(x->x.getTeacherId() != null)
+        List<Integer> teacherIdList = subjectClassTeacherDOList.stream().filter(x -> x.getTeacherId() != null)
                 .map(SubjectClassTeacherDO::getTeacherId).distinct().collect(Collectors.toList());
-        HashMap<Integer,List<Integer>> teacherOrderListMap = this.packTeacherOrderListMap(teacherIdList);
+        HashMap<Integer, List<Integer>> teacherOrderListMap = this.packTeacherOrderListMap(teacherIdList);
 
         // 节点使用回溯判断
         HashMap<Integer, HashMap<Integer, Boolean>> orderSubjectIdCanUseMap = this.getOrderSubjectIdCanUseMap(orderDTO.getOrderGradeClassNumWorkDayTimeMap(), gradeSubjectMap);
@@ -174,7 +171,105 @@ public class PrepareService {
         prepareDTO.setTimeTableMap(timeTableMap);
         prepareDTO.setBacktrackingTypeEnum(backtrackingTypeEnum);
 
+        boolean fcFlag = BacktrackingTypeEnum.FC_BA.equals(backtrackingTypeEnum)
+                || BacktrackingTypeEnum.FC_DW_BA.equals(backtrackingTypeEnum);
+        if (fcFlag) {
+            // 初始化约束 特殊课程
+            List<SubjectConstraintDTO> subjectConstraintDTOList = this.getDefaultConstraint(prepareDTO);
+            prepareDTO.setSubjectConstraintDTOList(subjectConstraintDTOList);
+
+            // 根据约束更新order可使用课程
+            for (SubjectConstraintDTO subjectConstraintDTO : subjectConstraintDTOList) {
+                var subjectIdCanUseMap = orderSubjectIdCanUseMap.get(subjectConstraintDTO.getOrderConstraint());
+                var canUseFlag = subjectIdCanUseMap.get(subjectConstraintDTO.getSubjectIdConstraint());
+                if (canUseFlag != null){
+                    subjectIdCanUseMap.put(subjectConstraintDTO.getSubjectIdConstraint(),false);
+                    orderSubjectIdCanUseMap.put(subjectConstraintDTO.getOrderConstraint(),subjectIdCanUseMap);
+                }
+            }
+
+            prepareDTO.setOrderSubjectIdCanUseMap(orderSubjectIdCanUseMap);
+        }
+
         return prepareDTO;
+    }
+
+    /**
+     * 获取强制约束
+     *
+     * @param prepareDTO
+     * @return
+     */
+    public List<SubjectConstraintDTO> getDefaultConstraint(PrepareDTO prepareDTO) {
+        List<SubjectConstraintDTO> subjectConstraintDTOList = new ArrayList<>();
+
+        var orderGradeClassNumWorkDayTimeMap = prepareDTO.getOrderGradeClassNumWorkDayTimeMap();
+        var allSubjectMap = prepareDTO.getAllSubjectMap();
+        for (Integer key : orderGradeClassNumWorkDayTimeMap.keySet()) {
+            var gradeClassNumWorkDayTimeDTO = orderGradeClassNumWorkDayTimeMap.get(key);
+            var workDay = gradeClassNumWorkDayTimeDTO.getWorkDay();
+            var time = gradeClassNumWorkDayTimeDTO.getTime();
+
+            boolean classMeetingFlag = SchoolTimeTableDefaultValueDTO.getMondayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getClassMeetingTime().equals(time);
+            boolean writingFlag = SchoolTimeTableDefaultValueDTO.getWednesdayNum().equals(workDay) && SchoolTimeTableDefaultValueDTO.getWritingTime().equals(time);
+            boolean schoolBasedFlag = SchoolTimeTableDefaultValueDTO.getFridayNum().equals(workDay) && Arrays.asList(SchoolTimeTableDefaultValueDTO.getSchoolBasedTime()).contains(time);
+            if (!classMeetingFlag) {
+                SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                subjectConstraintDTO.setOrder(0);
+                subjectConstraintDTO.setOrderConstraint(key);
+                subjectConstraintDTO.setSubjectIdConstraint(SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId());
+                subjectConstraintDTOList.add(subjectConstraintDTO);
+            } else {
+                for (Integer subjectId : allSubjectMap.keySet()) {
+                    if (!SchoolTimeTableDefaultValueDTO.getSubjectClassMeetingId().equals(subjectId)) {
+                        SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                        subjectConstraintDTO.setOrder(0);
+                        subjectConstraintDTO.setOrderConstraint(key);
+                        subjectConstraintDTO.setSubjectIdConstraint(subjectId);
+                        subjectConstraintDTOList.add(subjectConstraintDTO);
+                    }
+                }
+            }
+            if (!writingFlag) {
+                SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                subjectConstraintDTO.setOrder(0);
+                subjectConstraintDTO.setOrderConstraint(key);
+                subjectConstraintDTO.setSubjectIdConstraint(SchoolTimeTableDefaultValueDTO.getWritingId());
+                subjectConstraintDTOList.add(subjectConstraintDTO);
+            } else {
+                for (Integer subjectId : allSubjectMap.keySet()) {
+                    if (!SchoolTimeTableDefaultValueDTO.getWritingId().equals(subjectId)) {
+                        SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                        subjectConstraintDTO.setOrder(0);
+                        subjectConstraintDTO.setOrderConstraint(key);
+                        subjectConstraintDTO.setSubjectIdConstraint(subjectId);
+                        subjectConstraintDTOList.add(subjectConstraintDTO);
+                    }
+                }
+            }
+            if (!schoolBasedFlag) {
+                SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                subjectConstraintDTO.setOrder(0);
+                subjectConstraintDTO.setOrderConstraint(key);
+                subjectConstraintDTO.setSubjectIdConstraint(SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId());
+                subjectConstraintDTOList.add(subjectConstraintDTO);
+            } else {
+                for (Integer subjectId : allSubjectMap.keySet()) {
+                    if (!SchoolTimeTableDefaultValueDTO.getSubjectSchoolBasedId().equals(subjectId)) {
+                        SubjectConstraintDTO subjectConstraintDTO = new SubjectConstraintDTO();
+                        subjectConstraintDTO.setOrder(0);
+                        subjectConstraintDTO.setOrderConstraint(key);
+                        subjectConstraintDTO.setSubjectIdConstraint(subjectId);
+                        subjectConstraintDTOList.add(subjectConstraintDTO);
+                    }
+                }
+            }
+
+        }
+
+        subjectConstraintDTOList = subjectConstraintDTOList.stream().distinct().collect(Collectors.toList());
+
+        return subjectConstraintDTOList;
     }
 
     /**
@@ -183,13 +278,14 @@ public class PrepareService {
      * @param teacherIdList
      * @return
      */
-    private HashMap<Integer,List<Integer>> packTeacherOrderListMap(List<Integer> teacherIdList){
-        HashMap<Integer,List<Integer>> teacherOrderListMap = new HashMap<>();
-        for (Integer teacherId:teacherIdList){
-            teacherOrderListMap.put(teacherId,new ArrayList<>());
+    private HashMap<Integer, List<Integer>> packTeacherOrderListMap(List<Integer> teacherIdList) {
+        HashMap<Integer, List<Integer>> teacherOrderListMap = new HashMap<>();
+        for (Integer teacherId : teacherIdList) {
+            teacherOrderListMap.put(teacherId, new ArrayList<>());
         }
         return teacherOrderListMap;
     }
+
     /**
      * 节点添加约束
      *
@@ -494,8 +590,8 @@ public class PrepareService {
     private TreeMap<Integer, Integer> packTimeTableMap(OrderDTO orderDTO) {
         TreeMap<Integer, Integer> timeTableMap = new TreeMap<>();
 
-        for (Integer order:orderDTO.getOrderGradeClassNumWorkDayTimeMap().keySet()){
-            timeTableMap.put(order,null);
+        for (Integer order : orderDTO.getOrderGradeClassNumWorkDayTimeMap().keySet()) {
+            timeTableMap.put(order, null);
         }
 
         return timeTableMap;

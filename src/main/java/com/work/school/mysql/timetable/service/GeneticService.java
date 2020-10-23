@@ -4,9 +4,9 @@ import com.work.school.common.CattyResult;
 import com.work.school.common.excepetion.TransactionException;
 import com.work.school.mysql.common.service.ClassroomMaxCapacityService;
 import com.work.school.mysql.common.service.dto.*;
-import com.work.school.mysql.common.service.enums.FitnessFunctionEnum;
 import com.work.school.mysql.timetable.service.dto.FitnessScoreDTO;
 import com.work.school.mysql.timetable.service.dto.PopulationDTO;
+import com.work.school.mysql.timetable.service.enums.FitnessFunctionEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class GeneticService {
     /**
      * 进化次数
      */
-    private static final int EVOLUTION_TIMES = 2000;
+    private static final int EVOLUTION_TIMES = 5000;
     /**
      * 交叉概率
      */
@@ -98,6 +98,8 @@ public class GeneticService {
 
     @Autowired
     private ClassroomMaxCapacityService classroomMaxCapacityService;
+    @Autowired
+    private BacktrackingService backtrackingService;
 
     /**
      * 结果展示
@@ -424,22 +426,14 @@ public class GeneticService {
                 }
 
             }
-            String message = bestFitnessScore.getScore()
-                    + " " + bestFitnessScore.getHardScore()
-                    + " " + bestFitnessScore.getEveryTimeHaveSubjectCount()
-                    + " " + bestFitnessScore.getOneTimeOneClassMoreSubjectCount()
-                    + " " + bestFitnessScore.getOneTimeOneTeacherMoreClassCount()
-                    + " " + bestFitnessScore.getFixedSubjectIdCount()
-                    + " " + bestFitnessScore.getOneClassMoreOtherSubject()
-                    + " " + bestFitnessScore.getNeedAreaSubjectCount()
-                    + " " + bestFitnessScore.getSoftScore()
-                    + " " + bestFitnessScore.getTeacherOutMaxTimeCount()
-                    + " " + bestFitnessScore.getNoBestTimeBestSubjectCount()
-                    + " " + bestFitnessScore.getStudentContinueSameClassCount()
-                    + " " + bestFitnessScore.getNoMainSubjectCount()
-                    + " " + bestFitnessScore.getSportNoFinalClassCount()
-                    + " " + bestFitnessScore.getGoTimeNoAfternoonCount();
+
+            String message = backtrackingService.packMessage(bestFitnessScore);
             messageList.add(message);
+
+            if (bestFitnessScore.getHardScore().equals(0)) {
+                break;
+            }
+
         }
 
         long start = System.currentTimeMillis();
@@ -1409,7 +1403,12 @@ public class GeneticService {
     public FitnessScoreDTO computerFitnessScore(FitnessScoreDTO fitnessScoreDTO, List<String> geneList) {
         this.computerFitnessFunction(fitnessScoreDTO, geneList, FitnessFunctionEnum.HARD_SATISFIED);
         this.computerFitnessFunction(fitnessScoreDTO, geneList, FitnessFunctionEnum.SOFT_SATISFIED);
-        var score = fitnessScoreDTO.getHardScore() * BIG_SCORE + fitnessScoreDTO.getSoftScore() * ADD_SCORE;
+        var hardScore = fitnessScoreDTO.getHardScore() * BIG_SCORE;
+        var softScore = fitnessScoreDTO.getSoftScore() * ADD_SCORE;
+        var score = hardScore + softScore;
+
+        fitnessScoreDTO.setHardScore(hardScore);
+        fitnessScoreDTO.setSoftScore(softScore);
         fitnessScoreDTO.setScore(score);
 
         return fitnessScoreDTO;
