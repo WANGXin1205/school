@@ -39,14 +39,14 @@ public class BacktrackingService {
     private static final int BIG_SCORE = 10;
 
     private static final double MAX = 1;
-    private static final double SUP = 0.4;
-    private static final double PERCENT = 1;
+    private static final double SUP = 0.1;
+    private static final double PERCENT = 0.8;
 
     private static final long STOP_TIME = 300000;
     /**
      * 接受概率
      */
-    private static final BigDecimal ACCEPT_PRO = new BigDecimal("1");
+    private static final BigDecimal ACCEPT_PRO = new BigDecimal("0.2");
 
     @Resource
     private SubjectService subjectService;

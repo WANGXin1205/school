@@ -36,7 +36,7 @@ public class TimeTableServiceTest {
         for (int i = 0; i < 21; i++) {
             long start = System.currentTimeMillis();
             try {
-                Integer grade = 2;
+                Integer grade = null;
                 var cattyResult = timeTableService.backtracking(grade, BacktrackingTypeEnum.BA);
             } catch (Exception e) {
                 continue;
@@ -54,7 +54,7 @@ public class TimeTableServiceTest {
         List<Long> times = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
             long start = System.currentTimeMillis();
-            Integer grade = 2;
+            Integer grade = null;
             var cattyResult = timeTableService.backtracking(grade, BacktrackingTypeEnum.DW_BA);
             Assert.assertTrue(cattyResult.isSuccess());
             long end = System.currentTimeMillis();
@@ -70,7 +70,7 @@ public class TimeTableServiceTest {
         List<Long> times = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
             long start = System.currentTimeMillis();
-            Integer grade = 2;
+            Integer grade = null;
             try {
                 var cattyResult = timeTableService.forwardBacktracking(grade, BacktrackingTypeEnum.FC_BA);
             } catch (Exception e) {
@@ -92,6 +92,7 @@ public class TimeTableServiceTest {
             Integer grade = null;
             try {
                 var cattyResult = timeTableService.forwardBacktracking(grade, BacktrackingTypeEnum.FC_DW_BA);
+                Assert.assertTrue(cattyResult.isSuccess());
             } catch (Exception e) {
                 continue;
             }
